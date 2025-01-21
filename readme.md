@@ -1,4 +1,4 @@
-# Módulo de Carrier para SigeWeb
+# Módulo de Carrier para SigepWeb
 
 Crie cotações de entrega diretamente na API do SigepWeb (Correios), com tabela de contigência para casos de queda da API, além disso tenha acompanhamento com tracking page e email ao cliente para acompanhamento de entregas.
 
