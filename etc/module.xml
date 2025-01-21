@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="O2TI_SigepWebCarrier" setup_version="100.0.2">
+        <sequence>
+            <module name="Magento_Checkout"/>
+            <module name="Magento_Shipping"/>
+            <module name="Magento_Backend"/>
+            <module name="Magento_Config"/>
+        </sequence>
+    </module>
+</config>

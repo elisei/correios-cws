@@ -1,0 +1,26 @@
+<?php
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+
+/** @var \O2TI\SigepWebCarrier\Block\Adminhtml\System\Config\UpdateServicesButton $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<div class="actions actions-test-credentials">
+    <?= $block->getButtonHtml() ?>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "O2TI_SigepWebCarrier/js/update-services": {
+            "ajaxUrl": "<?=  /* @noEscape */ $escaper->escapeUrl($block->getAjaxUrl()) ?>"
+        }
+    }
+}
+</script>

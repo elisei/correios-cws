@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <sigep_web_carrier>
+                <active>1</active>
+                <environment>PRODUCAO</environment>
+                <title>Correios</title>
+                <model>O2TI\SigepWebCarrier\Model\Carrier</model>
+                <handling_fee>0</handling_fee>
+                <specificerrmsg>Este método de entrega não está disponível no momento.</specificerrmsg>
+                <free_method>min_value_available</free_method>
+                <servicos>03220,03298,04227</servicos>
+                <debug>1</debug>
+                <max_package_weight>150</max_package_weight>
+                <handling_type>F</handling_type>
+                <handling_action>O</handling_action>
+                <is_online>1</is_online>
+                <sallowspecific>0</sallowspecific>
+                <correios_id>virtualjoias</correios_id>
+                <auto_declared>0</auto_declared>
+                <mao_propria>0</mao_propria>
+                <aviso_de_recebimento>0</aviso_de_recebimento>
+                <add_deadline>0</add_deadline>
+                <has_credentials>0</has_credentials>
+                <has_service_define>0</has_service_define>
+                <fallback>
+                    <active>1</active>
+                    <price>10</price>
+                    <deadline>10</deadline>
+                    <default_weight>0.1</default_weight>
+                    <default_value>100</default_value>
+                    <service_rules><![CDATA[{"field0":{"service":"03298","zip_start":"01000000","zip_end":"19999999","delivery_time":"5","price":"32.00","max_weight":"5","comment":"SP"},"field1":{"service":"03220","zip_start":"01000000","zip_end":"19999999","delivery_time":"1","price":"25.00","max_weight":"5","comment":"SP"},"field2":{"service":"03298","zip_start":"20000000","zip_end":"28999999","delivery_time":"5","price":"35.00","max_weight":"5","comment":"RJ"},"field3":{"service":"03220","zip_start":"20000000","zip_end":"28999999","delivery_time":"1","price":"42.00","max_weight":"5","comment":"RJ"},"field4":{"service":"03298","zip_start":"29000000","zip_end":"29999999","delivery_time":"6","price":"35.00","max_weight":"5","comment":"ES"},"field5":{"service":"03220","zip_start":"29000000","zip_end":"29999999","delivery_time":"1","price":"42.00","max_weight":"5","comment":"ES"},"field6":{"service":"03298","zip_start":"30000000","zip_end":"39999999","delivery_time":"6","price":"35.00","max_weight":"5","comment":"MG"},"field7":{"service":"03220","zip_start":"30000000","zip_end":"39999999","delivery_time":"1","price":"42.00","max_weight":"5","comment":"MG"},"field8":{"service":"03298","zip_start":"80000000","zip_end":"87999999","delivery_time":"5","price":"35.00","max_weight":"5","comment":"PR"},"field9":{"service":"03220","zip_start":"80000000","zip_end":"87999999","delivery_time":"1","price":"42.00","max_weight":"5","comment":"PR"},"field10":{"service":"03298","zip_start":"88000000","zip_end":"89999999","delivery_time":"5","price":"35.00","max_weight":"5","comment":"SC"},"field11":{"service":"03220","zip_start":"88000000","zip_end":"89999999","delivery_time":"1","price":"42.00","max_weight":"5","comment":"SC"},"field12":{"service":"03298","zip_start":"90000000","zip_end":"99999999","delivery_time":"6","price":"35.00","max_weight":"5","comment":"RS"},"field13":{"service":"03220","zip_start":"90000000","zip_end":"99999999","delivery_time":"1","price":"42.00","max_weight":"5","comment":"RS"},"field14":{"service":"03298","zip_start":"40000000","zip_end":"48999999","delivery_time":"6","price":"37.00","max_weight":"5","comment":"BA"},"field15":{"service":"03220","zip_start":"40000000","zip_end":"48999999","delivery_time":"1","price":"53.00","max_weight":"5","comment":"BA"},"field16":{"service":"03298","zip_start":"49000000","zip_end":"49999999","delivery_time":"9","price":"44.00","max_weight":"5","comment":"SE"},"field17":{"service":"03220","zip_start":"49000000","zip_end":"49999999","delivery_time":"2","price":"71.00","max_weight":"5","comment":"SE"},"field18":{"service":"03298","zip_start":"50000000","zip_end":"56999999","delivery_time":"7","price":"39.00","max_weight":"5","comment":"PE"},"field19":{"service":"03220","zip_start":"50000000","zip_end":"56999999","delivery_time":"2","price":"63.00","max_weight":"5","comment":"PE"},"field20":{"service":"03298","zip_start":"57000000","zip_end":"57999999","delivery_time":"8","price":"44.00","max_weight":"5","comment":"AL"},"field21":{"service":"03220","zip_start":"57000000","zip_end":"57999999","delivery_time":"2","price":"71.00","max_weight":"5","comment":"AL"},"field22":{"service":"03298","zip_start":"58000000","zip_end":"58999999","delivery_time":"8","price":"44.00","max_weight":"5","comment":"PB"},"field23":{"service":"03220","zip_start":"58000000","zip_end":"58999999","delivery_time":"2","price":"71.00","max_weight":"5","comment":"PB"},"field24":{"service":"03298","zip_start":"59000000","zip_end":"59999999","delivery_time":"8","price":"44.00","max_weight":"5","comment":"RN"},"field25":{"service":"03220","zip_start":"59000000","zip_end":"59999999","delivery_time":"2","price":"71.00","max_weight":"5","comment":"RN"},"field26":{"service":"03298","zip_start":"60000000","zip_end":"63999999","delivery_time":"7","price":"39.00","max_weight":"5","comment":"CE"},"field27":{"service":"03220","zip_start":"60000000","zip_end":"63999999","delivery_time":"2","price":"63.00","max_weight":"5","comment":"CE"},"field28":{"service":"03298","zip_start":"64000000","zip_end":"64999999","delivery_time":"8","price":"44.00","max_weight":"5","comment":"PI"},"field29":{"service":"03220","zip_start":"64000000","zip_end":"64999999","delivery_time":"3","price":"71.00","max_weight":"5","comment":"PI"},"field30":{"service":"03298","zip_start":"65000000","zip_end":"65999999","delivery_time":"9","price":"44.00","max_weight":"5","comment":"MA"},"field31":{"service":"03220","zip_start":"65000000","zip_end":"65999999","delivery_time":"5","price":"71.00","max_weight":"5","comment":"MA"},"field32":{"service":"03298","zip_start":"66000000","zip_end":"68899999","delivery_time":"8","price":"39.00","max_weight":"5","comment":"PA"},"field33":{"service":"03220","zip_start":"66000000","zip_end":"68899999","delivery_time":"4","price":"63.00","max_weight":"5","comment":"PA"},"field34":{"service":"03298","zip_start":"68900000","zip_end":"68999999","delivery_time":"16","price":"44.00","max_weight":"5","comment":"AP"},"field35":{"service":"03220","zip_start":"68900000","zip_end":"68999999","delivery_time":"6","price":"71.00","max_weight":"5","comment":"AP"},"field36":{"service":"03298","zip_start":"69000000","zip_end":"69299999","delivery_time":"21","price":"44.00","max_weight":"5","comment":"AM-1"},"field37":{"service":"03220","zip_start":"69000000","zip_end":"69299999","delivery_time":"3","price":"71.00","max_weight":"5","comment":"AM-1"},"field38":{"service":"03298","zip_start":"69300000","zip_end":"69399999","delivery_time":"22","price":"44.00","max_weight":"5","comment":"RR"},"field39":{"service":"03220","zip_start":"69300000","zip_end":"69399999","delivery_time":"3","price":"71.00","max_weight":"5","comment":"RR"},"field40":{"service":"03298","zip_start":"69400000","zip_end":"69899999","delivery_time":"17","price":"78.00","max_weight":"5","comment":"AM-2"},"field41":{"service":"03220","zip_start":"69400000","zip_end":"69899999","delivery_time":"4","price":"89.00","max_weight":"5","comment":"AM-2"},"field42":{"service":"03298","zip_start":"69900000","zip_end":"69999999","delivery_time":"10","price":"44.00","max_weight":"5","comment":"AC"},"field43":{"service":"03220","zip_start":"69900000","zip_end":"69999999","delivery_time":"5","price":"71.00","max_weight":"5","comment":"AC"},"field44":{"service":"03298","zip_start":"76800000","zip_end":"76999999","delivery_time":"9","price":"44.00","max_weight":"5","comment":"RO"},"field45":{"service":"03220","zip_start":"76800000","zip_end":"76999999","delivery_time":"5","price":"71.00","max_weight":"5","comment":"RO"},"field46":{"service":"03298","zip_start":"77000000","zip_end":"77999999","delivery_time":"9","price":"39.00","max_weight":"5","comment":"TO"},"field47":{"service":"03220","zip_start":"77000000","zip_end":"77999999","delivery_time":"2","price":"63.00","max_weight":"5","comment":"TO"},"field48":{"service":"03298","zip_start":"70000000","zip_end":"72799999","delivery_time":"5","price":"35.00","max_weight":"5","comment":"DF-1"},"field49":{"service":"03220","zip_start":"70000000","zip_end":"72799999","delivery_time":"1","price":"42.00","max_weight":"5","comment":"DF-1"},"field50":{"service":"03298","zip_start":"72800000","zip_end":"72999999","delivery_time":"6","price":"35.00","max_weight":"5","comment":"GO-1"},"field51":{"service":"03220","zip_start":"72800000","zip_end":"72999999","delivery_time":"2","price":"42.00","max_weight":"5","comment":"GO-1"},"field52":{"service":"03298","zip_start":"73000000","zip_end":"73699999","delivery_time":"5","price":"35.00","max_weight":"5","comment":"DF-2"},"field53":{"service":"03220","zip_start":"73000000","zip_end":"73699999","delivery_time":"1","price":"42.00","max_weight":"5","comment":"DF-2"},"field54":{"service":"03298","zip_start":"73700000","zip_end":"76799999","delivery_time":"8","price":"38.00","max_weight":"5","comment":"GO-2"},"field55":{"service":"03220","zip_start":"73700000","zip_end":"76799999","delivery_time":"4","price":"57.00","max_weight":"5","comment":"GO-2"},"field56":{"service":"03298","zip_start":"78000000","zip_end":"78899999","delivery_time":"7","price":"37.00","max_weight":"5","comment":"MT"},"field57":{"service":"03220","zip_start":"78000000","zip_end":"78899999","delivery_time":"3","price":"53.00","max_weight":"5","comment":"MT"},"field58":{"service":"03298","zip_start":"79000000","zip_end":"79999999","delivery_time":"6","price":"35.00","max_weight":"5","comment":"MS"},"field59":{"service":"03220","zip_start":"79000000","zip_end":"79999999","delivery_time":"2","price":"42.00","max_weight":"5","comment":"MS"}}]]></service_rules>
+                </fallback>
+            </sigep_web_carrier>
+        </carriers>
+        <sigep>
+            <general>
+                <carrier>sigep_web_carrier</carrier>
+            </general>
+        </sigep>
+    </default>
+</config>

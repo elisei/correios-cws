@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="fallback" translate="label, comment" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Fallback</label>
+        <comment><![CDATA[The contingency table is only used in the event of a fall, and is automatically updated once a week. Keep in mind that <b>discrepancies may occur</b>, and it is not recommended to apply too many rules here.]]></comment>
+        <depends>
+            <field id="*/*/credentials/has_credentials">1</field>
+        </depends>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Enable Fallback Mode</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/sigep_web_carrier/fallback/active</config_path>
+        </field>
+        <field id="default_weight" translate="label, comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Default Weight for Calculation</label>
+            <comment>Weight that will be indicated to calculate the delivery cost of the contingency table.</comment>
+            <config_path>carriers/sigep_web_carrier/fallback/default_weight</config_path>
+        </field>
+        <field id="service_rules" translate="label" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+            <label>Service Rules</label>
+            <frontend_model>O2TI\SigepWebCarrier\Block\Adminhtml\Form\Field\AddServiceRules</frontend_model>
+            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            <config_path>carriers/sigep_web_carrier/fallback/service_rules</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+        <field id="update_rules_button" translate="label" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Update table</label>
+            <frontend_model>O2TI\SigepWebCarrier\Block\Adminhtml\System\Config\UpdateFallbackButton</frontend_model>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+    </group>
+</include>

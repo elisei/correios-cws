@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="service_settings" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Service Settings</label>
+        <depends>
+            <field id="*/*/credentials/has_credentials">1</field>
+        </depends>
+        <field id="auto_declared" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Declared Price</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/sigep_web_carrier/auto_declared</config_path>
+        </field>
+        <field id="mao_propria" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Own Hand</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/sigep_web_carrier/mao_propria</config_path>
+        </field>
+        <field id="aviso_de_recebimento" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Receipt Notice</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/sigep_web_carrier/aviso_de_recebimento</config_path>
+        </field>
+        <field id="max_package_weight" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" canRestore="1">
+            <label>Maximum Package Weight (please check with your carrier for maximum supported shipping weight)</label>
+            <validate>validate-number validate-zero-or-greater</validate>
+            <config_path>carriers/sigep_web_carrier/max_package_weight</config_path>
+        </field>
+        <field id="handling_type" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" canRestore="1">
+            <label>Calculate Handling Fee</label>
+            <source_model>Magento\Shipping\Model\Source\HandlingType</source_model>
+            <config_path>carriers/sigep_web_carrier/handling_type</config_path>
+        </field>
+        <field id="handling_action" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" canRestore="1">
+            <label>Handling Applied</label>
+            <source_model>Magento\Shipping\Model\Source\HandlingAction</source_model>
+            <config_path>carriers/sigep_web_carrier/handling_action</config_path>
+        </field>
+        <field id="handling_fee" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" canRestore="1">
+            <label>Handling Fee</label>
+            <validate>validate-number validate-zero-or-greater</validate>
+            <config_path>carriers/sigep_web_carrier/handling_fee</config_path>
+        </field>
+        <field id="add_deadline" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" canRestore="1">
+            <label>Additional Deadline</label>
+            <validate>validate-number validate-zero-or-greater</validate>
+            <config_path>carriers/sigep_web_carrier/add_deadline</config_path>
+        </field>
+        <field id="discount_rules" translate="label" sortOrder="90" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Discount Rules</label>
+            <frontend_model>O2TI\SigepWebCarrier\Block\Adminhtml\Form\Field\AddDiscountRules</frontend_model>
+            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            <config_path>carriers/sigep_web_carrier/discount_rules</config_path>
+            <depends>
+                <field id="active">1</field>
+            </depends>
+        </field>
+    </group>
+</include>

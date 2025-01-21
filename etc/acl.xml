@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="O2TI_SigepWebCarrier::sigep" title="O2TI Sigep" sortOrder="51">
+                    <resource id="O2TI_SigepWebCarrier::services_read" title="View Services" sortOrder="10" />
+                    <resource id="O2TI_SigepWebCarrier::services_write" title="Modify Services" sortOrder="20" />
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="O2TI_SigepWebCarrier::config" title="Correios Web Service Configuration" sortOrder="50">
+                                <resource id="O2TI_SigepWebCarrier::fallback_update" title="Update Fallback Rules" sortOrder="10" />
+                            </resource>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

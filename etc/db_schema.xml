@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sigep_web_services" resource="default" engine="innodb" comment="Sigep Web Services Table">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" padding="10" comment="Entity ID"/>
+        <column xsi:type="varchar" name="code" length="255" nullable="false" comment="Service Code"/>
+        <column xsi:type="varchar" name="name" length="255" nullable="false" comment="Service Name"/>
+        <column xsi:type="varchar" name="category" length="255" nullable="false" comment="Service Category"/>
+        <column xsi:type="smallint" name="status" unsigned="true" nullable="false" default="1" comment="Status"/>
+        <column xsi:type="boolean" name="has_mp" nullable="false" default="false" comment="Has Own Hand (Mão Própria)"/>
+        <column xsi:type="boolean" name="has_ar" nullable="false" default="false" comment="Has Receipt Notice (Aviso Recebimento)"/>
+        <column xsi:type="boolean" name="has_vd" nullable="false" default="false" comment="Has Declared Value (Valor Declarado)"/>
+        <column xsi:type="decimal" name="declared_min_value" scale="4" precision="12" unsigned="true" nullable="false" default="0" comment="Minimum Declared Value"/>
+        <column xsi:type="decimal" name="declared_max_value" scale="4" precision="12" unsigned="true" nullable="false" default="0" comment="Maximum Declared Value"/>
+        <column xsi:type="varchar" name="store_name" length="255" nullable="true" comment="Store Name"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
+</schema>

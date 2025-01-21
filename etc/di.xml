@@ -1,0 +1,122 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="sigepweb_fallback_update" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\UpdateFallbackRulesCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="O2TI\SigepWebCarrier\Api\Data\TrackingResultInterface"
+                type="O2TI\SigepWebCarrier\Model\Data\TrackingResult"/>
+    <preference for="O2TI\SigepWebCarrier\Api\Data\TrackingEventInterface"
+                type="O2TI\SigepWebCarrier\Model\Data\TrackingEvent"/>
+
+    <type name="O2TI\SigepWebCarrier\Cron\UpdateTrackingStatus">
+        <arguments>
+            <argument name="statusToProcess" xsi:type="string">sigewep_created</argument>
+        </arguments>
+    </type>
+    <virtualType name="UpdateCompleteStatus" type="O2TI\SigepWebCarrier\Cron\UpdateTrackingStatus">
+        <arguments>
+            <argument name="statusToProcess" xsi:type="string">complete</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UpdateInTransitStatus" type="O2TI\SigepWebCarrier\Cron\UpdateTrackingStatus">
+        <arguments>
+            <argument name="statusToProcess" xsi:type="string">sigewep_in_transit</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UpdateOnDeliveryRouteStatus" type="O2TI\SigepWebCarrier\Cron\UpdateTrackingStatus">
+        <arguments>
+            <argument name="statusToProcess" xsi:type="string">sigewep_on_delivery_route</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UpdateDeliveredStatus" type="O2TI\SigepWebCarrier\Cron\UpdateTrackingStatus">
+        <arguments>
+            <argument name="statusToProcess" xsi:type="string">sigewep_delivered</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="UpdateDeliveryFailedStatus" type="O2TI\SigepWebCarrier\Cron\UpdateTrackingStatus">
+        <arguments>
+            <argument name="statusToProcess" xsi:type="string">sigewep_delivery_failed</argument>
+        </arguments>
+    </virtualType>
+
+    <preference for="O2TI\SigepWebCarrier\Api\Data\SigepWebServicesInterface" 
+                type="O2TI\SigepWebCarrier\Model\SigepWebServices"/>
+    <type name="O2TI\SigepWebCarrier\Model\SigepWebServices">
+        <arguments>
+            <argument name="data" xsi:type="array"/>
+        </arguments>
+    </type>
+    
+    <!-- Interface Preferences -->
+    <preference for="O2TI\SigepWebCarrier\Api\Data\SigepWebServicesInterface" 
+                type="O2TI\SigepWebCarrier\Model\SigepWebServices"/>
+    <preference for="O2TI\SigepWebCarrier\Api\Data\SigepWebServicesSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults"/>
+    <preference for="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface"
+                type="O2TI\SigepWebCarrier\Model\SigepWebServicesRepository"/>
+                
+    <!-- Type configuration -->
+    <type name="O2TI\SigepWebCarrier\Model\SigepWebServices">
+        <arguments>
+            <argument name="data" xsi:type="array"/>
+        </arguments>
+    </type>
+    
+    <!-- Virtual Type for Collection Processor -->
+    <virtualType name="O2TI\SigepWebCarrier\Model\Api\SearchCriteria\SigepWebServicesCollectionProcessor"
+                 type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+        <arguments>
+            <argument name="processors" xsi:type="array">
+                <item name="filters" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor</item>
+                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
+                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    
+    <type name="O2TI\SigepWebCarrier\Model\SigepWebServicesRepository">
+        <arguments>
+            <argument name="collectionProcessor" xsi:type="object">O2TI\SigepWebCarrier\Model\Api\SearchCriteria\SigepWebServicesCollectionProcessor</argument>
+        </arguments>
+    </type>
+
+    <!-- API Client Configuration -->
+    <type name="O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Correios Service Configuration -->
+    <type name="O2TI\SigepWebCarrier\Gateway\Service\CorreiosService">
+        <arguments>
+            <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
+    <!-- Carrier Configuration -->
+    <type name="O2TI\SigepWebCarrier\Model\Carrier">
+        <arguments>
+            <argument name="correiosService" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Service\CorreiosService</argument>
+        </arguments>
+    </type>
+</config>

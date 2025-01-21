@@ -1,0 +1,46 @@
+parameters:
+    level: 1
+    paths:
+        - .
+    excludePaths:
+        - vendor/*
+        - generated/*
+        - setup/*
+        - Test/*
+        - tests/*
+    
+    ignoreErrors:
+        # Factory related errors
+        - '#Property .+ has unknown class .+Factory as its type#'
+        - '#Parameter .+ of method .+ has invalid type .+Factory#'
+        - '#Call to an undefined method .+Factory::.+\(\)#'
+
+        # Model/Carrier.php - StockRegistry deprecation
+        - message: '#Parameter \$stockRegistry of method O2TI\\SigepWebCarrier\\Model\\Carrier::__construct\(\) has typehint with deprecated interface Magento\\CatalogInventory\\Api\\StockRegistryInterface#'
+          path: Model/Carrier.php
+
+        # Model/Config/Source/Format.php - ArrayInterface deprecation
+        - message: '#Class O2TI\\SigepWebCarrier\\Model\\Config\\Source\\Format implements deprecated interface Magento\\Framework\\Option\\ArrayInterface#'
+          path: Model/Config/Source/Format.php
+
+        # Model/Config/Source/Environment.php - ArrayInterface deprecation
+        - message: '#Class O2TI\\SigepWebCarrier\\Model\\Config\\Source\\Environment implements deprecated interface Magento\\Framework\\Option\\ArrayInterface#'
+          path: Model/Config/Source/Environment.php
+
+        # Model/SigepWebServices.php - _getResource deprecation
+        - message: '#Call to deprecated method _getResource\(\) of class Magento\\Framework\\Model\\AbstractModel#'
+          path: Model/SigepWebServices.php
+
+        # Model/TrackingStatus.php - save() deprecation
+        - message: '#Call to deprecated method save\(\) of class Magento\\Framework\\Model\\AbstractModel#'
+          path: Model/TrackingStatus.php
+
+        # Common Magento patterns
+        - '#Casting to (int|string) something that''s already (int|string)#'
+        - '#Only booleans are allowed in (an if condition|a negated boolean)#'
+        - '#Short ternary operator is not allowed#'
+        - '#Construct empty\(\) is not allowed#'
+
+    reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
+    inferPrivatePropertyTypeFromConstructor: true

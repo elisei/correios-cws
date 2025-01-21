@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="basic_config" translate="label" type="text" sortOrder="200" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Basic Configuration</label>
+        <depends>
+            <field id="*/*/credentials/has_credentials">1</field>
+        </depends>
+        <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Enabled</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/sigep_web_carrier/active</config_path>
+        </field>
+        <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Title</label>
+            <config_path>carriers/sigep_web_carrier/title</config_path>
+        </field>
+        <field id="specificerrmsg" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+            <label>Error Message</label>
+            <config_path>carriers/sigep_web_carrier/specificerrmsg</config_path>
+        </field>
+        <field id="sallowspecific" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" canRestore="1">
+            <label>Ship to Applicable Countries</label>
+            <frontend_class>shipping-applicable-country</frontend_class>
+            <source_model>Magento\Shipping\Model\Config\Source\Allspecificcountries</source_model>
+            <config_path>carriers/sigep_web_carrier/sallowspecific</config_path>
+        </field>
+        <field id="specificcountry" translate="label" type="multiselect" sortOrder="50" showInDefault="1" showInWebsite="1" canRestore="1">
+            <label>Ship to Specific Countries</label>
+            <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+            <can_be_empty>1</can_be_empty>
+            <config_path>carriers/sigep_web_carrier/specificcountry</config_path>
+        </field>
+    </group>
+</include>

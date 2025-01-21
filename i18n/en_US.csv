@@ -1,0 +1,96 @@
+"Initial ZIP Code","Initial ZIP Code"
+"Final ZIP Code","Final ZIP Code"
+"Discount (%)","Discount (%)"
+"Add Discount Rule","Add Discount Rule"
+Format,Format
+"Height (cm)","Height (cm)"
+"Width (cm)","Width (cm)"
+"Length (cm)","Length (cm)"
+"Diameter (cm)","Diameter (cm)"
+Description,Description
+"Maximum Weight (kg)","Maximum Weight (kg)"
+Add,Add
+Service,Service
+"Delivery Time (days)","Delivery Time (days)"
+Price,Price
+Comment,Comment
+"Test your Credentials","Test your Credentials"
+"Update Rules from API","Update Rules from API"
+"Update Services","Update Services"
+"Service rules have been updated successfully.","Service rules have been updated successfully."
+"Error updating service rules: %1","Error updating service rules: %1"
+"Credentials validated and contract information saved successfully.","Credentials validated and contract information saved successfully."
+"No services found in the API response.","No services found in the API response."
+"Error updating services: %1","Error updating services: %1"
+"Error processing service %1: %2","Error processing service %1: %2"
+"Services updated successfully. Total services saved: %1","Services updated successfully. Total services saved: %1"
+"Errors occurred:","Errors occurred:"
+"Invalid JSON was returned by the Correios","Invalid JSON was returned by the Correios"
+"Failed to authenticate with Correios API: %1","Failed to authenticate with Correios API: %1"
+Token,Token
+"Expiration Time","Expiration Time"
+"Invalid authentication response: missing %1","Invalid authentication response: missing %1"
+"Invalid authentication response: missing contract data","Invalid authentication response: missing contract data"
+"Unable to retrieve tracking information","Unable to retrieve tracking information"
+"dias úteis","dias úteis"
+"dia útil","dia útil"
+"Entrega domiciliar indisponível. Retirar na Agência.","Entrega domiciliar indisponível. Retirar na Agência."
+"Shipping label generation not implemented yet","Shipping label generation not implemented yet"
+Produção,Produção
+Homologação,Homologação
+Envelope,Envelope
+Caixa,Caixa
+Cilindro,Cilindro
+"Cotação com o menor valor","Cotação com o menor valor"
+"Could not save the service: %1","Could not save the service: %1"
+"Sigep Web Service with id ""%1"" does not exist.","Sigep Web Service with id ""%1"" does not exist."
+"Sigep Web Service with code ""%1"" does not exist.","Sigep Web Service with code ""%1"" does not exist."
+"Could not delete the service: %1","Could not delete the service: %1"
+"Seu pedido foi encaminhado para coleta dos Correios, seu código de postagem é %1. Aguarde até 24 horas para acompanhar a entrega.","Seu pedido foi encaminhado para coleta dos Correios, seu código de postagem é %1. Aguarde até 24 horas para acompanhar a entrega."
+"Seu pedido %1 foi entregue em %2 às %3 em %4.","Seu pedido %1 foi entregue em %2 às %3 em %4."
+"Atualização sobre sua entrega %1: %2. Localização: %3 em %4 %5","Atualização sobre sua entrega %1: %2. Localização: %3 em %4 %5"
+Success,Success
+Error,Error
+"Sigep Web integration module.","Sigep Web integration module."
+"Basic Configuration","Basic Configuration"
+Enabled,Enabled
+Title,Title
+"Error Message","Error Message"
+"Ship to Applicable Countries","Ship to Applicable Countries"
+"Ship to Specific Countries","Ship to Specific Countries"
+Credentials,Credentials
+Environment,Environment
+Username,Username
+"Please note that the token <b>is not the web access user password</b>, but rather the token, to generate <a href=""https://cws.correios.com.br/ajuda"">see the documentation</a>.","Please note that the token <b>is not the web access user password</b>, but rather the token, to generate <a href=""https://cws.correios.com.br/ajuda"">see the documentation</a>."
+"Posting Card","Posting Card"
+Debug,Debug
+"Has Credentials","Has Credentials"
+"Click to validate credentials and save contract information.","Click to validate credentials and save contract information."
+Contract,Contract
+Direction,Direction
+CNPJ,CNPJ
+"Correios ID","Correios ID"
+"The contingency table is only used in the event of a fall, and is automatically updated once a week. Keep in mind that <b>discrepancies may occur</b>, and it is not recommended to apply too many rules here.","The contingency table is only used in the event of a fall, and is automatically updated once a week. Keep in mind that <b>discrepancies may occur</b>, and it is not recommended to apply too many rules here."
+"Enable Fallback Mode","Enable Fallback Mode"
+"Weight that will be indicated to calculate the delivery cost of the contingency table.","Weight that will be indicated to calculate the delivery cost of the contingency table."
+"Service Rules","Service Rules"
+"Update table","Update table"
+"Method Settings","Method Settings"
+"Click to fetch and update available services from Correios API.","Click to fetch and update available services from Correios API."
+"Package Rules","Package Rules"
+"Available Methods","Available Methods"
+"Free Method","Free Method"
+"Service Settings","Service Settings"
+"Declared Price","Declared Price"
+"Own Hand","Own Hand"
+"Receipt Notice","Receipt Notice"
+"Maximum Package Weight (please check with your carrier for maximum supported shipping weight)","Maximum Package Weight (please check with your carrier for maximum supported shipping weight)"
+"Calculate Handling Fee","Calculate Handling Fee"
+"Handling Applied","Handling Applied"
+"Handling Fee","Handling Fee"
+"Additional Deadline","Additional Deadline"
+"Discount Rules","Discount Rules"
+"Correios API Token Cache","Correios API Token Cache"
+"Cache for Correios API authentication tokens","Cache for Correios API authentication tokens"
+"Correios API Response Cache","Correios API Response Cache"
+"Cache for response quote from Correios API","Cache for response quote from Correios API"

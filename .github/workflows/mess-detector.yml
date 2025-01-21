@@ -1,0 +1,43 @@
+name: Magento Mess Detector
+on: [push, pull_request]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.3'
+        extensions: opcache gd mysqli curl intl xsl mbstring zip bcmath soap xdebug
+        
+    - name: Create auth.json
+      run: |
+        echo '${{ secrets.AUTH }}' > auth.json
+        chmod 600 auth.json
+
+    - name: Get Composer Cache Directory
+      id: composer-cache
+      run: |
+        echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache Composer packages
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+        restore-keys: |
+          ${{ runner.os }}-composer-
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-interaction --no-progress
+
+    - name: Remove auth.json for security
+      if: always()
+      run: rm -f auth.json
+
+    - name: Run PHPMD
+      run: vendor/bin/phpmd . ansi codesize,unusedcode,naming,cleancode,controversial,design --exclude vendor

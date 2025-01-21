@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="method_settings" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>Method Settings</label>
+        <depends>
+            <field id="*/*/credentials/has_credentials">1</field>
+        </depends>
+        <field id="update_services" translate="label, comment" type="button" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Update Services</label>
+            <frontend_model>O2TI\SigepWebCarrier\Block\Adminhtml\System\Config\UpdateServicesButton</frontend_model>
+            <comment>Click to fetch and update available services from Correios API.</comment>
+            <config_path>carriers/sigep_web_carrier/update_services</config_path>
+        </field>
+        <field id="package_rules" translate="label" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="0">
+            <label>Package Rules</label>
+            <frontend_model>O2TI\SigepWebCarrier\Block\Adminhtml\Form\Field\AddPackageRules</frontend_model>
+            <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+            <config_path>carriers/sigep_web_carrier/package_rules</config_path>
+        </field>
+        <field id="servicos" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Available Methods</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\Service</source_model>
+            <config_path>carriers/sigep_web_carrier/servicos</config_path>
+        </field>
+        <field id="free_method" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Free Method</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\FreeService</source_model>
+            <comment>Select which shipping method will be free when free shipping is applied via Cart Price Rules</comment>
+            <config_path>carriers/sigep_web_carrier/free_method</config_path>
+        </field>
+    </group>
+</include>

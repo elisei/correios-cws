@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Cache/etc/cache.xsd">
+    <type name="correios_token" translate="label,description" instance="O2TI\SigepWebCarrier\Model\Cache\Type\CorreiosTokenCache">
+        <label>Correios API Token Cache</label>
+        <description>Cache for Correios API authentication tokens</description>
+    </type>
+    <type name="correios_response" translate="label,description" instance="O2TI\SigepWebCarrier\Model\Cache\Type\CorreiosResponseCache">
+        <label>Correios API Response Cache</label>
+        <description>Cache for response quote from Correios API</description>
+    </type>
+</config>

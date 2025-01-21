@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="carriers">
+            <group id="sigep_web_carrier" translate="label, comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Correios</label>
+                <comment>Sigep Web integration module.</comment>
+                <!-- Group: Credentials -->
+                <include path="O2TI_SigepWebCarrier::system/credentials.xml"/>
+                <!-- Group: Basic Configuration -->
+                <include path="O2TI_SigepWebCarrier::system/basic_config.xml"/>
+                <!-- Group: Method Settings -->
+                <include path="O2TI_SigepWebCarrier::system/method_settings.xml"/>
+                <!-- Group: Service Settings -->
+                <include path="O2TI_SigepWebCarrier::system/service_settings.xml"/>
+                <!-- Grupo: Fallback -->
+                <include path="O2TI_SigepWebCarrier::system/fallback.xml"/>
+            </group>
+        </section>
+    </system>
+</config>

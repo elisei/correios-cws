@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="sigep_update_created_status" instance="O2TI\SigepWebCarrier\Cron\UpdateTrackingStatus" method="execute">
+            <schedule>30 6 * * 1-6</schedule>
+        </job>
+        <job name="sigep_update_init_status" instance="UpdateCompleteStatus" method="execute">
+            <schedule>* * * * 1-6</schedule>
+        </job>
+        <job name="sigep_update_in_transit_status" instance="UpdateInTransitStatus" method="execute">
+            <schedule>30 7 * * 1-6</schedule>
+        </job>
+        <job name="sigep_update_on_delivery_route_status" instance="UpdateOnDeliveryRouteStatus" method="execute">
+            <schedule>30 4 * * 1-6</schedule>
+        </job>
+        <job name="sigep_update_delivery_failed_status" instance="UpdateDeliveryFailedStatus" method="execute">
+            <schedule>30 8 * * 1-6</schedule>
+        </job>
+        <job name="sigepweb_update_fallback_rules" instance="O2TI\SigepWebCarrier\Cron\UpdateFallbackRules" method="execute">
+            <schedule>0 3 1-7 * * MON</schedule>
+        </job>
+    </group>
+</config>

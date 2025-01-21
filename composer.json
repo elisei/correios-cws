@@ -1,0 +1,64 @@
+{
+    "name": "o2ti/sigep-web-carrier",
+    "description": "O2TI - Sigep Web Carrier",
+    "require": {
+        "php": "~7.4.0||~8.1.0||~8.2.0||~8.3.0",
+        "magento/framework": "^103.0.0",
+        "magento/module-customer": "^103.0.0",
+        "magento/module-sales": "^103.0.0",
+        "magento/module-email": "^101.1.0",
+        "magento/module-quote": "^101.2.0",
+        "magento/module-checkout": "^100.4.0",
+        "magento/module-user": "^101.2.0",
+        "magento/module-backend": "^102.0.0",
+        "magento/module-ui": "^101.2.0",
+        "ext-json": "*"
+    },
+    "type": "magento2-module",
+    "authors": [
+        {
+            "name": "Bruno Elisei",
+            "email": "brunoelisei@o2ti.com"
+        }
+    ],
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "O2TI\\SigepWebCarrier\\": ""
+        }
+    },
+    "require-dev": {
+        "magento/magento-coding-standard": "*",
+        "phpmd/phpmd": "^2.13",
+        "phpstan/phpstan": "^1.6.8",
+        "phpstan/extension-installer": "^1.2",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.0"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        },
+        {
+            "type": "composer",
+            "url": "https://repo-magento-mirror.fooman.co.nz/"
+        }
+    ],
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+            "magento/composer-dependency-version-audit-plugin": false,
+            "phpstan/extension-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}

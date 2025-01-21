@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- GET service by ID -->
+    <route url="/V1/sigep-web-services/:serviceId" method="GET">
+        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="getById"/>
+        <resources>
+            <resource ref="O2TI_SigepWebCarrier::services_read"/>
+        </resources>
+    </route>
+
+    <!-- GET service by Code -->
+    <route url="/V1/sigep-web-services/code/:serviceCode" method="GET">
+        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="getByCode"/>
+        <resources>
+            <resource ref="O2TI_SigepWebCarrier::services_read"/>
+        </resources>
+    </route>
+
+    <!-- GET list of services -->
+    <route url="/V1/sigep-web-services" method="GET">
+        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="O2TI_SigepWebCarrier::services_read"/>
+        </resources>
+    </route>
+
+    <!-- POST save service -->
+    <route url="/V1/sigep-web-services" method="POST">
+        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="O2TI_SigepWebCarrier::services_write"/>
+        </resources>
+    </route>
+
+    <!-- PUT update service -->
+    <route url="/V1/sigep-web-services/:id" method="PUT">
+        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="O2TI_SigepWebCarrier::services_write"/>
+        </resources>
+    </route>
+
+    <!-- DELETE service -->
+    <route url="/V1/sigep-web-services/:serviceId" method="DELETE">
+        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="O2TI_SigepWebCarrier::services_write"/>
+        </resources>
+    </route>
+</routes>

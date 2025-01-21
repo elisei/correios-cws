@@ -1,0 +1,97 @@
+"Initial ZIP Code","CEP Inicial"
+"Final ZIP Code","CEP Final"
+"Discount (%)","Desconto (%)"
+"Add Discount Rule","Adicionar Regra de Desconto"
+Format,Formato
+"Height (cm)","Altura (cm)"
+"Width (cm)","Largura (cm)"
+"Length (cm)","Comprimento (cm)"
+"Diameter (cm)","Diâmetro (cm)"
+Description,Descrição
+"Maximum Weight (kg)","Peso Máximo (kg)"
+Add,Adicionar
+Service,Serviço
+"Delivery Time (days)","Prazo de Entrega (dias)"
+Price,Preço
+Comment,Comentário
+"Test your Credentials","Testar suas Credenciais"
+"Update Rules from API","Atualizar Regras da API"
+"Update Services","Atualizar Serviços"
+"Service rules have been updated successfully.","Regras de serviço foram atualizadas com sucesso."
+"Error updating service rules: %1","Erro ao atualizar regras de serviço: %1"
+"Credentials validated and contract information saved successfully.","Credenciais validadas e informações do contrato salvas com sucesso."
+"No services found in the API response.","Nenhum serviço encontrado na resposta da API."
+"Error updating services: %1","Erro ao atualizar serviços: %1"
+"Error processing service %1: %2","Erro ao processar serviço %1: %2"
+"Services updated successfully. Total services saved: %1","Serviços atualizados com sucesso. Total de serviços salvos: %1"
+"Errors occurred:","Ocorreram erros:"
+"Invalid JSON was returned by the Correios","JSON inválido foi retornado pelos Correios"
+"Failed to authenticate with Correios API: %1","Falha ao autenticar com a API dos Correios: %1"
+Token,Token
+"Expiration Time","Tempo de Expiração"
+"Invalid authentication response: missing %1","Resposta de autenticação inválida: faltando %1"
+"Invalid authentication response: missing contract data","Resposta de autenticação inválida: faltando dados do contrato"
+"Unable to retrieve tracking information","Não foi possível recuperar informações de rastreamento"
+"dias úteis","dias úteis"
+"dia útil","dia útil"
+"Entrega domiciliar indisponível. Retirar na Agência.","Entrega domiciliar indisponível. Retirar na Agência."
+"Shipping label generation not implemented yet","Geração de etiqueta de envio ainda não implementada"
+Produção,Produção
+Homologação,Homologação
+Envelope,Envelope
+Caixa,Caixa
+Cilindro,Cilindro
+"Cotação com o menor valor","Cotação com o menor valor"
+"Could not save the service: %1","Não foi possível salvar o serviço: %1"
+"Sigep Web Service with id ""%1"" does not exist.","Serviço Web Sigep com id ""%1"" não existe."
+"Sigep Web Service with code ""%1"" does not exist.","Serviço Web Sigep com código ""%1"" não existe."
+"Could not delete the service: %1","Não foi possível excluir o serviço: %1"
+"Seu pedido foi encaminhado para coleta dos Correios, seu código de postagem é %1. Aguarde até 24 horas para acompanhar a entrega.","Seu pedido foi encaminhado para coleta dos Correios, seu código de postagem é %1. Aguarde até 24 horas para acompanhar a entrega."
+"Seu pedido %1 foi entregue em %2 às %3 em %4.","Seu pedido %1 foi entregue em %2 às %3 em %4."
+"Atualização sobre sua entrega %1: %2. Localização: %3 em %4 %5","Atualização sobre sua entrega %1: %2. Localização: %3 em %4 %5"
+Success,Sucesso
+Error,Erro
+Correios,Correios
+"Sigep Web integration module.","Módulo de integração ao Sigep Web."
+"Basic Configuration","Configuração Básica"
+Enabled,Habilitado
+Title,Título
+"Error Message","Mensagem de Erro"
+"Ship to Applicable Countries","Enviar para Países Aplicáveis"
+"Ship to Specific Countries","Enviar para Países Específicos"
+Credentials,Credenciais
+Environment,Ambiente
+Username,Usuário
+"Please note that the token <b>is not the web access user password</b>, but rather the token, to generate <a href=""https://cws.correios.com.br/ajuda"">see the documentation</a>.","Atenção o token <b>não é a senha de usuário do acesso web</b>, e sim o token, para gerar <a href=""https://cws.correios.com.br/ajuda"">veja a documentação</a>."
+"Posting Card","Cartão de Postagem"
+Debug,Depuração
+"Has Credentials","Possui Credenciais"
+"Click to validate credentials and save contract information.","Clique para validar a credencial e salvar as informações do contrato."
+Contract,Contrato
+Direction,Direção
+CNPJ,CNPJ
+"Correios ID","ID Correios"
+"The contingency table is only used in the event of a fall, and is automatically updated once a week. Keep in mind that <b>discrepancies may occur</b>, and it is not recommended to apply too many rules here.","A tabela de contingência é usada somente em caso de queda, e é atualizada automaticamente uma vez por semana. Tenha em mente que <b>discrepâncias podem ocorrer</b>, e não é recomendado aplicar muitas regras aqui."
+"Enable Fallback Mode","Habilitar Modo Contingência"
+"Weight that will be indicated to calculate the delivery cost of the contingency table.","Peso que será indicado para calcular o custo de entrega da tabela de contingência."
+"Service Rules","Regras de Serviço"
+"Update table","Atualizar tabela"
+"Method Settings","Configurações do Método"
+"Click to fetch and update available services from Correios API.","Clique para buscar e atualizar os serviços disponíveis na API dos Correios."
+"Package Rules","Regras de Pacote"
+"Available Methods","Métodos Disponíveis"
+"Free Method","Método Gratuito"
+"Service Settings","Configurações de Serviço"
+"Declared Price","Valor Declarado"
+"Own Hand","Mão Própria"
+"Receipt Notice","Aviso de Recebimento"
+"Maximum Package Weight (please check with your carrier for maximum supported shipping weight)","Peso Máximo do Pacote (por favor, verifique com sua transportadora o peso máximo de envio suportado)"
+"Calculate Handling Fee","Calcular Taxa de Manuseio"
+"Handling Applied","Manuseio Aplicado"
+"Handling Fee","Taxa de Manuseio"
+"Additional Deadline","Prazo Adicional"
+"Discount Rules","Regras de Desconto"
+"Correios API Token Cache","Cache do Token da API dos Correios"
+"Cache for Correios API authentication tokens","Cache para tokens de autenticação da API dos Correios"
+"Correios API Response Cache","Cache de Resposta da API dos Correios"
+"Cache for response quote from Correios API","Cache para cotação de resposta da API dos Correios"
