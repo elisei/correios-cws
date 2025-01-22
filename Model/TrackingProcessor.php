@@ -278,7 +278,7 @@ class TrackingProcessor
     private function getInitialTrackingData(): array
     {
         return [
-            'status' => 'Pending',
+            'status' => 'sigewep_created',
             'deliverydate' => '',
             'deliverytime' => '',
             'deliverylocation' => '',
