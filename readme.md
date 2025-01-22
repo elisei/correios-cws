@@ -10,20 +10,15 @@ Crie cotações de entrega diretamente na API do SigepWeb (Correios), com tabela
 ## Recursos
 
 - Cotação de envio
-- Tabela de contigência dinâmica
+- Tabela de contingência dinâmica
 - Email de atualização de entrega
 - Página de acompanhamento de entrega
 
-## Instalação
+## Instalação e Configuração
 
-```ssh
-composer require o2ti/sigep-web-carrier
-```
+Visite nossa [Wiki](../../wiki) e veja como é fácil instalar e configurar o módulo.
 
-Após a instalação pelo Composer, execute os seguintes comandos:
+## License
 
-```sh
-bin/magento setup:upgrade
-bin/magento setup:di:compile
-```
+[Open Source License](../../LICENSE)
 
