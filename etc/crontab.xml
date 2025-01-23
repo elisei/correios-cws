@@ -22,10 +22,10 @@
             <schedule>30 7 * * 1-6</schedule>
         </job>
         <job name="sigep_update_on_delivery_route_status" instance="UpdateOnDeliveryRouteStatus" method="execute">
-            <schedule>30 4 * * 1-6</schedule>
+            <schedule>0 9 * * 1-6</schedule>
         </job>
         <job name="sigep_update_delivery_failed_status" instance="UpdateDeliveryFailedStatus" method="execute">
-            <schedule>30 8 * * 1-6</schedule>
+            <schedule>30 20 * * 1-6</schedule>
         </job>
         <job name="sigepweb_update_fallback_rules" instance="O2TI\SigepWebCarrier\Cron\UpdateFallbackRules" method="execute">
             <schedule>0 3 1-7 * * MON</schedule>
