@@ -178,7 +178,7 @@ class TrackingStatus
      * @param string $currentLocation
      * @return bool
      */
-    private function hasLocationChanged(Shipment $shipment, string $currentLocation): bool 
+    private function hasLocationChanged(Shipment $shipment, string $currentLocation): bool
     {
         $comments = $shipment->getCommentsCollection();
         
@@ -192,10 +192,10 @@ class TrackingStatus
         if (preg_match('/Localização:\s*([^\.]+)/', $lastCommentText, $matches)) {
             $lastLocation = trim($matches[1]);
             $lastLocation = preg_replace('/\s+em\s+\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}/', '', $lastLocation);
-            $normalizedLastLocation = preg_replace('/\s+/', ' ', strtolower($lastLocation));
-            $normalizedCurrentLocation = preg_replace('/\s+/', ' ', strtolower($currentLocation));
+            $normalLastLocation = preg_replace('/\s+/', ' ', strtolower($lastLocation));
+            $normalCurrentLocal = preg_replace('/\s+/', ' ', strtolower($currentLocation));
             
-            return $normalizedLastLocation !== $normalizedCurrentLocation;
+            return $normalLastLocation !== $normalCurrentLocal;
         }
 
         return true;
