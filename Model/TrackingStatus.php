@@ -139,9 +139,9 @@ class TrackingStatus
         if ($shouldAddComment) {
             $comment = $this->formatStatusComment($trackNumber, $trackingInfo);
             $shouldNotifyCustomer = ($status !== 'sigewep_created') && $shouldAddComment;
-            
-            $this->addShipmentComment($shipment, $comment, $shouldNotifyCustomer);
+
             $this->updateOrderStatus($order, $comment, $status);
+            $this->addShipmentComment($shipment, $comment, $shouldNotifyCustomer);
         }
     }
 
@@ -188,7 +188,7 @@ class TrackingStatus
 
         $lastComment = $comments->getLastItem();
         $lastCommentText = $lastComment->getComment();
-        
+
         if (preg_match('/Localização:\s*([^\.]+)/', $lastCommentText, $matches)) {
             $lastLocation = trim($matches[1]);
             $lastLocation = preg_replace('/\s+em\s+\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}/', '', $lastLocation);
