@@ -245,6 +245,8 @@ class TrackingStatus
      * @param string $comment
      * @param bool $shouldNotifyCustomer
      * @return void
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     protected function addShipmentComment(Shipment $shipment, string $comment, bool $shouldNotifyCustomer = true)
     {
