@@ -132,16 +132,13 @@ class TrackingStatus
         $status = $trackingInfo['status'];
         $order = $shipment->getOrder();
         $currentStatus = $order->getStatus();
-
         $currentLocation = $trackingInfo['progressdetail'][0]['deliverylocation'] ?? '';
-
-        if ($this->shouldAddComment($shipment, $status, $currentStatus, $currentLocation)) {
+        
+        $shouldAddComment = $this->shouldAddComment($shipment, $status, $currentStatus, $currentLocation);
+        
+        if ($shouldAddComment) {
             $comment = $this->formatStatusComment($trackNumber, $trackingInfo);
-            $shouldNotifyCustomer = ($status !== 'sigewep_created');
-
-            if ($status === 'sigewep_in_transit') {
-                $shouldNotifyCustomer = $this->hasLocationChanged($shipment, $currentLocation);
-            }
+            $shouldNotifyCustomer = ($status !== 'sigewep_created') && $shouldAddComment;
             
             $this->addShipmentComment($shipment, $comment, $shouldNotifyCustomer);
             $this->updateOrderStatus($order, $comment, $status);
@@ -181,7 +178,7 @@ class TrackingStatus
      * @param string $currentLocation
      * @return bool
      */
-    private function hasLocationChanged(Shipment $shipment, string $currentLocation): bool
+    private function hasLocationChanged(Shipment $shipment, string $currentLocation): bool 
     {
         $comments = $shipment->getCommentsCollection();
         
@@ -191,10 +188,14 @@ class TrackingStatus
 
         $lastComment = $comments->getLastItem();
         $lastCommentText = $lastComment->getComment();
-
-        if (preg_match('/Localização: ([^\.]+)/', $lastCommentText, $matches)) {
+        
+        if (preg_match('/Localização:\s*([^\.]+)/', $lastCommentText, $matches)) {
             $lastLocation = trim($matches[1]);
-            return $lastLocation !== $currentLocation;
+            $lastLocation = preg_replace('/\s+em\s+\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}/', '', $lastLocation);
+            $normalizedLastLocation = preg_replace('/\s+/', ' ', strtolower($lastLocation));
+            $normalizedCurrentLocation = preg_replace('/\s+/', ' ', strtolower($currentLocation));
+            
+            return $normalizedLastLocation !== $normalizedCurrentLocation;
         }
 
         return true;
