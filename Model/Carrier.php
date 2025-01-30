@@ -227,7 +227,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      */
     private function isFallbackEnabled(): bool
     {
-        return (bool)$this->getConfigData('fallback/active');
+        return (bool)$this->getConfigData('fallback_active');
     }
 
     /**

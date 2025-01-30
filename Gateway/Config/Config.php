@@ -172,7 +172,7 @@ class Config
      */
     public function getFallbackDefaultWeight(?int $storeId = null): ?float
     {
-        return (float)$this->getConfigValue('fallback/default_weight', $storeId);
+        return (float)$this->getConfigValue('fallback_default_weight', $storeId);
     }
 
     /**

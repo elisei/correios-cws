@@ -87,7 +87,7 @@ class UpdateFallbackRulesCommand extends Command
             
             // Save updated rules to configuration
             $this->configWriter->save(
-                'carriers/sigep_web_carrier/fallback/service_rules',
+                'carriers/sigep_web_carrier/fallback_service_rules',
                 $this->json->serialize($updatedRules)
             );
 

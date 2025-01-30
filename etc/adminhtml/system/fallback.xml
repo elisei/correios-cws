@@ -19,18 +19,18 @@
         <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Enable Fallback Mode</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-            <config_path>carriers/sigep_web_carrier/fallback/active</config_path>
+            <config_path>carriers/sigep_web_carrier/fallback_active</config_path>
         </field>
         <field id="default_weight" translate="label, comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
             <label>Default Weight for Calculation</label>
             <comment>Weight that will be indicated to calculate the delivery cost of the contingency table.</comment>
-            <config_path>carriers/sigep_web_carrier/fallback/default_weight</config_path>
+            <config_path>carriers/sigep_web_carrier/fallback_default_weight</config_path>
         </field>
         <field id="service_rules" translate="label" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
             <label>Service Rules</label>
             <frontend_model>O2TI\SigepWebCarrier\Block\Adminhtml\Form\Field\AddServiceRules</frontend_model>
             <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
-            <config_path>carriers/sigep_web_carrier/fallback/service_rules</config_path>
+            <config_path>carriers/sigep_web_carrier/fallback_service_rules</config_path>
             <depends>
                 <field id="active">1</field>
             </depends>

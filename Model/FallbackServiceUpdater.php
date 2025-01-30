@@ -114,7 +114,7 @@ class FallbackServiceUpdater
     private function getCurrentServiceRules(): array
     {
         $rulesJson = $this->scopeConfig->getValue(
-            'carriers/sigep_web_carrier/fallback/service_rules',
+            'carriers/sigep_web_carrier/fallback_service_rules',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 

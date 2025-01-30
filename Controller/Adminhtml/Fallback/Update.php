@@ -78,7 +78,7 @@ class Update extends Action
             $updatedRules = $this->fallbackUpdater->updateServiceRules();
             
             $this->configWriter->save(
-                'carriers/sigep_web_carrier/fallback/service_rules',
+                'carriers/sigep_web_carrier/fallback_service_rules',
                 $this->json->serialize($updatedRules)
             );
 

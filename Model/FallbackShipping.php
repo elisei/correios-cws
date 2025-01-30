@@ -66,7 +66,7 @@ class FallbackShipping
      */
     public function isFallbackEnabled(string $path): bool
     {
-        return (bool)$this->scopeConfig->getValue($path . 'fallback/active');
+        return (bool)$this->scopeConfig->getValue($path . 'fallback_active');
     }
 
     /**
@@ -77,7 +77,7 @@ class FallbackShipping
      */
     public function getFallbackServiceRules(string $path): array
     {
-        $rulesJson = $this->scopeConfig->getValue($path . 'fallback/service_rules');
+        $rulesJson = $this->scopeConfig->getValue($path . 'fallback_service_rules');
         if (!$rulesJson) {
             return [];
         }
