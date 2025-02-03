@@ -27,6 +27,7 @@
                 <handling_action>O</handling_action>
                 <is_online>1</is_online>
                 <sallowspecific>0</sallowspecific>
+                <specificcountry>BR</specificcountry>
                 <correios_id>virtualjoias</correios_id>
                 <auto_declared>0</auto_declared>
                 <mao_propria>0</mao_propria>

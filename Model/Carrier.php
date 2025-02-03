@@ -78,6 +78,10 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         '04227' => 'Mini Envios',
         '03140' => 'Sedex 12',
         '03212' => 'Sedex Grandes Formatos',
+        '03247' => 'Sedex',
+        '03301' => 'Pac',
+        '05991' => 'Sedex - Logística Reversa',
+        '06637' => 'Pac - Logística Reversa',
     ];
 
     /**
@@ -504,11 +508,19 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     {
         $deadlineMap = [];
         foreach ($deadlineResponse as $deadline) {
+            $entrega = 1;
+
+            if (!isset($deadline['entregaDomiciliar'])) {
+                $entrega = 1;
+            } elseif ($deadline['entregaDomiciliar'] !== 'S') {
+                $entrega = 0;
+            }
+
             if (!isset($deadline['txErro'])) {
                 $deadlineMap[$deadline['coProduto']] = [
                     'prazoEntrega' => $deadline['prazoEntrega'],
                     'msgPrazo' => $deadline['msgPrazo'] ?? null,
-                    'entregaDomiciliar' => $deadline['entregaDomiciliar'] !== 'S' ? 1 : 0
+                    'entregaDomiciliar' => $entrega
                 ];
             }
         }
