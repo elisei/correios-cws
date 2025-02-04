@@ -508,19 +508,19 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
     {
         $deadlineMap = [];
         foreach ($deadlineResponse as $deadline) {
-            $entrega = 1;
+            $naoEntrega = 0;
 
             if (!isset($deadline['entregaDomiciliar'])) {
-                $entrega = 1;
+                $naoEntrega = 0;
             } elseif ($deadline['entregaDomiciliar'] !== 'S') {
-                $entrega = 0;
+                $naoEntrega = 1;
             }
 
             if (!isset($deadline['txErro'])) {
                 $deadlineMap[$deadline['coProduto']] = [
                     'prazoEntrega' => $deadline['prazoEntrega'],
                     'msgPrazo' => $deadline['msgPrazo'] ?? null,
-                    'entregaDomiciliar' => $entrega
+                    'entregaDomiciliar' => $naoEntrega
                 ];
             }
         }
