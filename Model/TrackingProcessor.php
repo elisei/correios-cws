@@ -357,7 +357,8 @@ class TrackingProcessor
     {
         $statusMap = [
             'OEC' => 'sigewep_on_delivery_route',
-            'LDI' => 'sigewep_delivery_failed'
+            'LDI' => 'sigewep_delivery_failed',
+            'BDI' => 'sigewep_delivered'
         ];
 
         return $statusMap[$code] ?? 'sigewep_in_transit';
