@@ -7,6 +7,7 @@ use Magento\Framework\View\Result\PageFactory;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Controller\ResultFactory;
+use O2TI\SigepWebCarrier\Model\Session\PlpSession;
 
 class View extends Action
 {
@@ -21,18 +22,26 @@ class View extends Action
     protected $plpRepository;
 
     /**
+     * @var PlpSession
+     */
+    protected $plpSession;
+
+    /**
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param PlpRepositoryInterface $plpRepository
+     * @param PlpSession $plpSession
      */
     public function __construct(
         Context $context,
         PageFactory $resultPageFactory,
-        PlpRepositoryInterface $plpRepository
+        PlpRepositoryInterface $plpRepository,
+        PlpSession $plpSession
     ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
         $this->plpRepository = $plpRepository;
+        $this->plpSession = $plpSession;
     }
 
     /**
@@ -45,8 +54,12 @@ class View extends Action
         $id = $this->getRequest()->getParam('id');
         try {
             $plp = $this->plpRepository->getById($id);
+
+            $this->plpSession->setCurrentPlpId($id);
+            
             $resultPage = $this->resultPageFactory->create();
             $resultPage->getConfig()->getTitle()->prepend(__('View PLP #%1', $plp->getEntityId()));
+            
             return $resultPage;
         } catch (NoSuchEntityException $e) {
             $this->messageManager->addErrorMessage(__('This PLP no longer exists.'));

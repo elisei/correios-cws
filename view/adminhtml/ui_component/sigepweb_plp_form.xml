@@ -128,5 +128,23 @@
                 </item>
             </argument>
         </field>
+        <fieldset name="orders">
+            <settings>
+                <label translate="true">Orders</label>
+                <collapsible>false</collapsible>
+                <opened>true</opened>
+            </settings>
+            <insertListing name="sales_order_grid">
+                <settings>
+                    <autoRender>true</autoRender>
+                    <dataScope>sales_order_grid</dataScope>
+                    <ns>sales_order_grid</ns>
+                    <externalProvider>${ $.ns }.sales_order_grid_data_source</externalProvider>
+                    <selectionsProvider>${ $.ns }.sales_order_grid.sales_order_columns.ids</selectionsProvider>
+                    <dataProvider>sales_order_grid_data_source</dataProvider>
+                    <listingProvider>${ $.ns }.sales_order_grid_data_source</listingProvider>
+                </settings>
+            </insertListing>
+        </fieldset>
     </fieldset>
 </form>

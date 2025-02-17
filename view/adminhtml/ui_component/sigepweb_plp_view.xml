@@ -103,4 +103,22 @@
             </argument>
         </field>
     </fieldset>
+    <insertListing name="sigepweb_plp_order_listing">
+        <settings>
+            <dataScope>sigepweb_plp_order_listing</dataScope>
+            <autoRender>true</autoRender>
+            <ns>sigepweb_plp_order_listing</ns>
+            <externalProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing_data_source</externalProvider>
+            <selectionsProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing.plp_order_columns.ids</selectionsProvider>
+            <dataLinks>
+                <exports>false</exports>
+                <imports>true</imports>
+            </dataLinks>
+            <filters>
+                <plp_id>
+                    <value>${ $.parentComponent.provider }:data.entity_id</value>
+                </plp_id>
+            </filters>
+        </settings>
+    </insertListing>
 </form>
