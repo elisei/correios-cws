@@ -119,4 +119,41 @@
             <argument name="correiosService" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Service\CorreiosService</argument>
         </arguments>
     </type>
+
+    <!-- Interface Preferences -->
+    <preference for="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface"
+                type="O2TI\SigepWebCarrier\Model\PlpRepository"/>
+    <preference for="O2TI\SigepWebCarrier\Api\Data\PlpInterface"
+                type="O2TI\SigepWebCarrier\Model\Plp"/>
+    <preference for="O2TI\SigepWebCarrier\Api\Data\PlpOrderInterface"
+                type="O2TI\SigepWebCarrier\Model\PlpOrder"/>
+    <preference for="O2TI\SigepWebCarrier\Api\Data\PlpSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults"/>
+
+    <!-- Virtual Types -->
+    <virtualType name="O2TI\SigepWebCarrier\Model\ResourceModel\Plp\Grid\Collection" 
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">sales_shipment_correios_plp</argument>
+            <argument name="resourceModel" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\Plp</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\Grid\Collection" 
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">sales_shipment_correios_plp_order</argument>
+            <argument name="resourceModel" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Data Providers para UI Components -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="sigepweb_plp_listing_data_source" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\Plp\Grid\Collection</item>
+                <item name="sigepweb_plp_order_listing_data_source" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

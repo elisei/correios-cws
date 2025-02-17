@@ -29,4 +29,49 @@
             <column name="entity_id"/>
         </constraint>
     </table>
+
+    <table name="sales_shipment_correios_plp" resource="default" engine="innodb" comment="Tabela de PLPs dos Correios">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" 
+                comment="Store ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="50" default="open"
+                comment="Status da PLP"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="SALES_SHIPMENT_CORREIOS_PLP_STORE_ID_STORE_STORE_ID"
+                    table="sales_shipment_correios_plp" column="store_id" referenceTable="store"
+                    referenceColumn="store_id" onDelete="CASCADE"/>
+    </table>
+    
+    <table name="sales_shipment_correios_plp_order" resource="default" engine="innodb" 
+           comment="Relacionamento entre PLP e Pedidos">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"
+                comment="Entity ID"/>
+        <column xsi:type="int" name="plp_id" padding="10" unsigned="true" nullable="false"
+                comment="PLP ID"/>
+        <column xsi:type="varchar" name="order_id" length="32" nullable="false"
+                comment="Order ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="50" default="pending"
+                comment="Status do Processamento"/>
+        <column xsi:type="text" name="error_message" nullable="true"
+                comment="Mensagem de Erro"/>
+        <column xsi:type="varchar" name="shipment_id" length="32" nullable="true"
+                comment="Shipment ID"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="SALES_SHIPMENT_CORREIOS_PLP_ORDER_PLP_ID_SALES_SHIPMENT_CORREIOS_PLP_ENTITY_ID"
+                    table="sales_shipment_correios_plp_order" column="plp_id"
+                    referenceTable="sales_shipment_correios_plp" referenceColumn="entity_id"
+                    onDelete="CASCADE"/>
+        <index referenceId="SALES_SHIPMENT_CORREIOS_PLP_ORDER_ORDER_ID" indexType="btree">
+            <column name="order_id"/>
+        </index>
+    </table>
 </schema>
