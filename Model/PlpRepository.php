@@ -125,14 +125,6 @@ class PlpRepository implements PlpRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function deleteById($plpId)
-    {
-        return $this->delete($this->getById($plpId));
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getList(SearchCriteriaInterface $searchCriteria)
     {
         $collection = $this->plpCollectionFactory->create();
@@ -237,6 +229,32 @@ class PlpRepository implements PlpRepositoryInterface
             throw new CouldNotSaveException(
                 __('Could not update order status: %1', $exception->getMessage()),
                 $exception
+            );
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteById($plpId)
+    {
+        try {
+            $plp = $this->getById($plpId);
+            
+            // Verificar se a PLP está em um estado que permite exclusão
+            if ($plp->getStatus() === 'processing') {
+                throw new LocalizedException(
+                    __('Cannot delete PLP that is being processed.')
+                );
+            }
+            
+            $this->resource->delete($plp);
+            return true;
+        } catch (NoSuchEntityException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            throw new CouldNotDeleteException(
+                __('Could not delete PLP: %1', $e->getMessage())
             );
         }
     }

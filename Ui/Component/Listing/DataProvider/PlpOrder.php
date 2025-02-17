@@ -60,17 +60,16 @@ class PlpOrder extends AbstractDataProvider
             return $this->loadedData;
         }
 
-        // Obtém o ID da PLP da sessão
         $plpId = $this->plpSession->getCurrentPlpId();
-        
+        $items = [];
+
         if ($plpId) {
             $this->collection->addFieldToFilter('plp_id', $plpId);
+            $items = $this->collection->getData();
         }
-
-        $items = $this->collection->getData();
         
         $this->loadedData = [
-            'totalRecords' => $this->collection->getSize(),
+            'totalRecords' => count($items),
             'items' => $items
         ];
 

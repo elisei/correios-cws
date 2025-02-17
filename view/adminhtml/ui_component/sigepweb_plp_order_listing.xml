@@ -27,17 +27,18 @@
         </dataProvider>
     </dataSource>
     <columns name="plp_order_columns">
-        <column name="entity_id">
-            <settings>
-                <filter>textRange</filter>
-                <label translate="true">ID</label>
-                <sorting>asc</sorting>
-            </settings>
-        </column>
-        <column name="order_id">
+        <column name="order_id" class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\OrderLink">
             <settings>
                 <filter>text</filter>
-                <label translate="true">Order ID</label>
+                <label translate="true">Order #</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+            </settings>
+        </column>
+        <column name="shipment_id" class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\ShipmentLink">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Shipment #</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
             </settings>
         </column>
         <column name="status">
@@ -50,12 +51,6 @@
             <settings>
                 <filter>text</filter>
                 <label translate="true">Error Message</label>
-            </settings>
-        </column>
-        <column name="shipment_id">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Shipment ID</label>
             </settings>
         </column>
     </columns>

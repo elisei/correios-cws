@@ -3,12 +3,12 @@ namespace O2TI\SigepWebCarrier\Api\Data;
 
 interface PlpOrderInterface
 {
-    const ENTITY_ID = 'entity_id';
-    const PLP_ID = 'plp_id';
-    const ORDER_ID = 'order_id';
-    const STATUS = 'status';
-    const ERROR_MESSAGE = 'error_message';
-    const SHIPMENT_ID = 'shipment_id';
+    public const ENTITY_ID = 'entity_id';
+    public const PLP_ID = 'plp_id';
+    public const ORDER_ID = 'order_id';
+    public const STATUS = 'status';
+    public const ERROR_MESSAGE = 'error_message';
+    public const SHIPMENT_ID = 'shipment_id';
 
     /**
      * @return int

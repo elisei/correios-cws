@@ -15,12 +15,6 @@
     </argument>
      <settings>
         <buttons>
-            <button name="back" class="Magento\Backend\Block\Widget\Button\Generic">
-                <param name="label" xsi:type="string">Back</param>
-                <param name="onclick" xsi:type="string">setLocation('*/*/index')</param>
-                <param name="class" xsi:type="string">back</param>
-                <param name="sort_order" xsi:type="string">10</param>
-            </button>
             <button name="reset" class="Magento\Backend\Block\Widget\Button\Generic">
                 <param name="label" xsi:type="string">Reset</param>
                 <param name="onclick" xsi:type="string">location.reload();</param>
@@ -134,6 +128,24 @@
                 <collapsible>false</collapsible>
                 <opened>true</opened>
             </settings>
+            <insertListing name="sigepweb_plp_order_listing">
+                <settings>
+                    <dataScope>sigepweb_plp_order_listing</dataScope>
+                    <autoRender>true</autoRender>
+                    <ns>sigepweb_plp_order_listing</ns>
+                    <externalProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing_data_source</externalProvider>
+                    <selectionsProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing.plp_order_columns.ids</selectionsProvider>
+                    <dataLinks>
+                        <exports>false</exports>
+                        <imports>true</imports>
+                    </dataLinks>
+                    <filters>
+                        <plp_id>
+                            <value>${ $.parentComponent.provider }:data.entity_id</value>
+                        </plp_id>
+                    </filters>
+                </settings>
+            </insertListing>
             <insertListing name="sales_order_grid">
                 <settings>
                     <autoRender>true</autoRender>

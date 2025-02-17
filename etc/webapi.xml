@@ -59,6 +59,7 @@
         </resources>
     </route>
 
+    <!-- PLP Manamger -->
     <route url="/V1/sigepweb/plp" method="POST">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="save"/>
         <resources>
@@ -71,7 +72,7 @@
             <resource ref="O2TI_SigepWebCarrier::plp_view"/>
         </resources>
     </route>
-    <route url="/V1/sigepweb/plp/:plpId/order/:orderId" method="POST">
+    <route url="/V1/sigepweb/plp/:plpId/orders" method="POST">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="addOrderToPlp"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
@@ -79,6 +80,12 @@
     </route>
     <route url="/V1/sigepweb/plp/:plpId/order/:orderId/status" method="PUT">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderStatus"/>
+        <resources>
+            <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
+        </resources>
+    </route>
+    <route url="/V1/sigepweb/plp/:plpId" method="DELETE">
+        <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="deleteById"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>

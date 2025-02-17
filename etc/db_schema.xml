@@ -30,7 +30,8 @@
         </constraint>
     </table>
 
-    <table name="sales_shipment_correios_plp" resource="default" engine="innodb" comment="Tabela de PLPs dos Correios">
+      <table name="sales_shipment_correios_plp" resource="default" engine="innodb" 
+           comment="Tabela de PLPs dos Correios">
         <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"
                 comment="Entity ID"/>
         <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" 

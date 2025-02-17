@@ -22,14 +22,14 @@ interface PlpRepositoryInterface
     public function getById($plpId);
 
     /**
-     * Add order to PLP
+     * Add orders to PLP
      *
      * @param int $plpId
-     * @param string $orderId
+     * @param string[] $orderIds
      * @return bool
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function addOrderToPlp($plpId, $orderId);
+    public function addOrderToPlp($plpId, array $orderIds);
 
     /**
      * Update order status in PLP
@@ -43,4 +43,14 @@ interface PlpRepositoryInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function updateOrderStatus($plpId, $orderId, $status, $errorMessage = null, $shipmentId = null);
+
+    /**
+     * Delete PLP
+     *
+     * @param int $plpId
+     * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function deleteById($plpId);
 }

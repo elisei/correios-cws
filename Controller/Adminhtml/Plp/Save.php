@@ -76,6 +76,21 @@ class Save extends Action
 
             try {
                 $this->plpRepository->save($model);
+
+                if (isset($data['sales_order_grid']) && is_array($data['sales_order_grid'])) {
+                    $orderIds = [];
+                    foreach ($data['sales_order_grid'] as $order) {
+                        if (isset($order['entity_id'])) {
+                            $orderIds[] = $order['entity_id'];
+                        }
+                    }
+                    
+                    if (!empty($orderIds)) {
+                        $this->plpRepository->addOrderToPlp($model->getId(), $orderIds);
+                        $this->messageManager->addSuccessMessage(__('Orders were successfully added to the PLP.'));
+                    }
+                }
+
                 $this->messageManager->addSuccessMessage(__('You saved the PLP.'));
                 $this->dataPersistor->clear('plp');
 
