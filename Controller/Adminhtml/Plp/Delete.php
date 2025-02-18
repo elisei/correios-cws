@@ -1,4 +1,13 @@
 <?php
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+
 namespace O2TI\SigepWebCarrier\Controller\Adminhtml\Plp;
 
 use Magento\Backend\App\Action;
@@ -36,10 +45,10 @@ class Delete extends Action
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultRedirectFactory->create();
         
-        $id = $this->getRequest()->getParam('id');
-        if ($id) {
+        $plpId = $this->getRequest()->getParam('id');
+        if ($plpId) {
             try {
-                $this->plpRepository->deleteById($id);
+                $this->plpRepository->deleteById($plpId);
                 $this->messageManager->addSuccessMessage(__('The PLP has been deleted.'));
                 
                 return $resultRedirect->setPath('*/*/');
@@ -50,13 +59,13 @@ class Delete extends Action
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
                 
-                return $resultRedirect->setPath('*/*/edit', ['id' => $id]);
+                return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
             } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage(
                     __('Could not delete the PLP: %1', $e->getMessage())
                 );
                 
-                return $resultRedirect->setPath('*/*/edit', ['id' => $id]);
+                return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
             }
         }
         
@@ -69,6 +78,8 @@ class Delete extends Action
      * Check admin permissions for this controller
      *
      * @return boolean
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     protected function _isAllowed()
     {

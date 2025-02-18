@@ -1,4 +1,13 @@
 <?php
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+
 namespace O2TI\SigepWebCarrier\Controller\Adminhtml\Plp;
 
 use Magento\Backend\App\Action;
@@ -51,11 +60,11 @@ class View extends Action
      */
     public function execute()
     {
-        $id = $this->getRequest()->getParam('id');
+        $plpId = $this->getRequest()->getParam('id');
         try {
-            $plp = $this->plpRepository->getById($id);
+            $plp = $this->plpRepository->getById($plpId);
 
-            $this->plpSession->setCurrentPlpId($id);
+            $this->plpSession->setCurrentPlpId($plpId);
             
             $resultPage = $this->resultPageFactory->create();
             $resultPage->getConfig()->getTitle()->prepend(__('View PLP #%1', $plp->getEntityId()));
@@ -72,6 +81,8 @@ class View extends Action
      * Check admin permissions for this controller
      *
      * @return boolean
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     protected function _isAllowed()
     {

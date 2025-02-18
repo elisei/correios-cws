@@ -1,9 +1,19 @@
 <?php
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+
 namespace O2TI\SigepWebCarrier\Model;
 
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\LocalizedException;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
 use O2TI\SigepWebCarrier\Api\Data\PlpInterface;
 use O2TI\SigepWebCarrier\Model\ResourceModel\Plp as PlpResource;
@@ -14,6 +24,11 @@ use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use O2TI\SigepWebCarrier\Api\Data\PlpSearchResultsInterfaceFactory;
 use O2TI\SigepWebCarrier\Api\Data\PlpSearchResultsInterface;
 
+/**
+ * Correios Plp Repository.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PlpRepository implements PlpRepositoryInterface
 {
     /**
@@ -59,6 +74,8 @@ class PlpRepository implements PlpRepositoryInterface
      * @param PlpCollectionFactory $plpCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param PlpSearchResultsInterfaceFactory $searchResultsFactory
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     public function __construct(
         PlpResource $resource,
@@ -144,7 +161,6 @@ class PlpRepository implements PlpRepositoryInterface
     public function addOrderToPlp($plpId, $orderId)
     {
         try {
-            $plp = $this->getById($plpId);
             $orderIds = is_array($orderId) ? $orderId : [$orderId];
             
             // Verifica pedidos já existentes na PLP
@@ -162,8 +178,7 @@ class PlpRepository implements PlpRepositoryInterface
                     __('Orders "%1" are already in PLP "%2"', implode(', ', $existingOrders), $plpId)
                 );
             }
-            
-            // Adiciona os pedidos à PLP
+
             foreach ($orderIds as $id) {
                 $plpOrder = $this->plpOrderFactory->create();
                 $plpOrder->setPlpId($plpId)
@@ -240,8 +255,7 @@ class PlpRepository implements PlpRepositoryInterface
     {
         try {
             $plp = $this->getById($plpId);
-            
-            // Verificar se a PLP está em um estado que permite exclusão
+
             if ($plp->getStatus() === 'processing') {
                 throw new LocalizedException(
                     __('Cannot delete PLP that is being processed.')

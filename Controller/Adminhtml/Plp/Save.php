@@ -1,4 +1,13 @@
 <?php
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+
 namespace O2TI\SigepWebCarrier\Controller\Adminhtml\Plp;
 
 use Magento\Backend\App\Action;
@@ -47,6 +56,8 @@ class Save extends Action
      * Save action
      *
      * @return \Magento\Framework\Controller\ResultInterface
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute()
     {
@@ -62,10 +73,10 @@ class Save extends Action
             /** @var \O2TI\SigepWebCarrier\Model\Plp $model */
             $model = $this->plpFactory->create();
 
-            $id = $this->getRequest()->getParam('entity_id');
-            if ($id) {
+            $plpId = $this->getRequest()->getParam('entity_id');
+            if ($plpId) {
                 try {
-                    $model = $this->plpRepository->getById($id);
+                    $model = $this->plpRepository->getById($plpId);
                 } catch (LocalizedException $e) {
                     $this->messageManager->addErrorMessage(__('This PLP no longer exists.'));
                     return $resultRedirect->setPath('*/*/');
@@ -114,6 +125,8 @@ class Save extends Action
      * Check admin permissions for this controller
      *
      * @return boolean
+     *
+     * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
     protected function _isAllowed()
     {

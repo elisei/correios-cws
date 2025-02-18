@@ -1,4 +1,13 @@
 <?php
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+
 namespace O2TI\SigepWebCarrier\Ui\Component;
 
 use Magento\Framework\Api\FilterBuilder;
@@ -24,19 +33,21 @@ class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvi
      * @param string $primaryFieldName
      * @param string $requestFieldName
      * @param ReportingInterface $reporting
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param SearchCriteriaBuilder $searchCriteria
      * @param RequestInterface $request
      * @param FilterBuilder $filterBuilder
      * @param PlpRepositoryInterface $plpRepository
      * @param array $meta
      * @param array $data
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         $name,
         $primaryFieldName,
         $requestFieldName,
         ReportingInterface $reporting,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
+        SearchCriteriaBuilder $searchCriteria,
         RequestInterface $request,
         FilterBuilder $filterBuilder,
         PlpRepositoryInterface $plpRepository,
@@ -48,7 +59,7 @@ class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvi
             $primaryFieldName,
             $requestFieldName,
             $reporting,
-            $searchCriteriaBuilder,
+            $searchCriteria,
             $request,
             $filterBuilder,
             $meta,
@@ -61,6 +72,8 @@ class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvi
      * Get data
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.EmptyCatchBlock)
      */
     public function getData()
     {
@@ -68,16 +81,14 @@ class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvi
             return $this->loadedData;
         }
 
-        $id = $this->request->getParam($this->requestFieldName);
-        if ($id) {
+        $plpId = $this->request->getParam($this->requestFieldName);
+        if ($plpId) {
             try {
-                $plp = $this->plpRepository->getById($id);
+                $plp = $this->plpRepository->getById($plpId);
                 $this->loadedData = [
                     $plp->getEntityId() => $plp->getData()
                 ];
-            } catch (\Exception $e) {
-                // Handle exception if needed
-            }
+            } catch (\Exception $exception) {}  //@codingStandardsIgnoreLine
         }
 
         return $this->loadedData ?? [];
