@@ -87,5 +87,18 @@
                 <label translate="true">Error Message</label>
             </settings>
         </column>
+        <column name="order_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Order ID</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\PlpOrderActions">
+            <settings>
+                <indexField>entity_id</indexField>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>107</resizeDefaultWidth>
+            </settings>
+        </actionsColumn>
     </columns>
 </listing>
