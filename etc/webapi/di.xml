@@ -3,24 +3,24 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface">
         <method name="updateOrderCollectedData">
-            <parameter name="plpId" type="int" />
-            <parameter name="orderId" type="string" />
-            <parameter name="collectedData" type="string" />
+            <argument name="plpId" xsi:type="string">int</argument>
+            <argument name="orderId" xsi:type="string">string</argument>
+            <argument name="collectedData" xsi:type="string">string</argument>
         </method>
         <method name="updateOrderProcessingData">
-            <parameter name="plpId" type="int" />
-            <parameter name="orderId" type="string" />
-            <parameter name="processingData" type="string" />
+            <argument name="plpId" xsi:type="string">int</argument>
+            <argument name="orderId" xsi:type="string">string</argument>
+            <argument name="processingData" xsi:type="string">string</argument>
         </method>
         <method name="updateOrderCollectionStatus">
-            <parameter name="plpId" type="int" />
-            <parameter name="orderId" type="string" />
-            <parameter name="collectionStatus" type="string" />
+            <argument name="plpId" xsi:type="string">int</argument>
+            <argument name="orderId" xsi:type="string">string</argument>
+            <argument name="collectionStatus" xsi:type="string">string</argument>
         </method>
         <method name="updateOrderProcessingStatus">
-            <parameter name="plpId" type="int" />
-            <parameter name="orderId" type="string" />
-            <parameter name="processingStatus" type="string" />
+            <argument name="plpId" xsi:type="string">int</argument>
+            <argument name="orderId" xsi:type="string">string</argument>
+            <argument name="processingStatus" xsi:type="string">string</argument>
         </method>
     </type>
 </config>
