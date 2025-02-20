@@ -10,7 +10,7 @@
  */
  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
-    <module name="O2TI_SigepWebCarrier" setup_version="100.0.6">
+    <module name="O2TI_SigepWebCarrier" setup_version="100.0.7">
         <sequence>
             <module name="Magento_Checkout"/>
             <module name="Magento_Shipping"/>

@@ -21,6 +21,10 @@ interface PlpOrderInterface
     public const STATUS = 'status';
     public const ERROR_MESSAGE = 'error_message';
     public const SHIPMENT_ID = 'shipment_id';
+    public const COLLECTED_DATA = 'collected_data';
+    public const PROCESSING_DATA = 'processing_data';
+    public const COLLECTION_STATUS = 'collection_status';
+    public const PROCESSING_STATUS = 'processing_status';
 
     /**
      * Get Entity Id
@@ -111,4 +115,64 @@ interface PlpOrderInterface
      * @return $this
      */
     public function setShipmentId($shipmentId);
+
+    /**
+     * Get Collected Data
+     *
+     * @return string|null
+     */
+    public function getCollectedData();
+
+    /**
+     * Set Collected Data
+     *
+     * @param string|null $collectedData
+     * @return $this
+     */
+    public function setCollectedData($collectedData);
+
+    /**
+     * Get Processing Data
+     *
+     * @return string|null
+     */
+    public function getProcessingData();
+
+    /**
+     * Set Processing Data
+     *
+     * @param string|null $processingData
+     * @return $this
+     */
+    public function setProcessingData($processingData);
+
+    /**
+     * Get Collection Status
+     *
+     * @return string|null
+     */
+    public function getCollectionStatus();
+
+    /**
+     * Set Collection Status
+     *
+     * @param string|null $collectionStatus
+     * @return $this
+     */
+    public function setCollectionStatus($collectionStatus);
+
+    /**
+     * Get Processing Status
+     *
+     * @return string|null
+     */
+    public function getProcessingStatus();
+
+    /**
+     * Set Processing Status
+     *
+     * @param string|null $processingStatus
+     * @return $this
+     */
+    public function setProcessingStatus($processingStatus);
 }

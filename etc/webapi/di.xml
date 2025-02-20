@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface">
+        <method name="updateOrderCollectedData">
+            <parameter name="plpId" type="int" />
+            <parameter name="orderId" type="string" />
+            <parameter name="collectedData" type="string" />
+        </method>
+        <method name="updateOrderProcessingData">
+            <parameter name="plpId" type="int" />
+            <parameter name="orderId" type="string" />
+            <parameter name="processingData" type="string" />
+        </method>
+        <method name="updateOrderCollectionStatus">
+            <parameter name="plpId" type="int" />
+            <parameter name="orderId" type="string" />
+            <parameter name="collectionStatus" type="string" />
+        </method>
+        <method name="updateOrderProcessingStatus">
+            <parameter name="plpId" type="int" />
+            <parameter name="orderId" type="string" />
+            <parameter name="processingStatus" type="string" />
+        </method>
+    </type>
+</config>

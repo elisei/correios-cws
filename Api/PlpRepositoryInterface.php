@@ -65,4 +65,48 @@ interface PlpRepositoryInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function deleteById($plpId);
+
+    /**
+     * Update order collected data
+     *
+     * @param int $plpId
+     * @param string $orderId
+     * @param string $collectedData
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function updateOrderCollectedData($plpId, $orderId, $collectedData);
+
+    /**
+     * Update order processing data
+     *
+     * @param int $plpId
+     * @param string $orderId
+     * @param string $processingData
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function updateOrderProcessingData($plpId, $orderId, $processingData);
+
+    /**
+     * Update order collection status
+     *
+     * @param int $plpId
+     * @param string $orderId
+     * @param string $collectionStatus
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function updateOrderCollectionStatus($plpId, $orderId, $collectionStatus);
+
+    /**
+     * Update order processing status
+     *
+     * @param int $plpId
+     * @param string $orderId
+     * @param string $processingStatus
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function updateOrderProcessingStatus($plpId, $orderId, $processingStatus);
 }

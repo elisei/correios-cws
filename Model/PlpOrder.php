@@ -120,4 +120,68 @@ class PlpOrder extends AbstractModel implements PlpOrderInterface
     {
         return $this->setData(self::SHIPMENT_ID, $shipmentId);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCollectedData()
+    {
+        return $this->getData(self::COLLECTED_DATA);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCollectedData($collectedData)
+    {
+        return $this->setData(self::COLLECTED_DATA, $collectedData);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProcessingData()
+    {
+        return $this->getData(self::PROCESSING_DATA);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setProcessingData($processingData)
+    {
+        return $this->setData(self::PROCESSING_DATA, $processingData);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCollectionStatus()
+    {
+        return $this->getData(self::COLLECTION_STATUS);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCollectionStatus($collectionStatus)
+    {
+        return $this->setData(self::COLLECTION_STATUS, $collectionStatus);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getProcessingStatus()
+    {
+        return $this->getData(self::PROCESSING_STATUS);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setProcessingStatus($processingStatus)
+    {
+        return $this->setData(self::PROCESSING_STATUS, $processingStatus);
+    }
 }

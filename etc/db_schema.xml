@@ -52,7 +52,7 @@
     
     <table name="sales_shipment_correios_plp_order" resource="default" engine="innodb" 
            comment="Relacionamento entre PLP e Pedidos">
-        <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"
+         <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"
                 comment="Entity ID"/>
         <column xsi:type="int" name="plp_id" padding="10" unsigned="true" nullable="false"
                 comment="PLP ID"/>
@@ -64,6 +64,14 @@
                 comment="Mensagem de Erro"/>
         <column xsi:type="varchar" name="shipment_id" length="32" nullable="true"
                 comment="Shipment ID"/>
+        <column xsi:type="text" name="collected_data" nullable="true"
+                comment="Dados coletados do pedido em JSON"/>
+        <column xsi:type="text" name="processing_data" nullable="true"
+                comment="Dados do processamento em JSON"/>
+        <column xsi:type="varchar" name="collection_status" length="32" nullable="true" default="pending"
+                comment="Status da coleta de dados"/>
+        <column xsi:type="varchar" name="processing_status" length="32" nullable="true" default="pending"
+                comment="Status do processamento dos dados"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
