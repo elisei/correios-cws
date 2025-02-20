@@ -1,65 +1,7 @@
 <?xml version="1.0"?>
-<!--
-/**
- * O2TI Sigep Web Carrier.
- *
- * Copyright © 2025 O2TI. All rights reserved.
- *
- * @author    Bruno Elisei <brunoelisei@o2ti.com>
- * @license   See LICENSE for license details.
- */
- -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <!-- GET service by ID -->
-    <route url="/V1/sigep-web-services/:serviceId" method="GET">
-        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="getById"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::services_read"/>
-        </resources>
-    </route>
-
-    <!-- GET service by Code -->
-    <route url="/V1/sigep-web-services/code/:serviceCode" method="GET">
-        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="getByCode"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::services_read"/>
-        </resources>
-    </route>
-
-    <!-- GET list of services -->
-    <route url="/V1/sigep-web-services" method="GET">
-        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="getList"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::services_read"/>
-        </resources>
-    </route>
-
-    <!-- POST save service -->
-    <route url="/V1/sigep-web-services" method="POST">
-        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="save"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::services_write"/>
-        </resources>
-    </route>
-
-    <!-- PUT update service -->
-    <route url="/V1/sigep-web-services/:id" method="PUT">
-        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="save"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::services_write"/>
-        </resources>
-    </route>
-
-    <!-- DELETE service -->
-    <route url="/V1/sigep-web-services/:serviceId" method="DELETE">
-        <service class="O2TI\SigepWebCarrier\Api\SigepWebServicesRepositoryInterface" method="deleteById"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::services_write"/>
-        </resources>
-    </route>
-
-    <!-- PLP Manager -->
+    <!-- PLP Manamger -->
     <route url="/V1/sigepweb/plp" method="POST">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="save"/>
         <resources>
@@ -71,124 +13,48 @@
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_view"/>
         </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-        </data>
     </route>
     <route url="/V1/sigepweb/plp/:plpId/orders" method="POST">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="addOrderToPlp"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-            <parameter name="orderIds" force="true">%orderIds</parameter>
-        </data>
     </route>
     <route url="/V1/sigepweb/plp/:plpId/order/:orderId/status" method="PUT">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderStatus"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-            <parameter name="orderId" force="true">%orderId</parameter>
-            <parameter name="status" force="true">%status</parameter>
-            <parameter name="errorMessage" force="false">%errorMessage</parameter>
-            <parameter name="shipmentId" force="false">%shipmentId</parameter>
-        </data>
     </route>
     <route url="/V1/sigepweb/plp/:plpId" method="DELETE">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="deleteById"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-        </data>
     </route>
-    <!-- Endpoints para gestão de dados de coleta e processamento -->
+    <!-- Novos endpoints para gestão de dados de coleta e processamento -->
     <route url="/V1/sigepweb/plp/:plpId/order/:orderId/collected-data" method="POST">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderCollectedData"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-            <parameter name="orderId" force="true">%orderId</parameter>
-            <parameter name="collectedData" force="true">%collectedData</parameter>
-        </data>
     </route>
     <route url="/V1/sigepweb/plp/:plpId/order/:orderId/processing-data" method="POST">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderProcessingData"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-            <parameter name="orderId" force="true">%orderId</parameter>
-            <parameter name="processingData" force="true">%processingData</parameter>
-        </data>
     </route>
     <route url="/V1/sigepweb/plp/:plpId/order/:orderId/collection-status" method="PUT">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderCollectionStatus"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-            <parameter name="orderId" force="true">%orderId</parameter>
-            <parameter name="collectionStatus" force="true">%collectionStatus</parameter>
-        </data>
     </route>
     <route url="/V1/sigepweb/plp/:plpId/order/:orderId/processing-status" method="PUT">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderProcessingStatus"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-            <parameter name="orderId" force="true">%orderId</parameter>
-            <parameter name="processingStatus" force="true">%processingStatus</parameter>
-        </data>
-    </route>
-    <route url="/V1/sigepweb/plp/:plpId/status" method="POST">
-        <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="transitionStatus"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
-        </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-            <parameter name="newStatus" force="true">%newStatus</parameter>
-            <parameter name="message" force="false">%message</parameter>
-        </data>
-    </route>
-    <route url="/V1/sigepweb/plp/:plpId/status" method="GET">
-        <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="getStatusDetails"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::plp_view"/>
-        </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-        </data>
-    </route>
-    <route url="/V1/sigepweb/plp/:plpId/order/:orderId" method="DELETE">
-        <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="removeOrderFromPlp"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
-        </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-            <parameter name="orderId" force="true">%orderId</parameter>
-        </data>
-    </route>
-    <route url="/V1/sigepweb/plp/:plpId/close" method="POST">
-        <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="requestClosing"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
-        </resources>
-        <data>
-            <parameter name="plpId" force="true">%plpId</parameter>
-        </data>
     </route>
 </routes>

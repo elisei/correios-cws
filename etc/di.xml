@@ -130,14 +130,6 @@
     <preference for="O2TI\SigepWebCarrier\Api\Data\PlpSearchResultsInterface"
                 type="Magento\Framework\Api\SearchResults"/>
 
-    <type name="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface">
-        <arguments>
-            <argument name="orderIds" xsi:type="array">
-                <item name="type" xsi:type="string">string</item>
-            </argument>
-        </arguments>
-    </type>
-
     <!-- Virtual Types -->
     <virtualType name="O2TI\SigepWebCarrier\Model\ResourceModel\Plp\Grid\Collection" 
                  type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
