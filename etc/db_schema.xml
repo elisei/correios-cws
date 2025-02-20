@@ -37,11 +37,15 @@
         <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" 
                 comment="Store ID"/>
         <column xsi:type="varchar" name="status" nullable="false" length="50" default="open"
-                comment="Status da PLP"/>
-        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
-                comment="Created At"/>
-        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
-                comment="Updated At"/>
+            comment="Status da PLP"/>
+        <column xsi:type="boolean" name="can_add_orders" nullable="false" default="true"
+                comment="Flag indicando se pode adicionar pedidos"/>
+        <column xsi:type="boolean" name="can_remove_orders" nullable="false" default="true"
+                comment="Flag indicando se pode remover pedidos"/>
+        <column xsi:type="boolean" name="can_request_closing" nullable="false" default="true"
+                comment="Flag indicando se pode solicitar fechamento"/>
+        <column xsi:type="text" name="status_history" nullable="true"
+                comment="Histórico de alterações de status"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>

@@ -1,37 +1,50 @@
 <?php
-/**
- * O2TI Sigep Web Carrier.
- *
- * Copyright © 2025 O2TI. All rights reserved.
- *
- * @author    Bruno Elisei <brunoelisei@o2ti.com>
- * @license   See LICENSE for license details.
- */
-
 namespace O2TI\SigepWebCarrier\Api;
 
+use Magento\Framework\Api\SearchCriteriaInterface;
+use O2TI\SigepWebCarrier\Api\Data\PlpInterface;
+use O2TI\SigepWebCarrier\Api\Data\PlpSearchResultsInterface;
+
 /**
- * Management Correios Plp.
+ * Interface PlpRepositoryInterface
  */
 interface PlpRepositoryInterface
 {
     /**
      * Save PLP
      *
-     * @param \O2TI\SigepWebCarrier\Api\Data\PlpInterface $plp
-     * @return \O2TI\SigepWebCarrier\Api\Data\PlpInterface
+     * @param PlpInterface $plp
+     * @return PlpInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function save(\O2TI\SigepWebCarrier\Api\Data\PlpInterface $plp);
+    public function save(PlpInterface $plp);
 
     /**
      * Get PLP by ID
      *
      * @param int $plpId
-     * @return \O2TI\SigepWebCarrier\Api\Data\PlpInterface
+     * @return PlpInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getById($plpId);
+
+    /**
+     * Get list of PLPs
+     *
+     * @param SearchCriteriaInterface $searchCriteria
+     * @return PlpSearchResultsInterface
+     */
+    public function getList(SearchCriteriaInterface $searchCriteria);
+
+    /**
+     * Delete PLP
+     *
+     * @param int $plpId
+     * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function deleteById($plpId);
 
     /**
      * Add orders to PLP
@@ -55,16 +68,6 @@ interface PlpRepositoryInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function updateOrderStatus($plpId, $orderId, $status, $errorMessage = null, $shipmentId = null);
-
-    /**
-     * Delete PLP
-     *
-     * @param int $plpId
-     * @return bool
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function deleteById($plpId);
 
     /**
      * Update order collected data
@@ -109,4 +112,43 @@ interface PlpRepositoryInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function updateOrderProcessingStatus($plpId, $orderId, $processingStatus);
+
+    /**
+     * Transition PLP status
+     *
+     * @param int $plpId
+     * @param string $newStatus
+     * @param string|null $message
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function transitionStatus($plpId, $newStatus, $message = null);
+
+    /**
+     * Get PLP status details
+     *
+     * @param int $plpId
+     * @return \Magento\Framework\DataObject
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getStatusDetails($plpId);
+
+    /**
+     * Remove order from PLP
+     *
+     * @param int $plpId
+     * @param string $orderId
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function removeOrderFromPlp($plpId, $orderId);
+
+    /**
+     * Request PLP closing
+     *
+     * @param int $plpId
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function requestClosing($plpId);
 }
