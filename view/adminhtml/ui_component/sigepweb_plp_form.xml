@@ -20,10 +20,11 @@
         <item name="config" xsi:type="array">
             <item name="dataScope" xsi:type="string">data</item>
             <item name="namespace" xsi:type="string">sigepweb_plp_form</item>
+            <item name="component" xsi:type="string">O2TI_SigepWebCarrier/js/form/plp-form</item>
         </item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
     </argument>
-     <settings>
+    <settings>
         <buttons>
             <button name="reset" class="Magento\Backend\Block\Widget\Button\Generic">
                 <param name="label" xsi:type="string">Reset</param>
@@ -131,41 +132,129 @@
                 </item>
             </argument>
         </field>
+        <field name="can_add_orders">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Allow Adding Orders</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">can_add_orders</item>
+                    <item name="default" xsi:type="string">1</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="can_remove_orders">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Allow Removing Orders</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">can_remove_orders</item>
+                    <item name="default" xsi:type="string">1</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="can_close">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Allow Closing PLP</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">can_close</item>
+                    <item name="default" xsi:type="string">0</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <fieldset name="associated_orders">
+            <settings>
+                <label translate="true">Associated Orders</label>
+                <collapsible>false</collapsible>
+                <opened>true</opened>
+            </settings>
+            <insertListing name="sigepweb_plp_order_listing">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="autoRender" xsi:type="boolean">true</item>
+                        <item name="dataScope" xsi:type="string">sigepweb_plp_order_listing</item>
+                        <item name="ns" xsi:type="string">sigepweb_plp_order_listing</item>
+                        <item name="externalProvider" xsi:type="string">sigepweb_plp_order_listing.sigepweb_plp_order_listing_data_source</item>
+                        <item name="selectionsProvider" xsi:type="string">sigepweb_plp_order_listing.sigepweb_plp_order_listing.plp_order_columns.ids</item>
+                        <item name="render_url" xsi:type="url" path="mui/index/render"/>
+                        <item name="realTimeLink" xsi:type="boolean">true</item>
+                        <item name="dataLinks" xsi:type="array">
+                            <item name="imports" xsi:type="boolean">true</item>
+                            <item name="exports" xsi:type="boolean">false</item>
+                        </item>
+                    </item>
+                </argument>
+            </insertListing>
+        </fieldset>
         <fieldset name="orders">
             <settings>
                 <label translate="true">Orders</label>
                 <collapsible>false</collapsible>
                 <opened>true</opened>
             </settings>
-            <insertListing name="sigepweb_plp_order_listing">
-                <settings>
-                    <dataScope>sigepweb_plp_order_listing</dataScope>
-                    <autoRender>true</autoRender>
-                    <ns>sigepweb_plp_order_listing</ns>
-                    <externalProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing_data_source</externalProvider>
-                    <selectionsProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing.plp_order_columns.ids</selectionsProvider>
-                    <dataLinks>
-                        <exports>false</exports>
-                        <imports>true</imports>
-                    </dataLinks>
-                    <filters>
-                        <plp_id>
-                            <value>${ $.parentComponent.provider }:data.entity_id</value>
-                        </plp_id>
-                    </filters>
-                </settings>
-            </insertListing>
-            <insertListing name="sales_order_grid">
-                <settings>
-                    <autoRender>true</autoRender>
-                    <dataScope>sales_order_grid</dataScope>
-                    <ns>sales_order_grid</ns>
-                    <externalProvider>${ $.ns }.sales_order_grid_data_source</externalProvider>
-                    <selectionsProvider>${ $.ns }.sales_order_grid.sales_order_columns.ids</selectionsProvider>
-                    <dataProvider>sales_order_grid_data_source</dataProvider>
-                    <listingProvider>${ $.ns }.sales_order_grid_data_source</listingProvider>
-                </settings>
-            </insertListing>
+            <container name="orders_container">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Orders</item>
+                    </item>
+                </argument>
+                <insertListing name="sales_order_grid">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="autoRender" xsi:type="boolean">true</item>
+                            <item name="dataScope" xsi:type="string">sales_order_grid</item>
+                            <item name="ns" xsi:type="string">sales_order_grid</item>
+                            <item name="externalProvider" xsi:type="string">sales_order_grid.sales_order_grid_data_source</item>
+                            <item name="selectionsProvider" xsi:type="string">sales_order_grid.sales_order_grid.sales_order_columns.ids</item>
+                            <item name="render_url" xsi:type="url" path="mui/index/render"/>
+                            <item name="realTimeLink" xsi:type="boolean">true</item>
+                            <item name="dataLinks" xsi:type="array">
+                                <item name="imports" xsi:type="boolean">true</item>
+                                <item name="exports" xsi:type="boolean">true</item>
+                            </item>
+                            <item name="behaviourType" xsi:type="string">simple</item>
+                            <item name="clientConfig" xsi:type="array">
+                                <item name="selectionsProvider" xsi:type="string">sales_order_grid.sales_order_grid.sales_order_columns.ids</item>
+                                <item name="provider" xsi:type="string">sales_order_grid.sales_order_grid_data_source</item>
+                                <item name="deps" xsi:type="array">
+                                    <item name="0" xsi:type="string">sales_order_grid.sales_order_grid_data_source</item>
+                                </item>
+                            </item>
+                            <item name="indexField" xsi:type="string">entity_id</item>
+                            <item name="preserveSelectionsOnFilter" xsi:type="boolean">true</item>
+                            <item name="updateSelection" xsi:type="boolean">true</item>
+                            <item name="deferredLoading" xsi:type="boolean">true</item>
+                            <item name="selected" xsi:type="array"/>
+                            <item name="selectedData" xsi:type="array">
+                                <item name="provider" xsi:type="string">sales_order_grid.sales_order_grid.sales_order_columns.ids</item>
+                                <item name="field" xsi:type="string">entity_id</item>
+                            </item>
+                            <item name="initialSelectionProvider" xsi:type="string"/>
+                        </item>
+                    </argument>
+                </insertListing>
+            </container>
         </fieldset>
     </fieldset>
 </form>

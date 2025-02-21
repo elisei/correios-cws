@@ -23,6 +23,7 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 use O2TI\SigepWebCarrier\Api\Data\PlpSearchResultsInterfaceFactory;
 use O2TI\SigepWebCarrier\Api\Data\PlpSearchResultsInterface;
+use O2TI\SigepWebCarrier\Model\Plp\Source\Status;
 
 /**
  * Correios Plp Repository.
@@ -67,6 +68,11 @@ class PlpRepository implements PlpRepositoryInterface
     private $searchResultsFactory;
 
     /**
+     * @var Status
+     */
+    protected $statusModel;
+
+    /**
      * @param PlpResource $resource
      * @param PlpFactory $plpFactory
      * @param PlpOrderFactory $plpOrderFactory
@@ -74,6 +80,7 @@ class PlpRepository implements PlpRepositoryInterface
      * @param PlpCollectionFactory $plpCollectionFactory
      * @param CollectionProcessorInterface $collectionProcessor
      * @param PlpSearchResultsInterfaceFactory $searchResultsFactory
+     * @param Status $statusModel
      *
      * @SuppressWarnings(PHPMD.CamelCaseMethodName)
      */
@@ -84,7 +91,8 @@ class PlpRepository implements PlpRepositoryInterface
         PlpOrderResource $plpOrderResource,
         PlpCollectionFactory $plpCollectionFactory,
         CollectionProcessorInterface $collectionProcessor,
-        PlpSearchResultsInterfaceFactory $searchResultsFactory
+        PlpSearchResultsInterfaceFactory $searchResultsFactory,
+        Status $statusModel
     ) {
         $this->resource = $resource;
         $this->plpFactory = $plpFactory;
@@ -93,6 +101,7 @@ class PlpRepository implements PlpRepositoryInterface
         $this->plpCollectionFactory = $plpCollectionFactory;
         $this->collectionProcessor = $collectionProcessor;
         $this->searchResultsFactory = $searchResultsFactory;
+        $this->statusModel = $statusModel;
     }
 
     /**
@@ -101,6 +110,14 @@ class PlpRepository implements PlpRepositoryInterface
     public function save(PlpInterface $plp)
     {
         try {
+
+            if ($plp->getStatus()) {
+                $permissions = $this->statusModel->getActionPermissions($plp->getStatus());
+                $plp->setCanAddOrders($permissions['can_add_orders']);
+                $plp->setCanRemoveOrders($permissions['can_remove_orders']);
+                $plp->setCanClose($permissions['can_close']);
+            }
+
             $this->resource->save($plp);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(

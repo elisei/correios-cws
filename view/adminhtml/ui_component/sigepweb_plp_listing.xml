@@ -101,6 +101,57 @@
                 <label translate="true">Updated At</label>
             </settings>
         </column>
+        <column name="can_add_orders" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>boolean</filter>
+                <label translate="true">Can Add Orders</label>
+                <dataType>boolean</dataType>
+                <options>
+                    <option name="1" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="label" xsi:type="string" translate="true">Yes</item>
+                    </option>
+                    <option name="0" xsi:type="array">
+                        <item name="value" xsi:type="string">0</item>
+                        <item name="label" xsi:type="string" translate="true">No</item>
+                    </option>
+                </options>
+            </settings>
+        </column>
+        <column name="can_remove_orders" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>boolean</filter>
+                <label translate="true">Can Remove Orders</label>
+                <dataType>boolean</dataType>
+                <options>
+                    <option name="1" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="label" xsi:type="string" translate="true">Yes</item>
+                    </option>
+                    <option name="0" xsi:type="array">
+                        <item name="value" xsi:type="string">0</item>
+                        <item name="label" xsi:type="string" translate="true">No</item>
+                    </option>
+                </options>
+            </settings>
+        </column>
+        <column name="can_close" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>boolean</filter>
+                <label translate="true">Can Close</label>
+                <dataType>boolean</dataType>
+                <options>
+                    <option name="1" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="label" xsi:type="string" translate="true">Yes</item>
+                    </option>
+                    <option name="0" xsi:type="array">
+                        <item name="value" xsi:type="string">0</item>
+                        <item name="label" xsi:type="string" translate="true">No</item>
+                    </option>
+                </options>
+            </settings>
+        </column>
         <actionsColumn name="actions" class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\PlpActions">
             <settings>
                 <indexField>entity_id</indexField>

@@ -38,6 +38,12 @@
                 comment="Store ID"/>
         <column xsi:type="varchar" name="status" nullable="false" length="50" default="open"
                 comment="Status da PLP"/>
+        <column xsi:type="boolean" name="can_add_orders" nullable="false" default="true"
+            comment="Permite adicionar novos pedidos"/>
+        <column xsi:type="boolean" name="can_remove_orders" nullable="false" default="true"
+                comment="Permite remover pedidos"/>
+        <column xsi:type="boolean" name="can_close" nullable="false" default="false"
+                comment="Permite fechar a PLP"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"

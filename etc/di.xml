@@ -157,14 +157,6 @@
         </arguments>
     </type>
 
-    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
-        <arguments>
-            <argument name="collections" xsi:type="array">
-                <item name="sigepweb_plp_order_listing_data_source" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\Collection</item>
-            </argument>
-        </arguments>
-    </type>
-
     <virtualType name="O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\Grid\Collection" 
                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
