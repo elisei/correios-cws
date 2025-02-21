@@ -23,46 +23,32 @@
         </item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
     </argument>
-    <settings>
+     <settings>
         <buttons>
-            <button name="reset" class="Magento\Backend\Block\Widget\Button\Generic">
-                <param name="label" xsi:type="string">Reset</param>
-                <param name="onclick" xsi:type="string">location.reload();</param>
-                <param name="class" xsi:type="string">reset</param>
-                <param name="sort_order" xsi:type="string">20</param>
+            <button name="back">
+                <url path="*/*/"/>
+                <class>back</class>
+                <label translate="true">Back</label>
             </button>
-            <button name="save" class="Magento\Backend\Block\Widget\Button\Generic">
-                <param name="label" xsi:type="string">Save</param>
-                <param name="class" xsi:type="string">save primary</param>
-                <param name="data_attribute" xsi:type="array">
-                    <item name="mage-init" xsi:type="array">
-                        <item name="button" xsi:type="array">
-                            <item name="event" xsi:type="string">save</item>
-                        </item>
-                    </item>
-                </param>
-                <param name="sort_order" xsi:type="string">30</param>
+            <button name="reset">
+                <class>reset</class>
+                <label translate="true">Reset</label>
             </button>
-            <button name="save_and_continue" class="Magento\Backend\Block\Widget\Button\Generic">
-                <param name="label" xsi:type="string">Save and Continue Edit</param>
-                <param name="class" xsi:type="string">save</param>
-                <param name="data_attribute" xsi:type="array">
-                    <item name="mage-init" xsi:type="array">
-                        <item name="button" xsi:type="array">
-                            <item name="event" xsi:type="string">saveAndContinueEdit</item>
-                        </item>
-                    </item>
-                </param>
-                <param name="sort_order" xsi:type="string">40</param>
+            <button name="save">
+                <class>primary</class>
+                <label translate="true">Save</label>
             </button>
         </buttons>
         <namespace>sigepweb_plp_form</namespace>
         <dataScope>data</dataScope>
         <deps>
-            <dep>sigepweb_plp_form.plp_form_data_source</dep>
+            <dep>sigepweb_plp_form.sigepweb_plp_form_data_source</dep>
         </deps>
     </settings>
-    <dataSource name="plp_form_data_source">
+    <dataSource name="sigepweb_plp_form_data_source" component="Magento_Ui/js/form/provider">
+        <settings>
+            <submitUrl path="*/*/save"/>
+        </settings>
         <argument name="dataProvider" xsi:type="configurableObject">
             <argument name="class" xsi:type="string">O2TI\SigepWebCarrier\Model\Plp\DataProvider</argument>
             <argument name="name" xsi:type="string">plp_form_data_source</argument>
@@ -224,17 +210,25 @@
                 <options>
                     <option name="title" xsi:type="string" translate="true">Select Orders</option>
                 </options>
+                <deps>
+                    <dep>order_selection_modal.order_selection_listing</dep>
+                </deps>
             </settings>
-            <insertListing name="order_selection_listing" component="Magento_Ui/js/grid/listing">
-                <argument name="data" xsi:type="array">
-                    <item name="config" xsi:type="array">
-                        <item name="autoRender" xsi:type="boolean">true</item>
-                        <item name="dataScope" xsi:type="string">order_selection_listing</item>
-                        <item name="ns" xsi:type="string">order_selection_listing</item>
-                        <item name="externalProvider" xsi:type="string">sales_order_grid.sales_order_grid_data_source</item>
-                        <item name="updateUrl" xsi:type="string">mui/index/render</item>
-                    </item>
-                </argument>
+           <insertListing name="order_selection_listing">
+                <settings>
+                    <dataScope>order_selection_listing</dataScope>
+                    <ns>order_selection_listing</ns>
+                    <externalProvider>${ $.ns }.order_selection_listing_data_source</externalProvider>
+                    <selectionsProvider>${ $.ns }.order_selection_listing.order_selection_columns.ids</selectionsProvider>
+                    <dataLinks>
+                        <exports>false</exports>
+                        <imports>true</imports>
+                    </dataLinks>
+                    <autoRender>true</autoRender>
+                    <realTimeLink>true</realTimeLink>
+                    <behaviourType>simple</behaviourType>
+                    <externalFilterMode>true</externalFilterMode>
+                </settings>
             </insertListing>
         </modal>
 

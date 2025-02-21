@@ -88,9 +88,9 @@ class Save extends Action
             try {
                 $this->plpRepository->save($model);
 
-                if (isset($data['sales_order_grid']) && is_array($data['sales_order_grid'])) {
+                if (isset($data['order_selection_listing']) && is_array($data['order_selection_listing'])) {
                     $orderIds = [];
-                    foreach ($data['sales_order_grid'] as $order) {
+                    foreach ($data['order_selection_listing'] as $order) {
                         if (isset($order['entity_id'])) {
                             $orderIds[] = $order['entity_id'];
                         }

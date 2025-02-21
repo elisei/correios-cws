@@ -82,9 +82,7 @@ class OrderSelection extends DataProvider
             );
         }
 
-        // Adicionar filtros adicionais se necessário
-        // Por exemplo, filtrar apenas pedidos com status específico
-        $collection->addFieldToFilter('status', ['in' => ['processing', 'complete']]);
+        // $collection->addFieldToFilter('state', ['in' => ['processing']]);
 
         // Ordenar por ID decrescente
         $collection->setOrder('entity_id', 'DESC');

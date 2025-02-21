@@ -2,49 +2,43 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="data" xsi:type="array">
         <item name="js_config" xsi:type="array">
-            <item name="provider" xsi:type="string">sales_order_grid.sales_order_grid_data_source</item>
+            <item name="provider" xsi:type="string">order_selection_listing.order_selection_listing_data_source</item>
         </item>
     </argument>
     <settings>
+        <spinner>order_selection_columns</spinner>
         <deps>
-            <dep>sales_order_grid.sales_order_grid_data_source</dep>
+            <dep>order_selection_listing.order_selection_listing_data_source</dep>
         </deps>
     </settings>
-    <dataSource name="sales_order_grid_data_source" component="Magento_Ui/js/grid/provider">
+    <dataSource name="order_selection_listing_data_source" component="Magento_Ui/js/grid/provider">
         <settings>
             <updateUrl path="mui/index/render"/>
         </settings>
-        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="sales_order_grid_data_source">
+        <dataProvider class="O2TI\SigepWebCarrier\Ui\Component\Listing\DataProvider\OrderSelection" name="order_selection_listing_data_source">
             <settings>
-                <requestFieldName>entity_id</requestFieldName>
-                <primaryFieldName>main_table.entity_id</primaryFieldName>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
             </settings>
         </dataProvider>
     </dataSource>
     <columns name="order_selection_columns">
-        <selectionsColumn name="ids" component="Magento_Sales/js/grid/columns/multiselect">
+        <selectionsColumn name="ids">
             <settings>
-                <indexField>entity_id</indexField> </settings>
+                <indexField>entity_id</indexField>
+            </settings>
         </selectionsColumn>
         <column name="increment_id">
             <settings>
                 <filter>text</filter>
-                <label translate="true">ID</label>
+                <label translate="true">Order #</label>
             </settings>
         </column>
-        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store">
-            <settings>
-                <label translate="true">Purchase Point</label>
-                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
-                <sortable>false</sortable>
-            </settings>
-        </column>
-        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date">
             <settings>
                 <filter>dateRange</filter>
                 <dataType>date</dataType>
                 <label translate="true">Purchase Date</label>
-                <sorting>desc</sorting>
             </settings>
         </column>
         <column name="billing_name">
@@ -59,23 +53,15 @@
                 <label translate="true">Ship-to Name</label>
             </settings>
         </column>
-        <column name="base_grand_total" class="Magento\Sales\Ui\Component\Listing\Column\Price">
+        <column name="grand_total" class="Magento\Sales\Ui\Component\Listing\Column\Price">
             <settings>
                 <filter>textRange</filter>
-                <label translate="true">Grand Total (Base)</label>
+                <label translate="true">Grand Total</label>
             </settings>
         </column>
-        <column name="grand_total" class="Magento\Sales\Ui\Component\Listing\Column\PurchasedPrice">
+        <column name="status">
             <settings>
-                <filter>textRange</filter>
-                <label translate="true">Grand Total (Purchased)</label>
-            </settings>
-        </column>
-        <column name="status" component="Magento_Ui/js/grid/columns/select">
-            <settings>
-                <filter>select</filter>
-                <options class="Magento\Sales\Ui\Component\Listing\Column\Status\Options"/>
-                <dataType>select</dataType>
+                <filter>text</filter>
                 <label translate="true">Status</label>
             </settings>
         </column>
