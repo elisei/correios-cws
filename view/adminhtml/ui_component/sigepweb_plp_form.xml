@@ -15,6 +15,7 @@
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">sigepweb_plp_form.plp_form_data_source</item>
             <item name="deps" xsi:type="string">sigepweb_plp_form.plp_form_data_source</item>
+            <item name="component" xsi:type="string">O2TI_SigepWebCarrier/js/form/plp-form</item>
         </item>
         <item name="label" xsi:type="string" translate="true">PLP Information</item>
         <item name="config" xsi:type="array">
@@ -115,6 +116,7 @@
                     <item name="source" xsi:type="string">plp</item>
                     <item name="dataScope" xsi:type="string">status</item>
                     <item name="default" xsi:type="string">open</item>
+                    <item name="disabled" xsi:type="boolean">true</item>
                     <item name="validation" xsi:type="array">
                         <item name="required-entry" xsi:type="boolean">true</item>
                     </item>
