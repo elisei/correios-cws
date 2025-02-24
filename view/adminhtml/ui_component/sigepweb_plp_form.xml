@@ -23,7 +23,7 @@
         </item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
     </argument>
-     <settings>
+    <settings>
         <buttons>
             <button name="back">
                 <url path="*/*/"/>
@@ -33,6 +33,14 @@
             <button name="reset">
                 <class>reset</class>
                 <label translate="true">Reset</label>
+            </button>
+            <button name="save_and_continue">
+                <class>save</class>
+                <label translate="true">Save and Continue Edit</label>
+                <data_attribute>
+                    <name>mage-init</name>
+                    <value>{"button": {"event": "saveAndContinueEdit", "target": "#edit_form"}}</value>
+                </data_attribute>
             </button>
             <button name="save">
                 <class>primary</class>
@@ -165,7 +173,6 @@
             </argument>
         </field>
 
-
         <fieldset name="associated_orders">
             <settings>
                 <label translate="true">Associated Orders</label>
@@ -194,7 +201,10 @@
                     <item name="component" xsi:type="string">Magento_Ui/js/form/components/button</item>
                     <item name="template" xsi:type="string">ui/form/components/button/container</item>
                     <item name="title" xsi:type="string" translate="true">Select Orders</item>
-                    <item name="additionalClasses" xsi:type="string">primary</item>
+                    <item name="buttonClasses" xsi:type="string">action-primary</item>
+                    <item name="additionalClasses" xsi:type="string">admin__field-medium admin__field-tooltip</item>
+                    <item name="displayArea" xsi:type="string">insideGroup</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
                     <item name="actions" xsi:type="array">
                         <item name="0" xsi:type="array">
                             <item name="targetName" xsi:type="string">${ $.parentName }.order_selection_modal</item>
@@ -205,16 +215,38 @@
             </argument>
         </container>
 
-        <modal name="order_selection_modal">
+        <modal name="order_selection_modal" component="O2TI_SigepWebCarrier/js/order-selection-modal">
             <settings>
                 <options>
                     <option name="title" xsi:type="string" translate="true">Select Orders</option>
+                    <option name="buttons" xsi:type="array">
+                        <item name="0" xsi:type="array">
+                            <item name="text" xsi:type="string" translate="true">Cancel</item>
+                            <item name="class" xsi:type="string">action-secondary</item>
+                            <item name="actions" xsi:type="array">
+                                <item name="0" xsi:type="array">
+                                    <item name="targetName" xsi:type="string">${ $.name }</item>
+                                    <item name="actionName" xsi:type="string">closeModal</item>
+                                </item>
+                            </item>
+                        </item>
+                        <item name="1" xsi:type="array">
+                            <item name="text" xsi:type="string" translate="true">Add Selected Orders</item>
+                            <item name="class" xsi:type="string">action-primary</item>
+                            <item name="actions" xsi:type="array">
+                                <item name="0" xsi:type="array">
+                                    <item name="targetName" xsi:type="string">${ $.name }</item>
+                                    <item name="actionName" xsi:type="string">addSelectedOrders</item>
+                                </item>
+                            </item>
+                        </item>
+                    </option>
                 </options>
                 <deps>
                     <dep>order_selection_modal.order_selection_listing</dep>
                 </deps>
             </settings>
-           <insertListing name="order_selection_listing">
+            <insertListing name="order_selection_listing">
                 <settings>
                     <dataScope>order_selection_listing</dataScope>
                     <ns>order_selection_listing</ns>
@@ -231,6 +263,5 @@
                 </settings>
             </insertListing>
         </modal>
-
     </fieldset>
 </form>

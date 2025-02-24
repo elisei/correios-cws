@@ -14,36 +14,38 @@ class OrderSelection extends DataProvider
     /**
      * @var PlpOrderCollectionFactory
      */
-    protected $plpOrderCollectionFactory;
+    protected $plpOrderCollection;
 
     /**
      * @var CollectionFactory
      */
-    protected $orderGridCollectionFactory;
+    protected $orderGridCollection;
 
     /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
      * @param ReportingInterface $reporting
-     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param SearchCriteriaBuilder $searchCriteria
      * @param RequestInterface $request
      * @param FilterBuilder $filterBuilder
-     * @param CollectionFactory $orderGridCollectionFactory
-     * @param PlpOrderCollectionFactory $plpOrderCollectionFactory
+     * @param CollectionFactory $orderGridCollection
+     * @param PlpOrderCollectionFactory $plpOrderCollection
      * @param array $meta
      * @param array $data
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         $name,
         $primaryFieldName,
         $requestFieldName,
         ReportingInterface $reporting,
-        SearchCriteriaBuilder $searchCriteriaBuilder,
+        SearchCriteriaBuilder $searchCriteria,
         RequestInterface $request,
         FilterBuilder $filterBuilder,
-        CollectionFactory $orderGridCollectionFactory,
-        PlpOrderCollectionFactory $plpOrderCollectionFactory,
+        CollectionFactory $orderGridCollection,
+        PlpOrderCollectionFactory $plpOrderCollection,
         array $meta = [],
         array $data = []
     ) {
@@ -52,14 +54,14 @@ class OrderSelection extends DataProvider
             $primaryFieldName,
             $requestFieldName,
             $reporting,
-            $searchCriteriaBuilder,
+            $searchCriteria,
             $request,
             $filterBuilder,
             $meta,
             $data
         );
-        $this->orderGridCollectionFactory = $orderGridCollectionFactory;
-        $this->plpOrderCollectionFactory = $plpOrderCollectionFactory;
+        $this->orderGridCollection = $orderGridCollection;
+        $this->plpOrderCollection = $plpOrderCollection;
     }
 
     /**
@@ -69,10 +71,8 @@ class OrderSelection extends DataProvider
      */
     public function getData()
     {
-        $collection = $this->orderGridCollectionFactory->create();
-        
-        // Excluir pedidos que já estão em PLPs
-        $plpOrderCollection = $this->plpOrderCollectionFactory->create();
+        $collection = $this->orderGridCollection->create();
+        $plpOrderCollection = $this->plpOrderCollection->create();
         $existingOrderIds = $plpOrderCollection->getColumnValues('order_id');
         
         if (!empty($existingOrderIds)) {
@@ -84,7 +84,6 @@ class OrderSelection extends DataProvider
 
         // $collection->addFieldToFilter('state', ['in' => ['processing']]);
 
-        // Ordenar por ID decrescente
         $collection->setOrder('entity_id', 'DESC');
 
         $result = [

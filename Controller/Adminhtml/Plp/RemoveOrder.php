@@ -52,6 +52,7 @@ class RemoveOrder extends Action
         $resultRedirect = $this->resultRedirectFactory->create();
         $plpId = $this->getRequest()->getParam('plp_id');
         $orderId = $this->getRequest()->getParam('order_id');
+        $refererUrl = $this->_redirect->getRefererUrl();
 
         try {
             $plpOrder = $this->plpOrderFactory->create();
@@ -72,6 +73,10 @@ class RemoveOrder extends Action
                     $e->getMessage()
                 )
             );
+        }
+
+        if ($refererUrl) {
+            return $resultRedirect->setUrl($refererUrl);
         }
 
         return $resultRedirect->setPath('*/*/view', ['id' => $plpId]);

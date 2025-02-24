@@ -87,27 +87,14 @@ class Save extends Action
 
             try {
                 $this->plpRepository->save($model);
-
-                if (isset($data['order_selection_listing']) && is_array($data['order_selection_listing'])) {
-                    $orderIds = [];
-                    foreach ($data['order_selection_listing'] as $order) {
-                        if (isset($order['entity_id'])) {
-                            $orderIds[] = $order['entity_id'];
-                        }
-                    }
-                    
-                    if (!empty($orderIds)) {
-                        $this->plpRepository->addOrderToPlp($model->getId(), $orderIds);
-                        $this->messageManager->addSuccessMessage(__('Orders were successfully added to the PLP.'));
-                    }
-                }
-
                 $this->messageManager->addSuccessMessage(__('You saved the PLP.'));
                 $this->dataPersistor->clear('plp');
 
-                if ($this->getRequest()->getParam('back')) {
-                    return $resultRedirect->setPath('*/*/edit', ['id' => $model->getId()]);
+                if ($this->getRequest()->getParam('back') === 'edit'
+                || $this->getRequest()->getParam('saveandcontinue')) {
+                    return $resultRedirect->setPath('*/*/edit', ['id' => $model->getId(), '_current' => false]);
                 }
+
                 return $resultRedirect->setPath('*/*/');
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());

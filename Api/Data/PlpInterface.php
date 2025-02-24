@@ -72,6 +72,8 @@ interface PlpInterface
      * Get Can Add Orders
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getCanAddOrders();
 
@@ -87,6 +89,8 @@ interface PlpInterface
      * Get Can Remove Orders
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getCanRemoveOrders();
 
@@ -102,6 +106,8 @@ interface PlpInterface
      * Get Can Close
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getCanClose();
 

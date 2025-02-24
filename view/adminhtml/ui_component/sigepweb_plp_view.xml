@@ -22,15 +22,21 @@
             <item name="namespace" xsi:type="string">sigepweb_plp_view</item>
         </item>
         <item name="template" xsi:type="string">templates/form/collapsible</item>
-        <item name="buttons" xsi:type="array">
-            <item name="back" xsi:type="array">
-                <item name="name" xsi:type="string">back</item>
-                <item name="label" xsi:type="string" translate="true">Back</item>
-                <item name="class" xsi:type="string">back</item>
-                <item name="url" xsi:type="string">*/*/</item>
-            </item>
-        </item>
     </argument>
+    <settings>
+        <buttons>
+            <button name="back">
+                <url path="*/*/"/>
+                <class>back</class>
+                <label translate="true">Back</label>
+            </button>
+        </buttons>
+        <namespace>sigepweb_plp_view</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>sigepweb_plp_view.sigepweb_plp_view_data_source</dep>
+        </deps>
+    </settings>
     <dataSource name="sigepweb_plp_view_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
             <argument name="class" xsi:type="string">O2TI\SigepWebCarrier\Ui\Component\DataProvider</argument>
@@ -65,6 +71,7 @@
         </field>
         <field name="store_id">
             <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magento\Store\Model\System\Store</item>
                 <item name="config" xsi:type="array">
                     <item name="label" xsi:type="string" translate="true">Store View</item>
                     <item name="visible" xsi:type="boolean">true</item>
@@ -72,18 +79,69 @@
                     <item name="formElement" xsi:type="string">select</item>
                     <item name="dataScope" xsi:type="string">store_id</item>
                     <item name="disabled" xsi:type="boolean">true</item>
-                    <item name="options" xsi:type="object">Magento\Store\Model\ResourceModel\Store\Collection</item>
                 </item>
             </argument>
         </field>
         <field name="status">
             <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">O2TI\SigepWebCarrier\Model\Plp\Source\Status</item>
                 <item name="config" xsi:type="array">
                     <item name="label" xsi:type="string" translate="true">Status</item>
                     <item name="visible" xsi:type="boolean">true</item>
                     <item name="dataType" xsi:type="string">text</item>
-                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="formElement" xsi:type="string">select</item>
                     <item name="dataScope" xsi:type="string">status</item>
+                    <item name="disabled" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+        </field>
+        <field name="can_add_orders">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Allow Adding Orders</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">can_add_orders</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                    <item name="disabled" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+        </field>
+        <field name="can_remove_orders">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Allow Removing Orders</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">can_remove_orders</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                    <item name="disabled" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+        </field>
+        <field name="can_close">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Allow Closing PLP</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">can_close</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
                     <item name="disabled" xsi:type="boolean">true</item>
                 </item>
             </argument>
@@ -113,22 +171,29 @@
             </argument>
         </field>
     </fieldset>
-    <insertListing name="sigepweb_plp_order_listing">
+    <fieldset name="associated_orders">
         <settings>
-            <dataScope>sigepweb_plp_order_listing</dataScope>
-            <autoRender>true</autoRender>
-            <ns>sigepweb_plp_order_listing</ns>
-            <externalProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing_data_source</externalProvider>
-            <selectionsProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing.plp_order_columns.ids</selectionsProvider>
-            <dataLinks>
-                <exports>false</exports>
-                <imports>true</imports>
-            </dataLinks>
-            <filters>
-                <plp_id>
-                    <value>${ $.parentComponent.provider }:data.entity_id</value>
-                </plp_id>
-            </filters>
+            <label translate="true">Associated Orders</label>
+            <collapsible>false</collapsible>
+            <opened>true</opened>
         </settings>
-    </insertListing>
+        <insertListing name="sigepweb_plp_order_listing">
+            <settings>
+                <dataScope>sigepweb_plp_order_listing</dataScope>
+                <autoRender>true</autoRender>
+                <ns>sigepweb_plp_order_listing</ns>
+                <externalProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing_data_source</externalProvider>
+                <selectionsProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing.plp_order_columns.ids</selectionsProvider>
+                <dataLinks>
+                    <exports>false</exports>
+                    <imports>true</imports>
+                </dataLinks>
+                <filters>
+                    <plp_id>
+                        <value>${ $.parentComponent.provider }:data.entity_id</value>
+                    </plp_id>
+                </filters>
+            </settings>
+        </insertListing>
+    </fieldset>
 </form>
