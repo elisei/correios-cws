@@ -16,6 +16,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="sigepweb_fallback_update" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\UpdateFallbackRulesCommand</item>
+                <item name="sigepweb_plp_data_collect" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpDataCollectCommand</item>
             </argument>
         </arguments>
     </type>
