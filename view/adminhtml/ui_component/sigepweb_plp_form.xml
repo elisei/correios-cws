@@ -193,6 +193,11 @@
                         <exports>false</exports>
                     </dataLinks>
                     <updateUrl path="mui/index/render"/>
+                    <externalFilterMode>true</externalFilterMode>
+                    <realTimeLink>true</realTimeLink>
+                    <filterUrlParams>
+                        <param name="id">*</param>
+                    </filterUrlParams>
                 </settings>
             </insertListing>
         </fieldset>

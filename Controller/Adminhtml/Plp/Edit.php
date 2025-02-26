@@ -13,6 +13,7 @@ namespace O2TI\SigepWebCarrier\Controller\Adminhtml\Plp;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
+use O2TI\SigepWebCarrier\Model\Session\PlpSession;
 
 class Edit extends Action
 {
@@ -22,17 +23,25 @@ class Edit extends Action
     protected $resultPageFactory;
 
     /**
+     * @var PlpSession
+     */
+    protected $plpSession;
+
+    /**
      * Contruct.
      *
      * @param Context $context
      * @param PageFactory $resultPageFactory
+     * @param PlpSession $plpSession
      */
     public function __construct(
         Context $context,
-        PageFactory $resultPageFactory
+        PageFactory $resultPageFactory,
+        PlpSession $plpSession
     ) {
         parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
+        $this->plpSession = $plpSession;
     }
 
     /**
@@ -47,6 +56,7 @@ class Edit extends Action
 
         $resultPage->getConfig()->getTitle()->prepend(__('New PLP'));
         if ($plpId) {
+            $this->plpSession->setCurrentPlpId($plpId);
             $resultPage->getConfig()->getTitle()->prepend(__('Edit PLP #%1', $plpId));
         }
         

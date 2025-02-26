@@ -12,7 +12,6 @@ namespace O2TI\SigepWebCarrier\Ui\Component\Listing\DataProvider;
 
 use Magento\Ui\DataProvider\AbstractDataProvider;
 use O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\CollectionFactory;
-use Magento\Framework\App\RequestInterface;
 use O2TI\SigepWebCarrier\Model\Session\PlpSession;
 
 class PlpOrder extends AbstractDataProvider
@@ -33,11 +32,15 @@ class PlpOrder extends AbstractDataProvider
     protected $loadedData;
 
     /**
+     * @var CollectionFactory
+     */
+    protected $collection;
+
+    /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
-     * @param CollectionFactory $collectionFactory
-     * @param RequestInterface $request
+     * @param CollectionFactory $collection
      * @param PlpSession $plpSession
      * @param array $meta
      * @param array $data
@@ -46,15 +49,13 @@ class PlpOrder extends AbstractDataProvider
         $name,
         $primaryFieldName,
         $requestFieldName,
-        CollectionFactory $collectionFactory,
-        RequestInterface $request,
+        CollectionFactory $collection,
         PlpSession $plpSession,
         array $meta = [],
         array $data = []
     ) {
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
-        $this->collection = $collectionFactory->create();
-        $this->request = $request;
+        $this->collection = $collection;
         $this->plpSession = $plpSession;
     }
 
@@ -73,8 +74,9 @@ class PlpOrder extends AbstractDataProvider
         $items = [];
 
         if ($plpId) {
-            $this->collection->addFieldToFilter('plp_id', $plpId);
-            $items = $this->collection->getData();
+            $collection = $this->collection->create();
+            $collection->addFieldToFilter('plp_id', $plpId);
+            $items = $collection->getData();
         }
         
         $this->loadedData = [

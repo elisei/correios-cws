@@ -16,7 +16,7 @@ define([
             listingProvider: 'order_selection_listing.order_selection_listing.order_selection_columns.ids',
             formProvider: 'sigepweb_plp_form.plp_form_data_source',
             orderListingComponent: 'sigepweb_plp_form.sigepweb_plp_form.general.associated_orders.sigepweb_plp_order_listing',
-            selectionListingComponent: 'order_selection_listing.order_selection_listing'
+            selectionListingComponent: 'sigepweb_plp_form.sigepweb_plp_form.general.order_selection_modal.order_selection_listing'
         },
 
         /**
@@ -51,7 +51,6 @@ define([
                         $('body').trigger('processStop');
                         
                         if (response.success) {
-                            self.reloadOrderListing();
                             self.reloadSelectionListing();
                         }
 
@@ -78,6 +77,17 @@ define([
             }
             
             return listingComponent.selected();
+        },
+        
+        /**
+         * Clears the current selections
+         */
+        clearSelections: function () {
+            var listingComponent = registry.get(this.listingProvider);
+            
+            if (listingComponent && typeof listingComponent.deselectAll === 'function') {
+                listingComponent.deselectAll();
+            }
         },
         
         /**
@@ -122,6 +132,7 @@ define([
             }
             
             selectionListing = registry.get('order_selection_listing');
+            
             if (selectionListing) {
                 if (typeof selectionListing.reload === 'function') {
                     selectionListing.reload();
@@ -137,11 +148,13 @@ define([
         },
         
         /**
-         * Override openModal to refresh selection grid before opening
+         * Override openModal to refresh selection grid before closing
          */
-        openModal: function() {
+        closeModal: function() {
             this._super();
+            this.clearSelections();
             this.reloadSelectionListing();
+            this.reloadOrderListing();
             return this;
         }
     });

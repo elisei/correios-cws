@@ -88,7 +88,7 @@ class OrderSelection extends DataProvider
 
         $result = [
             'totalRecords' => $collection->getSize(),
-            'items' => $collection->getData(),
+            'items' => $collection->getData()
         ];
 
         return $result;
