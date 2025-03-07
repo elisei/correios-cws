@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
 use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
 use O2TI\SigepWebCarrier\Model\Plp\Source\StatusItem as PlpStatusItem;
@@ -22,6 +23,9 @@ use O2TI\SigepWebCarrier\Model\Plp\StoreInformation;
 use O2TI\SigepWebCarrier\Model\ResourceModel\Plp\CollectionFactory as PlpCollectionFactory;
 use O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\CollectionFactory as PlpOrderCollectionFactory;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PlpDataCollector extends AbstractPlpOperation
 {
     /**
@@ -32,7 +36,7 @@ class PlpDataCollector extends AbstractPlpOperation
     /**
      * @var SigepWebDataFormatter
      */
-    protected $sigepWebDataFormatter;
+    protected $sigepDataFormatter;
     
     /**
      * @var StoreInformation
@@ -51,9 +55,9 @@ class PlpDataCollector extends AbstractPlpOperation
      * @param Json $json
      * @param PlpRepositoryInterface $plpRepository
      * @param OrderRepositoryInterface $orderRepository
-     * @param PlpOrderCollectionFactory $plpOrderCollectionFactory
+     * @param PlpOrderCollectionFactory $plpOrdCollection
      * @param PlpCollectionFactory $plpCollectionFactory
-     * @param SigepWebDataFormatter $sigepWebDataFormatter
+     * @param SigepWebDataFormatter $sigepDataFormatter
      * @param StoreInformation $storeInformation
      * @param StoreManagerInterface $storeManager
      */
@@ -62,14 +66,14 @@ class PlpDataCollector extends AbstractPlpOperation
         Json $json,
         PlpRepositoryInterface $plpRepository,
         OrderRepositoryInterface $orderRepository,
-        PlpOrderCollectionFactory $plpOrderCollectionFactory,
+        PlpOrderCollectionFactory $plpOrdCollection,
         PlpCollectionFactory $plpCollectionFactory,
-        SigepWebDataFormatter $sigepWebDataFormatter,
+        SigepWebDataFormatter $sigepDataFormatter,
         StoreInformation $storeInformation,
         StoreManagerInterface $storeManager = null
     ) {
         $this->orderRepository = $orderRepository;
-        $this->sigepWebDataFormatter = $sigepWebDataFormatter;
+        $this->sigepDataFormatter = $sigepDataFormatter;
         $this->storeInformation = $storeInformation;
         $this->storeManager = $storeManager;
         
@@ -77,7 +81,7 @@ class PlpDataCollector extends AbstractPlpOperation
             $logger,
             $plpRepository,
             $json,
-            $plpOrderCollectionFactory,
+            $plpOrdCollection,
             $plpCollectionFactory
         );
     }
@@ -96,9 +100,9 @@ class PlpDataCollector extends AbstractPlpOperation
         $this->failurePlpStatus = PlpStatus::STATUS_PLP_OPENED;
         
         // Define order statuses
-        $this->expectedTypeFilterOrder = 'status';
-        $this->expectedOrderStatuses = [PlpStatusItem::STATUS_ITEM_PENDING_COLLECTION];
-        $this->inProgressOrderStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_COLLECTION;
+        $this->expectedTypeFilter = 'status';
+        $this->expectedOrderStatus = [PlpStatusItem::STATUS_ITEM_PENDING_COLLECTION];
+        $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_COLLECTION;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_COLLECTION_COMPLETED;
         $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_ERROR;
     }
@@ -135,15 +139,15 @@ class PlpDataCollector extends AbstractPlpOperation
             );
             
             return true;
-        } catch (\Exception $e) {
+        } catch (LocalizedException $exc) {
             $this->logger->error(__(
                 'Error collecting data for order %1 in PLP %2: %3',
                 $plpOrder->getOrderId(),
                 $plpOrder->getPlpId(),
-                $e->getMessage()
+                $exc->getMessage()
             ));
             
-            $plpOrder->setErrorMessage($e->getMessage());
+            $plpOrder->setErrorMessage($exc->getMessage());
             $this->updatePlpOrderStatus(
                 $plpOrder,
                 $this->failureOrderStatus
@@ -166,7 +170,7 @@ class PlpDataCollector extends AbstractPlpOperation
         
         if ($allProcessed && $errorCount === 0) {
             $plp->setStatus($this->successPlpStatus);
-        } else {
+        } elseif ($errorCount) {
             $plp->setStatus($this->failurePlpStatus);
         }
         
@@ -187,12 +191,13 @@ class PlpDataCollector extends AbstractPlpOperation
         
         if (!$shippingAddress) {
             // phpcs:ignore Magento2.Exceptions.DirectThrow
-            throw new \Exception(__('Shipping address not found for order %1', $orderId));
+            throw new LocalizedException(__('Shipping address not found for order %1', $orderId));
         }
 
         $collectedData = [
             'order_info' => [
                 'order_id' => $order->getEntityId(),
+                'subtotal' => $order->getSubtotal(),
                 'increment_id' => $order->getIncrementId(),
                 'created_at' => $order->getCreatedAt(),
                 'customer_email' => $order->getCustomerEmail(),
@@ -234,7 +239,7 @@ class PlpDataCollector extends AbstractPlpOperation
         }
 
         $senderData = $this->storeInformation->getSenderData();
-        $collectedData = $this->sigepWebDataFormatter->formatOrderData(
+        $collectedData = $this->sigepDataFormatter->formatOrderData(
             $collectedData,
             $senderData
         );
@@ -269,7 +274,7 @@ class PlpDataCollector extends AbstractPlpOperation
      */
     protected function checkAllOrdersProcessed($plpId)
     {
-        $collection = $this->plpOrderCollectionFactory->create();
+        $collection = $this->plpOrdCollection->create();
         $collection->addFieldToFilter('plp_id', $plpId);
         $collection->addFieldToFilter('status', ['eq' => PlpStatusItem::STATUS_ITEM_PENDING_COLLECTION]);
         

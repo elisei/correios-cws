@@ -20,6 +20,10 @@ use O2TI\SigepWebCarrier\Model\ResourceModel\Plp\CollectionFactory as PlpCollect
 use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
 use O2TI\SigepWebCarrier\Model\Plp\Source\StatusItem as PlpStatusItem;
 
+/**
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 abstract class AbstractPlpOperation
 {
     /**
@@ -40,7 +44,7 @@ abstract class AbstractPlpOperation
     /**
      * @var PlpOrderCollectionFactory
      */
-    protected $plpOrderCollectionFactory;
+    protected $plpOrdCollection;
     
     /**
      * @var PlpCollectionFactory
@@ -87,21 +91,21 @@ abstract class AbstractPlpOperation
      *
      * @var array
      */
-    protected $expectedOrderStatuses = [];
+    protected $expectedOrderStatus = [];
     
     /**
      * Expected type filter for match
      *
      * @var string
      */
-    protected $expectedTypeFilterOrder;
+    protected $expectedTypeFilter;
 
     /**
      * In-progress order status for this operation
      *
      * @var string
      */
-    protected $inProgressOrderStatus;
+    protected $inProgressOrdStatus;
     
     /**
      * Success order status for this operation
@@ -120,7 +124,7 @@ abstract class AbstractPlpOperation
     /**
      * @var array
      */
-    protected $standardResponseFields = [
+    protected $standResponseFields = [
         'success' => true,
         'message' => '',
         'processed' => 0,
@@ -133,20 +137,20 @@ abstract class AbstractPlpOperation
      * @param LoggerInterface $logger
      * @param PlpRepositoryInterface $plpRepository
      * @param Json $json
-     * @param PlpOrderCollectionFactory $plpOrderCollectionFactory
+     * @param PlpOrderCollectionFactory $plpOrdCollection
      * @param PlpCollectionFactory $plpCollectionFactory
      */
     public function __construct(
         LoggerInterface $logger,
         PlpRepositoryInterface $plpRepository,
         Json $json,
-        PlpOrderCollectionFactory $plpOrderCollectionFactory,
+        PlpOrderCollectionFactory $plpOrdCollection,
         PlpCollectionFactory $plpCollectionFactory
     ) {
         $this->logger = $logger;
         $this->plpRepository = $plpRepository;
         $this->json = $json;
-        $this->plpOrderCollectionFactory = $plpOrderCollectionFactory;
+        $this->plpOrdCollection = $plpOrdCollection;
         $this->plpCollectionFactory = $plpCollectionFactory;
         
         $this->initialize();
@@ -175,7 +179,7 @@ abstract class AbstractPlpOperation
      */
     protected function createSuccessResponse($message, $data = [])
     {
-        $response = array_merge($this->standardResponseFields, [
+        $response = array_merge($this->standResponseFields, [
             'success' => true,
             'message' => $message
         ]);
@@ -197,7 +201,7 @@ abstract class AbstractPlpOperation
      */
     protected function createErrorResponse($message, $data = [], $exception = null)
     {
-        $response = array_merge($this->standardResponseFields, [
+        $response = array_merge($this->standResponseFields, [
             'success' => false,
             'message' => $message
         ]);
@@ -266,6 +270,8 @@ abstract class AbstractPlpOperation
      * @param string|null $expectedStatus Expected PLP status (optional)
      * @param bool $strictValidation If true, error on invalid status
      * @return array|object Returns array with error or PLP object
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     protected function getPlpWithValidation($plpId, $expectedStatus = null, $strictValidation = false)
     {
@@ -292,12 +298,12 @@ abstract class AbstractPlpOperation
             
             return $plp;
             
-        } catch (\Exception $e) {
-            $this->logger->critical($e);
+        } catch (\Exception $exc) {
+            $this->logger->critical($exc);
             return $this->createErrorResponse(
-                __('Error retrieving PLP %1: %2', $plpId, $e->getMessage()),
+                __('Error retrieving PLP %1: %2', $plpId, $exc->getMessage()),
                 [],
-                $e
+                $exc
             );
         }
     }
@@ -305,22 +311,22 @@ abstract class AbstractPlpOperation
     /**
      * Handle exception safely
      *
-     * @param \Exception $e Exception to handle
+     * @param \Exception $exc Exception to handle
      * @param int $plpId PLP ID
      * @param string|null $customOperationName Operation being performed (optional override)
      * @param string|null $failureStatus Status to set on failure (optional override)
      * @return array Error response
      */
-    protected function handleException($e, $plpId, $customOperationName = null, $failureStatus = null)
+    protected function handleException($exc, $plpId, $customOperationName = null, $failureStatus = null)
     {
-        $this->logger->critical($e);
+        $this->logger->critical($exc);
         $operationName = $customOperationName ?? $this->operationName;
         $failureStatus = $failureStatus ?? $this->failurePlpStatus;
         
         $errorResponse = $this->createErrorResponse(
-            __('Error during %1 for PLP %2: %3', $operationName, $plpId, $e->getMessage()),
+            __('Error during %1 for PLP %2: %3', $operationName, $plpId, $exc->getMessage()),
             [],
-            $e
+            $exc
         );
             
         if ($failureStatus !== null) {
@@ -377,11 +383,11 @@ abstract class AbstractPlpOperation
             $plpOrder->setStatus($status);
             $plpOrder->save();
             return true;
-        } catch (\Exception $e) {
+        } catch (\Exception $exc) {
             $this->logger->error(__(
                 'Error updating PLP order status for ID %1: %2',
                 $plpOrder->getId(),
-                $e->getMessage()
+                $exc->getMessage()
             ));
             return false;
         }
@@ -400,12 +406,14 @@ abstract class AbstractPlpOperation
         $processingStatus,
         $typeFilter = 'status'
     ) {
-        $collection = $this->plpOrderCollectionFactory->create();
+        $collection = $this->plpOrdCollection->create();
         $collection->addFieldToFilter('plp_id', $plpId);
         
         if (is_array($processingStatus)) {
             $collection->addFieldToFilter($typeFilter, ['in' => $processingStatus]);
-        } else {
+        }
+
+        if (!is_array($processingStatus)) {
             $collection->addFieldToFilter($typeFilter, $processingStatus);
         }
         
@@ -424,7 +432,9 @@ abstract class AbstractPlpOperation
         
         if (is_array($status)) {
             $collection->addFieldToFilter('status', ['in' => $status]);
-        } else {
+        }
+
+        if (is_array($status)) {
             $collection->addFieldToFilter('status', $status);
         }
         
@@ -468,27 +478,30 @@ abstract class AbstractPlpOperation
 
             foreach ($plpOrders as $plpOrder) {
                 try {
-                    $this->updatePlpOrderStatus($plpOrder, $this->inProgressOrderStatus);
+                    $this->updatePlpOrderStatus($plpOrder, $this->inProgressOrdStatus);
                     
                     $success = $this->processPlpOrder($plpOrder, $result);
                     
                     if ($success) {
                         $successCount++;
-                    } else {
+                    }
+
+                    if (!$success) {
                         $errorCount++;
                     }
-                } catch (\Exception $e) {
+
+                } catch (\Exception $exc) {
                     $this->logger->error(__(
                         'Error processing order %1 in PLP %2: %3',
                         $plpOrder->getOrderId(),
                         $plpId,
-                        $e->getMessage()
+                        $exc->getMessage()
                     ));
                     
                     $this->updatePlpOrderStatus(
                         $plpOrder,
                         $this->failureOrderStatus,
-                        ['error' => $e->getMessage()]
+                        ['error' => $exc->getMessage()]
                     );
                     
                     $errorCount++;
@@ -501,8 +514,8 @@ abstract class AbstractPlpOperation
             $result['processed'] = $successCount;
             $result['errors'] = $errorCount;
 
-        } catch (\Exception $e) {
-            $result = $this->handleException($e, $plpId);
+        } catch (\Exception $exc) {
+            $result = $this->handleException($exc, $plpId);
         }
 
         return $result;
@@ -516,7 +529,7 @@ abstract class AbstractPlpOperation
      */
     protected function getEligibleOrders($plpId)
     {
-        return $this->getPlpOrdersByStatus($plpId, $this->expectedOrderStatuses, $this->expectedTypeFilterOrder);
+        return $this->getPlpOrdersByStatus($plpId, $this->expectedOrderStatus, $this->expectedTypeFilter);
     }
     
     /**
@@ -559,7 +572,7 @@ abstract class AbstractPlpOperation
             $plp->setStatus($this->successPlpStatus);
         } elseif ($successCount > 0) {
             $plp->setStatus($this->successPlpStatus);
-        } else {
+        } elseif ($errorCount > 0) {
             $plp->setStatus($this->failurePlpStatus);
         }
         

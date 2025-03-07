@@ -34,7 +34,7 @@ class PlpLabelRequest extends AbstractPlpOperation
      * @param LoggerInterface $logger
      * @param PlpRepositoryInterface $plpRepository
      * @param PlpAsyncLabelService $plpAsyncLabelService
-     * @param PlpOrderCollectionFactory $plpOrderCollectionFactory
+     * @param PlpOrderCollectionFactory $plpOrdCollection
      * @param PlpCollectionFactory $plpCollectionFactory
      */
     public function __construct(
@@ -42,7 +42,7 @@ class PlpLabelRequest extends AbstractPlpOperation
         LoggerInterface $logger,
         PlpRepositoryInterface $plpRepository,
         PlpAsyncLabelService $plpAsyncLabelService,
-        PlpOrderCollectionFactory $plpOrderCollectionFactory,
+        PlpOrderCollectionFactory $plpOrdCollection,
         PlpCollectionFactory $plpCollectionFactory
     ) {
         $this->plpAsyncLabelService = $plpAsyncLabelService;
@@ -51,7 +51,7 @@ class PlpLabelRequest extends AbstractPlpOperation
             $logger,
             $plpRepository,
             $json,
-            $plpOrderCollectionFactory,
+            $plpOrdCollection,
             $plpCollectionFactory
         );
     }
@@ -70,12 +70,12 @@ class PlpLabelRequest extends AbstractPlpOperation
         $this->failurePlpStatus = PlpStatus::STATUS_PLP_REQUESTING_RECEIPT;
         
         // Define order statuses
-        $this->expectedTypeFilterOrder = 'status';
-        $this->expectedOrderStatuses = [
+        $this->expectedTypeFilter = 'status';
+        $this->expectedOrderStatus = [
             PlpStatusItem::STATUS_ITEM_SUBMIT_CREATED,
             PlpStatusItem::STATUS_ITEM_PENDING_REQUEST_LABELS
         ];
-        $this->inProgressOrderStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_REQUEST_LABELS;
+        $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_REQUEST_LABELS;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED;
         $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_RECEIPT_ERROR;
     }
@@ -214,18 +214,10 @@ class PlpLabelRequest extends AbstractPlpOperation
     {
         if ($successCount > 0 && $errorCount === 0) {
             $plp->setStatus($this->successPlpStatus);
-            $result['message'] = __('Successfully requested %1 labels for PLP %2', $successCount, $plp->getId());
         } elseif ($successCount > 0 && $errorCount > 0) {
             $plp->setStatus($this->successPlpStatus);
-            $result['message'] = __(
-                'Successfully requested %1 labels for PLP %2 (%3 errors occurred)',
-                $successCount,
-                $plp->getId(),
-                $errorCount
-            );
-        } else {
+        } elseif ($errorCount) {
             $plp->setStatus($this->failurePlpStatus);
-            $result['message'] = __('Failed to request any labels for PLP %1', $plp->getId());
         }
         
         $this->plpRepository->save($plp);

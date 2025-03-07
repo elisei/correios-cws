@@ -79,7 +79,6 @@ class PlpSingleSubmitService
         ];
 
         try {
-            $auth = $this->authService->getBearerHeader();
             $response = $this->apiClient->request(
                 $this->config->getBaseUrl() . 'prepostagem/v1/prepostagens',
                 $this->authService->getBearerHeader(),

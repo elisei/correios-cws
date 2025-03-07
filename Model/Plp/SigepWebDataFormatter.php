@@ -80,8 +80,7 @@ class SigepWebDataFormatter
         $package = $this->getPackageDimensions($weight);
         
         $serviceCode = $this->getServiceCode($collectedData['order_info']['shipping_method']);
-        $declaredValue = isset($collectedData['order_info']['subtotal']) ?
-            (float)$collectedData['order_info']['subtotal'] : null;
+        $declaredValue = $this->formatTotal($collectedData['order_info']['subtotal']);
         
         $formattedData = [
             'sequencial' => $collectedData['order_info']['order_id'],
@@ -114,6 +113,8 @@ class SigepWebDataFormatter
      * @param string $serviceCode
      * @param float|null $declaredValue
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function processAdditionalServices(
         array $formattedData,
@@ -261,8 +262,8 @@ class SigepWebDataFormatter
         }
         
         if (stripos($ruleWeight, 'kg') !== false) {
-            $kg = (float)preg_replace('/[^0-9\.]/', '', $ruleWeight);
-            return (int)($kg * 1000);
+            $kgm = (float)preg_replace('/[^0-9\.]/', '', $ruleWeight);
+            return (int)($kgm * 1000);
         }
         
         return (int)$ruleWeight;
@@ -364,6 +365,17 @@ class SigepWebDataFormatter
         }
         
         return number_format($weight, 3, '.', '') * 100;
+    }
+
+    /**
+     * Format total
+     *
+     * @param float $total
+     * @return string
+     */
+    protected function formatTotal($total)
+    {
+        return number_format($total, 2, '.', '');
     }
 
     /**

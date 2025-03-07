@@ -79,9 +79,6 @@ class PlpSyncService
         ];
 
         try {
-            $postingCard = $this->config->getPostingCard();
-            $correiosId = $this->config->getCorreiosId();
-            
             $endpoint = $this->config->getBaseUrl() . 'prepostagem/v1/prepostagens/lote/' . $idLote .'/sequencia';
 
             $auth = $this->authService->getBearerHeader();

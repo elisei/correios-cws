@@ -25,7 +25,7 @@ class PlpSingleSubmit extends AbstractPlpOperation
     /**
      * @var PlpSingleSubmitService
      */
-    protected $plpSingleSubmitService;
+    protected $plpSingleService;
 
     /**
      * Constructor
@@ -33,25 +33,25 @@ class PlpSingleSubmit extends AbstractPlpOperation
      * @param Json $json
      * @param LoggerInterface $logger
      * @param PlpRepositoryInterface $plpRepository
-     * @param PlpSingleSubmitService $plpSingleSubmitService
-     * @param PlpOrderCollectionFactory $plpOrderCollectionFactory
+     * @param PlpSingleSubmitService $plpSingleService
+     * @param PlpOrderCollectionFactory $plpOrdCollection
      * @param PlpCollectionFactory $plpCollectionFactory
      */
     public function __construct(
         Json $json,
         LoggerInterface $logger,
         PlpRepositoryInterface $plpRepository,
-        PlpSingleSubmitService $plpSingleSubmitService,
-        PlpOrderCollectionFactory $plpOrderCollectionFactory,
+        PlpSingleSubmitService $plpSingleService,
+        PlpOrderCollectionFactory $plpOrdCollection,
         PlpCollectionFactory $plpCollectionFactory
     ) {
-        $this->plpSingleSubmitService = $plpSingleSubmitService;
+        $this->plpSingleService = $plpSingleService;
         
         parent::__construct(
             $logger,
             $plpRepository,
             $json,
-            $plpOrderCollectionFactory,
+            $plpOrdCollection,
             $plpCollectionFactory
         );
     }
@@ -67,9 +67,9 @@ class PlpSingleSubmit extends AbstractPlpOperation
         $this->successPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_RECEIPT;
         $this->failurePlpStatus = PlpStatus::STATUS_PLP_COLLECTING_DATA;
         
-        $this->expectedTypeFilterOrder = 'status';
-        $this->expectedOrderStatuses = PlpStatusItem::STATUS_ITEM_COLLECTION_COMPLETED;
-        $this->inProgressOrderStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_SUBMIT;
+        $this->expectedTypeFilter = 'status';
+        $this->expectedOrderStatus = PlpStatusItem::STATUS_ITEM_COLLECTION_COMPLETED;
+        $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_SUBMIT;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_SUBMIT_CREATED;
         $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_SUBMIT_ERROR;
     }
@@ -119,7 +119,7 @@ class PlpSingleSubmit extends AbstractPlpOperation
             
             $request = $this->json->unserialize($request);
             
-            $serviceResult = $this->plpSingleSubmitService->execute($request);
+            $serviceResult = $this->plpSingleService->execute($request);
 
             if (!$serviceResult['success']) {
                 throw new LocalizedException(__('Service error: %1', $serviceResult['message']));
@@ -174,26 +174,10 @@ class PlpSingleSubmit extends AbstractPlpOperation
     {
         if ($successCount > 0 && $errorCount === 0) {
             $plp->setStatus($this->successPlpStatus);
-            $message = __(
-                'All %1 orders in PLP %2 were processed successfully',
-                $successCount,
-                $plp->getId()
-            );
         } elseif ($successCount > 0 && $errorCount > 0) {
             $plp->setStatus($this->successPlpStatus);
-            $message = __(
-                '%1 orders processed successfully and %2 orders failed in PLP %3',
-                $successCount,
-                $errorCount,
-                $plp->getId()
-            );
-        } else {
+        } elseif ($errorCount) {
             $plp->setStatus($this->failurePlpStatus);
-            $message = __(
-                'All %1 orders in PLP %2 failed processing',
-                $errorCount,
-                $plp->getId()
-            );
         }
         
         $this->plpRepository->save($plp);

@@ -17,6 +17,7 @@ use Magento\Framework\Filesystem\Driver\File as DriverFile;
 use Magento\Framework\Filesystem\Io\File;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Url\DecoderInterface;
+use Magento\Framework\Exception\LocalizedException;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
 use O2TI\SigepWebCarrier\Gateway\Service\PlpLabelDownloadService;
 use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
@@ -24,12 +25,18 @@ use O2TI\SigepWebCarrier\Model\Plp\Source\StatusItem as PlpStatusItem;
 use O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\CollectionFactory as PlpOrderCollectionFactory;
 use O2TI\SigepWebCarrier\Model\ResourceModel\Plp\CollectionFactory as PlpCollectionFactory;
 
+/**
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class PlpLabelDownload extends AbstractPlpOperation
 {
     /**
      * @var PlpLabelDownloadService
      */
-    protected $plpLabelDownloadService;
+    protected $plpLabelDownService;
     
     /**
      * @var Filesystem
@@ -62,27 +69,29 @@ class PlpLabelDownload extends AbstractPlpOperation
      * @param Json $json
      * @param LoggerInterface $logger
      * @param PlpRepositoryInterface $plpRepository
-     * @param PlpLabelDownloadService $plpLabelDownloadService
-     * @param PlpOrderCollectionFactory $plpOrderCollectionFactory
+     * @param PlpLabelDownloadService $plpLabelDownService
+     * @param PlpOrderCollectionFactory $plpOrdCollection
      * @param PlpCollectionFactory $plpCollectionFactory
      * @param Filesystem $filesystem
      * @param DriverFile $driver
      * @param File $fileIo
      * @param DecoderInterface $urlDecoder
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         Json $json,
         LoggerInterface $logger,
         PlpRepositoryInterface $plpRepository,
-        PlpLabelDownloadService $plpLabelDownloadService,
-        PlpOrderCollectionFactory $plpOrderCollectionFactory,
+        PlpLabelDownloadService $plpLabelDownService,
+        PlpOrderCollectionFactory $plpOrdCollection,
         PlpCollectionFactory $plpCollectionFactory,
         Filesystem $filesystem,
         DriverFile $driver,
         File $fileIo,
         DecoderInterface $urlDecoder
     ) {
-        $this->plpLabelDownloadService = $plpLabelDownloadService;
+        $this->plpLabelDownService = $plpLabelDownService;
         $this->filesystem = $filesystem;
         $this->driver = $driver;
         $this->fileIo = $fileIo;
@@ -92,7 +101,7 @@ class PlpLabelDownload extends AbstractPlpOperation
             $logger,
             $plpRepository,
             $json,
-            $plpOrderCollectionFactory,
+            $plpOrdCollection,
             $plpCollectionFactory
         );
     }
@@ -111,12 +120,12 @@ class PlpLabelDownload extends AbstractPlpOperation
         $this->failurePlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
         
         // Define order statuses
-        $this->expectedTypeFilterOrder = 'status';
-        $this->expectedOrderStatuses = [
+        $this->expectedTypeFilter = 'status';
+        $this->expectedOrderStatus = [
             PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED,
             PlpStatusItem::STATUS_ITEM_PENDING_DOWNLOAD
         ];
-        $this->inProgressOrderStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_DOWNLOAD;
+        $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_DOWNLOAD;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_DOWNLOAD_COMPLETED;
         $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED;
     }
@@ -170,7 +179,7 @@ class PlpLabelDownload extends AbstractPlpOperation
 
             if (empty($processingData)) {
                 // phpcs:ignore Magento2.Exceptions.DirectThrow
-                throw new \Exception(__(
+                throw new LocalizedException(__(
                     'PLP Order %1 has no processing data',
                     $plpOrder->getId()
                 ));
@@ -180,7 +189,7 @@ class PlpLabelDownload extends AbstractPlpOperation
             
             if (!isset($processingData['labelReceiptId'])) {
                 // phpcs:ignore Magento2.Exceptions.DirectThrow
-                throw new \Exception(__(
+                throw new LocalizedException(__(
                     'PLP Order %1 has no label receipt ID',
                     $plpOrder->getId()
                 ));
@@ -188,11 +197,11 @@ class PlpLabelDownload extends AbstractPlpOperation
 
             $receiptId = $processingData['labelReceiptId'];
             
-            $serviceResult = $this->plpLabelDownloadService->execute($receiptId);
+            $serviceResult = $this->plpLabelDownService->execute($receiptId);
             
             if (!$serviceResult['success']) {
                 // phpcs:ignore Magento2.Exceptions.DirectThrow
-                throw new \Exception(__(
+                throw new LocalizedException(__(
                     'Failed to download label for receipt ID %1: %2',
                     $receiptId,
                     $serviceResult['message']
@@ -208,7 +217,7 @@ class PlpLabelDownload extends AbstractPlpOperation
             
             if (!$fileName) {
                 // phpcs:ignore Magento2.Exceptions.DirectThrow
-                throw new \Exception(__(
+                throw new LocalizedException(__(
                     'Failed to save label file for receipt ID %1',
                     $receiptId
                 ));
@@ -222,12 +231,12 @@ class PlpLabelDownload extends AbstractPlpOperation
                 'file_name' => $fileName
             ];
             
-            $this->saveDownloadData($plpOrder, $processingData, $serviceResult, $result);
+            $this->saveDownloadData($plpOrder, $processingData, $result);
             
             $result['success_count']++;
             return true;
-        } catch (\Exception $e) {
-            $errorMessage = $e->getMessage();
+        } catch (LocalizedException $exc) {
+            $errorMessage = $exc->getMessage();
             $this->logger->critical(__(
                 'Exception occurred while processing receipt ID %1: %2',
                 $processingData['labelReceiptId'] ?? 'unknown',
@@ -270,7 +279,7 @@ class PlpLabelDownload extends AbstractPlpOperation
                 $plp->getId(),
                 $this->expectedPlpStatus
             ));
-        } else {
+        } elseif ($errorCount) {
             $plp->setStatus($this->failurePlpStatus);
             $this->logger->info(__(
                 'Setting PLP %1 status to %2 (failure)',
@@ -347,7 +356,7 @@ class PlpLabelDownload extends AbstractPlpOperation
                 $syncCount,
                 $plpId
             );
-        } else {
+        } elseif ($errorCount) {
             $this->result['success'] = false;
             $this->result['message'] = __('Failed to download any labels for PLP %1', $plpId);
         }
@@ -403,10 +412,9 @@ class PlpLabelDownload extends AbstractPlpOperation
      *
      * @param object $plpOrder
      * @param array $processingData
-     * @param array $serviceResult
      * @param array $result
      */
-    private function saveDownloadData($plpOrder, $processingData, $serviceResult, &$result)
+    private function saveDownloadData($plpOrder, $processingData, &$result)
     {
         $processingData['labelDownloadData'] = [
             'status' => 'downloaded',
@@ -442,6 +450,8 @@ class PlpLabelDownload extends AbstractPlpOperation
      * @param object $plpOrder
      * @param int $plpId
      * @return string|false
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function saveShippingLabelFile($labelData, $plpOrder, $plpId)
     {
@@ -461,7 +471,9 @@ class PlpLabelDownload extends AbstractPlpOperation
                 if ($fileCreated) {
                     return $fileName;
                 }
-            } else {
+            }
+
+            if (!isset($labelData['nome']) || !isset($labelData['dados'])) {
                 $fileName = $this->generateLabelFileName($plpId, $plpOrder->getId(), $trackingCode);
                 $filePath = $this->getLabelFilePath($fileName);
                 
@@ -479,11 +491,11 @@ class PlpLabelDownload extends AbstractPlpOperation
             }
             
             return false;
-        } catch (\Exception $e) {
+        } catch (LocalizedException $exc) {
             $this->logger->error(__(
                 'Error saving label file for PLP Order %1: %2',
                 $plpOrder->getId(),
-                $e->getMessage()
+                $exc->getMessage()
             ));
             return false;
         }
@@ -548,9 +560,9 @@ class PlpLabelDownload extends AbstractPlpOperation
             
             $this->driver->filePutContents($filePath, $content);
             return true;
-        } catch (\Exception $e) {
+        } catch (LocalizedException $exc) {
             $this->logger->critical(
-                __('Error creating label file: %1', $e->getMessage())
+                __('Error creating label file: %1', $exc->getMessage())
             );
             return false;
         }

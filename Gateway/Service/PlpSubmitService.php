@@ -122,15 +122,17 @@ class PlpSubmitService
             
             if (isset($response['idLote'])) {
                 $result['data'] = $response;
-            } else {
+            }
+
+            if (!isset($response['idLote'])) {
                 $result['success'] = false;
                 $result['message'] = __('Failed to submit PLP: Invalid API response');
             }
 
-        } catch (\Exception $e) {
-            $this->logger->critical($e);
+        } catch (\Exception $exc) {
+            $this->logger->critical($exc);
             $result['success'] = false;
-            $result['message'] = __('Error submitting PLP file: %1', $e->getMessage());
+            $result['message'] = __('Error submitting PLP file: %1', $exc->getMessage());
         }
 
         return $result;

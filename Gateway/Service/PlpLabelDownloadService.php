@@ -84,8 +84,7 @@ class PlpLabelDownloadService
                 $url,
                 $this->authService->getBearerHeader(),
                 [],
-                'GET',
-                true
+                'GET'
             );
             
             if (isset($response['mensagem']) &&

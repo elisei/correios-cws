@@ -176,6 +176,9 @@ class PlpCompleteProcessCron
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     protected function processPLP($plp)
     {
@@ -270,7 +273,9 @@ class PlpCompleteProcessCron
         
         if ($result['success']) {
             $this->processStats['data_collection']['success'] += $result['processed'];
-        } else {
+        }
+
+        if ($result['errors']) {
             $this->processStats['data_collection']['errors'] += $result['errors'];
         }
         
@@ -309,7 +314,9 @@ class PlpCompleteProcessCron
         
         if ($result['success']) {
             $this->processStats['submission']['success'] += $result['processed'];
-        } else {
+        }
+
+        if ($result['errors']) {
             $this->processStats['submission']['errors'] += $result['errors'];
         }
         
@@ -348,7 +355,9 @@ class PlpCompleteProcessCron
         
         if ($result['success']) {
             $this->processStats['label_requests']['success'] += $result['processed'];
-        } else {
+        }
+
+        if ($result['errors']) {
             $this->processStats['label_requests']['errors'] += $result['errors'];
         }
         
@@ -387,7 +396,9 @@ class PlpCompleteProcessCron
         
         if ($result['success']) {
             $this->processStats['label_downloads']['success'] += $result['processed'];
-        } else {
+        }
+
+        if ($result['errors']) {
             $this->processStats['label_downloads']['errors'] += $result['errors'];
         }
         
@@ -426,7 +437,9 @@ class PlpCompleteProcessCron
         
         if ($result['success']) {
             $this->processStats['shipment_creation']['success'] += $result['processed'];
-        } else {
+        }
+
+        if ($result['errors']) {
             $this->processStats['shipment_creation']['errors'] += $result['errors'];
         }
         

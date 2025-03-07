@@ -27,6 +27,9 @@ use O2TI\SigepWebCarrier\Model\Plp\Source\StatusItem as PlpStatusItem;
 use O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\CollectionFactory as PlpOrderCollectionFactory;
 use O2TI\SigepWebCarrier\Model\ResourceModel\Plp\CollectionFactory as PlpCollectionFactory;
 
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PlpOrderShipmentCreator extends AbstractPlpOperation
 {
     /**
@@ -84,12 +87,15 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
      * @param ConvertOrder $convertOrder
      * @param ShipmentNotifier $shipmentNotifier
      * @param PlpRepositoryInterface $plpRepository
-     * @param PlpOrderCollectionFactory $plpOrderCollectionFactory
+     * @param PlpOrderCollectionFactory $plpOrdCollection
      * @param PlpCollectionFactory $plpCollectionFactory
      * @param Filesystem $filesystem
      * @param TrackFactory $trackFactory
      * @param DriverFile $driver
      * @param bool $sendEmail
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function __construct(
         Json $json,
@@ -99,7 +105,7 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         ConvertOrder $convertOrder,
         ShipmentNotifier $shipmentNotifier,
         PlpRepositoryInterface $plpRepository,
-        PlpOrderCollectionFactory $plpOrderCollectionFactory,
+        PlpOrderCollectionFactory $plpOrdCollection,
         PlpCollectionFactory $plpCollectionFactory,
         Filesystem $filesystem,
         TrackFactory $trackFactory,
@@ -119,7 +125,7 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
             $logger,
             $plpRepository,
             $json,
-            $plpOrderCollectionFactory,
+            $plpOrdCollection,
             $plpCollectionFactory
         );
     }
@@ -138,9 +144,9 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         $this->failurePlpStatus = PlpStatus::STATUS_PLP_AWAITING_SHIPMENT;
         
         // Define order statuses
-        $this->expectedTypeFilterOrder = 'status';
-        $this->expectedOrderStatuses = [PlpStatusItem::STATUS_ITEM_DOWNLOAD_COMPLETED];
-        $this->inProgressOrderStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_SHIP_CREATE;
+        $this->expectedTypeFilter = 'status';
+        $this->expectedOrderStatus = [PlpStatusItem::STATUS_ITEM_DOWNLOAD_COMPLETED];
+        $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_SHIP_CREATE;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_SHIP_CREATED;
         $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_SHIP_CREATE_ERROR;
     }
@@ -185,8 +191,10 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
      * @param int $plpId
      * @param bool $sendEmail Overrides the class-level setting
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
-    public function execute($plpId, $sendEmail = null)
+    public function execute($plpId, $sendEmail = true)
     {
         $this->sendEmail = $sendEmail !== null ? (bool)$sendEmail : $this->sendEmail;
         return parent::execute($plpId);
@@ -287,7 +295,7 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
     {
         if ($successCount > 0 && $errorCount === 0) {
             $plp->setStatus($this->successPlpStatus);
-        } else {
+        } elseif ($errorCount) {
             $plp->setStatus($this->failurePlpStatus);
         }
         
@@ -330,6 +338,8 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
      * @param array $processingData
      * @param bool $sendEmail
      * @return \Magento\Sales\Api\Data\ShipmentInterface
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function createShipment($order, $processingData, $sendEmail = false)
     {
@@ -359,8 +369,6 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         $track->setTrackNumber($trackingNumber);
         
         $shipment->addTrack($track);
-        
-        $labelFilePath = $this->getLabelFilePath($processingData['labelFileName']);
         
         $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::VAR_DIR);
         $relativeFilePath = 'sigepweb/labels/' . $processingData['labelFileName'];
@@ -394,18 +402,6 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         }
         
         return $shipment;
-    }
-    
-    /**
-     * Get label file path
-     *
-     * @param string $fileName
-     * @return string
-     */
-    private function getLabelFilePath($fileName)
-    {
-        $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::VAR_DIR);
-        return $mediaDirectory->getAbsolutePath('sigepweb/labels/' . $fileName);
     }
 
     /**
