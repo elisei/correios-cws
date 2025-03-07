@@ -18,8 +18,7 @@ interface PlpInterface
     public const STORE_ID = 'store_id';
     public const STATUS = 'status';
     public const CAN_ADD_ORDERS = 'can_add_orders';
-    public const CAN_REMOVE_ORDERS = 'can_remove_orders';
-    public const CAN_CLOSE = 'can_close';
+    public const CAN_SEND_TO_CWS = 'can_send_to_cws';
     public const CREATED_AT = 'created_at';
     public const UPDATED_AT = 'updated_at';
 
@@ -69,6 +68,23 @@ interface PlpInterface
     public function setStatus($status);
 
     /**
+     * Get Can Send To Cws
+     *
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
+     */
+    public function getCanSendToCws();
+
+    /**
+     * Set Can Send To Cws
+     *
+     * @param bool $canSendToCws
+     * @return $this
+     */
+    public function setCanSendToCws($canSendToCws);
+
+    /**
      * Get Can Add Orders
      *
      * @return bool
@@ -84,38 +100,4 @@ interface PlpInterface
      * @return $this
      */
     public function setCanAddOrders($canAddOrders);
-
-    /**
-     * Get Can Remove Orders
-     *
-     * @return bool
-     *
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
-     */
-    public function getCanRemoveOrders();
-
-    /**
-     * Set Can Remove Orders
-     *
-     * @param bool $canRemoveOrders
-     * @return $this
-     */
-    public function setCanRemoveOrders($canRemoveOrders);
-
-    /**
-     * Get Can Close
-     *
-     * @return bool
-     *
-     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
-     */
-    public function getCanClose();
-
-    /**
-     * Set Can Close
-     *
-     * @param bool $canClose
-     * @return $this
-     */
-    public function setCanClose($canClose);
 }

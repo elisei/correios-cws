@@ -15,14 +15,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use O2TI\SigepWebCarrier\Model\Plp\PlpDataCollector;
+use O2TI\SigepWebCarrier\Model\Plp\PlpLabelRequest;
+use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
 
-class PlpDataCollectCommand extends Command
+class PlpLabelRequestCommand extends Command
 {
     /**
      * Command Name
      */
-    public const COMMAND_NAME = 'sigepweb:plp:collect';
+    public const COMMAND_NAME = 'sigepweb:plp:request_labels';
 
     /**
      * Force option
@@ -35,26 +36,22 @@ class PlpDataCollectCommand extends Command
     public const PLP_ID_ARGUMENT = 'plp_id';
 
     /**
-     * Process all PLPs option
+     * @var PlpLabelRequest
      */
-    public const ALL_PLPS_OPTION = 'all';
-
-    /**
-     * @var PlpDataCollector
-     */
-    private $plpDataCollector;
+    private $plpLabelRequest;
 
     /**
      * Constructor
      *
-     * @param PlpDataCollector $plpDataCollector
+     * @param PlpLabelRequest $plpLabelRequest
      * @param string|null $name
      */
     public function __construct(
-        PlpDataCollector $plpDataCollector,
+        PlpLabelRequest $plpLabelRequest,
         $name = null
     ) {
-        $this->plpDataCollector = $plpDataCollector;
+        $this->plpLabelRequest = $plpLabelRequest;
+        
         parent::__construct($name);
     }
 
@@ -66,11 +63,11 @@ class PlpDataCollectCommand extends Command
     protected function configure()
     {
         $this->setName(self::COMMAND_NAME)
-            ->setDescription('Collect order data for PLPs with pending orders')
+            ->setDescription('Request labels for PLPs with submitted objects')
             ->addArgument(
                 self::PLP_ID_ARGUMENT,
                 InputArgument::OPTIONAL,
-                'Specific PLP ID to collect data for'
+                'Specific PLP ID to request labels for'
             )
             ->addOption(
                 self::FORCE_OPTION,
@@ -93,40 +90,50 @@ class PlpDataCollectCommand extends Command
     {
         try {
             $plpId = $input->getArgument(self::PLP_ID_ARGUMENT);
-
+            
             if (!$plpId) {
-                $output->writeln('<error>'. __('Please provide a PLP ID') . '</error>');
+                $output->writeln(
+                    '<error>'.
+                    __('Please provide a PLP ID or use the --all option to process all PLPs')
+                    .'</error>'
+                );
                 return Command::FAILURE;
             }
 
-            $output->writeln('<info>' . __('Processing PLP ID: %1', $plpId) . '</info>');
+            $output->writeln('<info>'. __('Requesting labels for PLP ID: %1', $plpId) .'</info>');
             
-            $result = $this->plpDataCollector->execute($plpId);
+            $result = $this->plpLabelRequest->execute($plpId);
             
             if ($result['success']) {
                 $output->writeln(
                     '<info>'.
-                    __(
-                        '%1: Processed %2 orders with %3 errors.',
-                        $result['message'],
-                        $result['processed'],
-                        $result['errors']
-                    )
-                    .'</info>'
+                    __('%1', $result['message']).
+                    '</info>'
                 );
                 
-                if ($result['errors'] > 0) {
-                    $output->writeln('<comment>'. __('Check logs for error details.').'</comment>');
+                if (!empty($result['data']['receipts'])) {
+                    $output->writeln('<info>'. __('Label receipt details:') .'</info>');
+                    foreach ($result['data']['receipts'] as $receipt) {
+                        $output->writeln(
+                            '<comment>'.
+                            __(
+                                '  - Order ID: %1, Tracking: %2, Receipt ID: %3',
+                                $receipt['plp_order_id'],
+                                $receipt['tracking_code'],
+                                $receipt['receipt_id']
+                            ).
+                            '</comment>'
+                        );
+                    }
                 }
-                
                 return Command::SUCCESS;
             }
 
             if (!$result['success']) {
-                $output->writeln('<error>' . __('Error: %s', $result['message']) . '</error>');
+                $output->writeln('<error>'. __('%1', $result['message']) .'</error>');
                 return Command::FAILURE;
             }
-            
+
         } catch (\Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
             return Command::FAILURE;

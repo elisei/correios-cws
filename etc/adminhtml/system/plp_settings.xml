@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="plp_settings" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>PLP Settings</label>
+        <depends>
+            <field id="*/*/credentials/has_credentials">1</field>
+        </depends>
+        <field id="label_type" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Label Type</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\LabelType</source_model>
+            <config_path>carriers/sigep_web_carrier/label_type</config_path>
+        </field>
+        <field id="label_format" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Label Format</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\LabelFormat</source_model>
+            <config_path>carriers/sigep_web_carrier/label_format</config_path>
+        </field>
+        <field id="print_layout" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Print Layout</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\PrintLayout</source_model>
+            <config_path>carriers/sigep_web_carrier/print_layout</config_path>
+        </field>
+        <field id="allowed_status" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Status Allowed for create Label</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\FilterStatus</source_model>
+            <config_path>carriers/sigep_web_carrier/allowed_status</config_path>
+        </field>
+    </group>
+</include>

@@ -152,36 +152,4 @@ class PlpOrder extends AbstractModel implements PlpOrderInterface
     {
         return $this->setData(self::PROCESSING_DATA, $processingData);
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCollectionStatus()
-    {
-        return $this->getData(self::COLLECTION_STATUS);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setCollectionStatus($collectionStatus)
-    {
-        return $this->setData(self::COLLECTION_STATUS, $collectionStatus);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getProcessingStatus()
-    {
-        return $this->getData(self::PROCESSING_STATUS);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setProcessingStatus($processingStatus)
-    {
-        return $this->setData(self::PROCESSING_STATUS, $processingStatus);
-    }
 }

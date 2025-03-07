@@ -26,6 +26,8 @@
                 <include path="O2TI_SigepWebCarrier::system/service_settings.xml"/>
                 <!-- Grupo: Fallback -->
                 <include path="O2TI_SigepWebCarrier::system/fallback.xml"/>
+                <!-- Grupo: Plp -->
+                <include path="O2TI_SigepWebCarrier::system/plp_settings.xml"/>
             </group>
         </section>
     </system>

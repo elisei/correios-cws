@@ -94,6 +94,22 @@ class Plp extends AbstractModel implements PlpInterface
     /**
      * @inheritDoc
      */
+    public function getCanSendToCws()
+    {
+        return (bool)$this->getData(self::CAN_SEND_TO_CWS);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCanSendToCws($canSendToCws)
+    {
+        return $this->setData(self::CAN_SEND_TO_CWS, (bool)$canSendToCws);
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getCanAddOrders()
     {
         return (bool)$this->getData(self::CAN_ADD_ORDERS);
@@ -110,44 +126,10 @@ class Plp extends AbstractModel implements PlpInterface
     /**
      * @inheritDoc
      */
-    public function getCanRemoveOrders()
-    {
-        return (bool)$this->getData(self::CAN_REMOVE_ORDERS);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setCanRemoveOrders($canRemoveOrders)
-    {
-        return $this->setData(self::CAN_REMOVE_ORDERS, (bool)$canRemoveOrders);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getCanClose()
-    {
-        return (bool)$this->getData(self::CAN_CLOSE);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setCanClose($canClose)
-    {
-        return $this->setData(self::CAN_CLOSE, (bool)$canClose);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function setStatus($status)
     {
         $permissions = $this->statusModel->getActionPermissions($status);
         $this->setCanAddOrders($permissions['can_add_orders']);
-        $this->setCanRemoveOrders($permissions['can_remove_orders']);
-        $this->setCanClose($permissions['can_close']);
         
         return $this->setData(self::STATUS, $status);
     }

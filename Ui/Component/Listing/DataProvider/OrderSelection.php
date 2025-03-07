@@ -7,10 +7,16 @@ use Magento\Framework\Api\Search\ReportingInterface;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\ResourceModel\Order\Grid\CollectionFactory;
+use O2TI\SigepWebCarrier\Gateway\Config\Config;
 use O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\CollectionFactory as PlpOrderCollectionFactory;
 
 class OrderSelection extends DataProvider
 {
+    /**
+     * @var Config
+     */
+    protected $config;
+
     /**
      * @var PlpOrderCollectionFactory
      */
@@ -29,6 +35,7 @@ class OrderSelection extends DataProvider
      * @param SearchCriteriaBuilder $searchCriteria
      * @param RequestInterface $request
      * @param FilterBuilder $filterBuilder
+     * @param Config $config
      * @param CollectionFactory $orderGridCollection
      * @param PlpOrderCollectionFactory $plpOrderCollection
      * @param array $meta
@@ -44,6 +51,7 @@ class OrderSelection extends DataProvider
         SearchCriteriaBuilder $searchCriteria,
         RequestInterface $request,
         FilterBuilder $filterBuilder,
+        Config $config,
         CollectionFactory $orderGridCollection,
         PlpOrderCollectionFactory $plpOrderCollection,
         array $meta = [],
@@ -60,6 +68,7 @@ class OrderSelection extends DataProvider
             $meta,
             $data
         );
+        $this->config = $config;
         $this->orderGridCollection = $orderGridCollection;
         $this->plpOrderCollection = $plpOrderCollection;
     }
@@ -74,6 +83,7 @@ class OrderSelection extends DataProvider
         $collection = $this->orderGridCollection->create();
         $plpOrderCollection = $this->plpOrderCollection->create();
         $existingOrderIds = $plpOrderCollection->getColumnValues('order_id');
+        $allowedStatus = $this->config->getAllowedStatus();
         
         if (!empty($existingOrderIds)) {
             $collection->addFieldToFilter(
@@ -82,8 +92,7 @@ class OrderSelection extends DataProvider
             );
         }
 
-        // $collection->addFieldToFilter('state', ['in' => ['processing']]);
-
+        $collection->addFieldToFilter('status', ['in' => $allowedStatus]);
         $collection->setOrder('entity_id', 'DESC');
 
         $result = [

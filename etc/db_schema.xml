@@ -36,14 +36,16 @@
                 comment="Entity ID"/>
         <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" 
                 comment="Store ID"/>
-        <column xsi:type="varchar" name="status" nullable="false" length="50" default="open"
+        <column xsi:type="varchar" name="status" nullable="false" length="50" default="opened"
                 comment="Status da PLP"/>
+        <!-- <column xsi:type="varchar" name="id_lote" nullable="true" length="50"
+                comment="ID do Lote"/>
+        <column xsi:type="varchar" name="nome_arquivo_lote" nullable="true" length="250"
+                comment="Nome do Arquivo do Lote"/> -->
+        <column xsi:type="boolean" name="can_send_to_cws" nullable="false" default="false"
+                comment="Enviar a PLP aos Correios"/>
         <column xsi:type="boolean" name="can_add_orders" nullable="false" default="true"
             comment="Permite adicionar novos pedidos"/>
-        <column xsi:type="boolean" name="can_remove_orders" nullable="false" default="true"
-                comment="Permite remover pedidos"/>
-        <column xsi:type="boolean" name="can_close" nullable="false" default="false"
-                comment="Permite fechar a PLP"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
         <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP"
@@ -64,7 +66,7 @@
                 comment="PLP ID"/>
         <column xsi:type="varchar" name="order_id" length="32" nullable="false"
                 comment="Order ID"/>
-        <column xsi:type="varchar" name="status" nullable="false" length="50" default="pending"
+        <column xsi:type="varchar" name="status" nullable="false" length="32" default="pending_collection"
                 comment="Status do Processamento"/>
         <column xsi:type="text" name="error_message" nullable="true"
                 comment="Mensagem de Erro"/>
@@ -74,10 +76,6 @@
                 comment="Dados coletados do pedido em JSON"/>
         <column xsi:type="text" name="processing_data" nullable="true"
                 comment="Dados do processamento em JSON"/>
-        <column xsi:type="varchar" name="collection_status" length="32" nullable="true" default="pending"
-                comment="Status da coleta de dados"/>
-        <column xsi:type="varchar" name="processing_status" length="32" nullable="true" default="pending"
-                comment="Status do processamento dos dados"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>

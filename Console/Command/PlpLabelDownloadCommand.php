@@ -15,14 +15,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
-use O2TI\SigepWebCarrier\Model\Plp\PlpDataCollector;
+use O2TI\SigepWebCarrier\Model\Plp\PlpLabelDownload;
+use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
 
-class PlpDataCollectCommand extends Command
+class PlpLabelDownloadCommand extends Command
 {
     /**
      * Command Name
      */
-    public const COMMAND_NAME = 'sigepweb:plp:collect';
+    public const COMMAND_NAME = 'sigepweb:plp:download_labels';
 
     /**
      * Force option
@@ -40,21 +41,21 @@ class PlpDataCollectCommand extends Command
     public const ALL_PLPS_OPTION = 'all';
 
     /**
-     * @var PlpDataCollector
+     * @var PlpLabelDownload
      */
-    private $plpDataCollector;
+    private $plpLabelDownload;
 
     /**
      * Constructor
      *
-     * @param PlpDataCollector $plpDataCollector
+     * @param PlpLabelDownload $plpLabelDownload
      * @param string|null $name
      */
     public function __construct(
-        PlpDataCollector $plpDataCollector,
+        PlpLabelDownload $plpLabelDownload,
         $name = null
     ) {
-        $this->plpDataCollector = $plpDataCollector;
+        $this->plpLabelDownload = $plpLabelDownload;
         parent::__construct($name);
     }
 
@@ -66,11 +67,11 @@ class PlpDataCollectCommand extends Command
     protected function configure()
     {
         $this->setName(self::COMMAND_NAME)
-            ->setDescription('Collect order data for PLPs with pending orders')
+            ->setDescription('Download labels for PLPs with requested labels')
             ->addArgument(
                 self::PLP_ID_ARGUMENT,
                 InputArgument::OPTIONAL,
-                'Specific PLP ID to collect data for'
+                'Specific PLP ID to download labels for'
             )
             ->addOption(
                 self::FORCE_OPTION,
@@ -95,40 +96,47 @@ class PlpDataCollectCommand extends Command
             $plpId = $input->getArgument(self::PLP_ID_ARGUMENT);
 
             if (!$plpId) {
-                $output->writeln('<error>'. __('Please provide a PLP ID') . '</error>');
+                $output->writeln('<e>'. __('Please provide a PLP ID, receipt ID, or use the --all option') .'</e>');
                 return Command::FAILURE;
             }
 
-            $output->writeln('<info>' . __('Processing PLP ID: %1', $plpId) . '</info>');
+            $output->writeln('<info>'. __('Downloading labels for PLP ID: %1', $plpId) .'</info>');
             
-            $result = $this->plpDataCollector->execute($plpId);
+            $result = $this->plpLabelDownload->execute($plpId);
             
             if ($result['success']) {
                 $output->writeln(
                     '<info>'.
-                    __(
-                        '%1: Processed %2 orders with %3 errors.',
-                        $result['message'],
-                        $result['processed'],
-                        $result['errors']
-                    )
-                    .'</info>'
+                    __('%1', $result['message']).
+                    '</info>'
                 );
                 
-                if ($result['errors'] > 0) {
-                    $output->writeln('<comment>'. __('Check logs for error details.').'</comment>');
+                if (!empty($result['data']['downloads'])) {
+                    $output->writeln('<info>'. __('Label download details:') .'</info>');
+                    foreach ($result['data']['downloads'] as $download) {
+                        $output->writeln(
+                            '<comment>'.
+                            __(
+                                '  - Order ID: %1, Tracking: %2, Receipt ID: %3',
+                                $download['plp_order_id'],
+                                $download['tracking_code'],
+                                $download['receipt_id']
+                            ).
+                            '</comment>'
+                        );
+                    }
                 }
                 
                 return Command::SUCCESS;
             }
 
             if (!$result['success']) {
-                $output->writeln('<error>' . __('Error: %s', $result['message']) . '</error>');
+                $output->writeln('<e>'. __('%1', $result['message']) .'</e>');
                 return Command::FAILURE;
             }
             
         } catch (\Exception $e) {
-            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            $output->writeln('<e>' . $e->getMessage() . '</e>');
             return Command::FAILURE;
         }
     }

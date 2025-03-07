@@ -12,15 +12,5 @@
             <argument name="orderId" xsi:type="string">string</argument>
             <argument name="processingData" xsi:type="string">string</argument>
         </method>
-        <method name="updateOrderCollectionStatus">
-            <argument name="plpId" xsi:type="string">int</argument>
-            <argument name="orderId" xsi:type="string">string</argument>
-            <argument name="collectionStatus" xsi:type="string">string</argument>
-        </method>
-        <method name="updateOrderProcessingStatus">
-            <argument name="plpId" xsi:type="string">int</argument>
-            <argument name="orderId" xsi:type="string">string</argument>
-            <argument name="processingStatus" xsi:type="string">string</argument>
-        </method>
     </type>
 </config>

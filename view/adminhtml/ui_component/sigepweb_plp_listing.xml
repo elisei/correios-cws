@@ -73,13 +73,37 @@
             <settings>
                 <filter>select</filter>
                 <options>
-                    <option name="open" xsi:type="array">
-                        <item name="value" xsi:type="string">open</item>
-                        <item name="label" xsi:type="string" translate="true">Open</item>
+                    <option name="opened" xsi:type="array">
+                        <item name="value" xsi:type="string">opened</item>
+                        <item name="label" xsi:type="string" translate="true">Opened</item>
                     </option>
-                    <option name="processing" xsi:type="array">
-                        <item name="value" xsi:type="string">processing</item>
-                        <item name="label" xsi:type="string" translate="true">Processing</item>
+                    <option name="collecting_data" xsi:type="array">
+                        <item name="value" xsi:type="string">collecting_data</item>
+                        <item name="label" xsi:type="string" translate="true">Collecting Data</item>
+                    </option>
+                    <option name="in_communication" xsi:type="array">
+                        <item name="value" xsi:type="string">in_communication</item>
+                        <item name="label" xsi:type="string" translate="true">In Communication</item>
+                    </option>
+                    <option name="requesting_receipt" xsi:type="array">
+                        <item name="value" xsi:type="string">requesting_receipt</item>
+                        <item name="label" xsi:type="string" translate="true">Requesting Receipt</item>
+                    </option>
+                    <option name="requesting_file_creation" xsi:type="array">
+                        <item name="value" xsi:type="string">requesting_file_creation</item>
+                        <item name="label" xsi:type="string" translate="true">Requesting File Creation</item>
+                    </option>
+                    <option name="requesting_shipment_creation" xsi:type="array">
+                        <item name="value" xsi:type="string">requesting_shipment_creation</item>
+                        <item name="label" xsi:type="string" translate="true">Requesting Shipment Creation</item>
+                    </option>
+                    <option name="awaiting_shipment" xsi:type="array">
+                        <item name="value" xsi:type="string">awaiting_shipment</item>
+                        <item name="label" xsi:type="string" translate="true">Awaiting Shipment</item>
+                    </option>
+                    <option name="completed" xsi:type="array">
+                        <item name="value" xsi:type="string">completed</item>
+                        <item name="label" xsi:type="string" translate="true">Completed</item>
                     </option>
                 </options>
                 <label translate="true">Status</label>

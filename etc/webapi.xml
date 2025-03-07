@@ -93,16 +93,4 @@
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>
     </route>
-    <route url="/V1/sigepweb/plp/:plpId/order/:orderId/collection-status" method="PUT">
-        <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderCollectionStatus"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
-        </resources>
-    </route>
-    <route url="/V1/sigepweb/plp/:plpId/order/:orderId/processing-status" method="PUT">
-        <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderProcessingStatus"/>
-        <resources>
-            <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
-        </resources>
-    </route>
 </routes>

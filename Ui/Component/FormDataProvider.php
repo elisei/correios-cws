@@ -8,13 +8,13 @@
  * @license   See LICENSE for license details.
  */
 
-namespace O2TI\SigepWebCarrier\Model\Plp;
+namespace O2TI\SigepWebCarrier\Ui\Component;
 
 use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Ui\DataProvider\AbstractDataProvider;
 use O2TI\SigepWebCarrier\Model\ResourceModel\Plp\CollectionFactory;
 
-class DataProvider extends AbstractDataProvider
+class FormDataProvider extends AbstractDataProvider
 {
     /**
      * @var ResourceModel\Plp\Collection

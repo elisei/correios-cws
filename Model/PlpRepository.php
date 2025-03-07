@@ -114,8 +114,6 @@ class PlpRepository implements PlpRepositoryInterface
             if ($plp->getStatus()) {
                 $permissions = $this->statusModel->getActionPermissions($plp->getStatus());
                 $plp->setCanAddOrders($permissions['can_add_orders']);
-                $plp->setCanRemoveOrders($permissions['can_remove_orders']);
-                $plp->setCanClose($permissions['can_close']);
             }
 
             $this->resource->save($plp);
@@ -200,7 +198,7 @@ class PlpRepository implements PlpRepositoryInterface
                 $plpOrder = $this->plpOrderFactory->create();
                 $plpOrder->setPlpId($plpId)
                     ->setOrderId($id)
-                    ->setStatus('pending');
+                    ->setStatus('pending_collection');
                 
                 $this->plpOrderResource->save($plpOrder);
             }
@@ -237,7 +235,6 @@ class PlpRepository implements PlpRepositoryInterface
             
             $this->plpOrderResource->save($plpOrder);
             
-            // Atualizar status da PLP se necessário
             if ($status === 'success') {
                 $allOrders = $this->plpOrderFactory->create()->getCollection()
                     ->addFieldToFilter('plp_id', $plpId);
@@ -339,60 +336,6 @@ class PlpRepository implements PlpRepositoryInterface
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
                 __('Could not update order processing data: %1', $exception->getMessage()),
-                $exception
-            );
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function updateOrderCollectionStatus($plpId, $orderId, $collectionStatus)
-    {
-        try {
-            $plpOrder = $this->plpOrderFactory->create();
-            $plpOrder->getResource()->loadByPlpAndOrder($plpOrder, $plpId, $orderId);
-            
-            if (!$plpOrder->getId()) {
-                throw new NoSuchEntityException(
-                    __('Order with id "%1" does not exist in PLP "%2".', $orderId, $plpId)
-                );
-            }
-            
-            $plpOrder->setCollectionStatus($collectionStatus);
-            $this->plpOrderResource->save($plpOrder);
-            
-            return true;
-        } catch (\Exception $exception) {
-            throw new CouldNotSaveException(
-                __('Could not update order collection status: %1', $exception->getMessage()),
-                $exception
-            );
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function updateOrderProcessingStatus($plpId, $orderId, $processingStatus)
-    {
-        try {
-            $plpOrder = $this->plpOrderFactory->create();
-            $plpOrder->getResource()->loadByPlpAndOrder($plpOrder, $plpId, $orderId);
-            
-            if (!$plpOrder->getId()) {
-                throw new NoSuchEntityException(
-                    __('Order with id "%1" does not exist in PLP "%2".', $orderId, $plpId)
-                );
-            }
-            
-            $plpOrder->setProcessingStatus($processingStatus);
-            $this->plpOrderResource->save($plpOrder);
-            
-            return true;
-        } catch (\Exception $exception) {
-            throw new CouldNotSaveException(
-                __('Could not update order processing status: %1', $exception->getMessage()),
                 $exception
             );
         }

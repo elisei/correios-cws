@@ -17,13 +17,14 @@ class Status implements OptionSourceInterface
     /**
      * Status constants
      */
-    public const STATUS_OPEN = 'open';
-    public const STATUS_COLLECTING = 'collecting';
-    public const STATUS_FORMED = 'formed';
-    public const STATUS_PROCESSING = 'processing';
-    public const STATUS_PROCESSED = 'processed';
-    public const STATUS_CREATING_SHIPMENT = 'creating_shipment';
-    public const STATUS_CLOSED = 'closed';
+    public const STATUS_PLP_OPENED = 'opened';
+    public const STATUS_PLP_COLLECTING_DATA = 'collecting_data';
+    public const STATUS_PLP_IN_COMMUNICATION = 'in_communication';
+    public const STATUS_PLP_REQUESTING_RECEIPT = 'requesting_receipt';
+    public const STATUS_PLP_REQUESTING_FILE_CREATION = 'requesting_file_creation';
+    public const STATUS_PLP_REQUESTING_SHIPMENT_CREATION = 'requesting_shipment_creation';
+    public const STATUS_PLP_AWAITING_SHIPMENT = 'awaiting_shipment';
+    public const STATUS_PLP_COMPLETED = 'completed';
 
     /**
      * Get options
@@ -33,13 +34,14 @@ class Status implements OptionSourceInterface
     public function toOptionArray()
     {
         return [
-            ['value' => self::STATUS_OPEN, 'label' => __('Open')],
-            ['value' => self::STATUS_COLLECTING, 'label' => __('Collecting')],
-            ['value' => self::STATUS_FORMED, 'label' => __('Formed')],
-            ['value' => self::STATUS_PROCESSING, 'label' => __('Processing')],
-            ['value' => self::STATUS_PROCESSED, 'label' => __('Processed')],
-            ['value' => self::STATUS_CREATING_SHIPMENT, 'label' => __('Creating Shipment')],
-            ['value' => self::STATUS_CLOSED, 'label' => __('Closed')]
+            ['value' => self::STATUS_PLP_OPENED, 'label' => __('Opened')],
+            ['value' => self::STATUS_PLP_COLLECTING_DATA, 'label' => __('Collecting Data')],
+            ['value' => self::STATUS_PLP_IN_COMMUNICATION, 'label' => __('In Communication')],
+            ['value' => self::STATUS_PLP_REQUESTING_RECEIPT, 'label' => __('Requesting Receipt')],
+            ['value' => self::STATUS_PLP_REQUESTING_FILE_CREATION, 'label' => __('Requesting File Creation')],
+            ['value' => self::STATUS_PLP_REQUESTING_SHIPMENT_CREATION, 'label' => __('Requesting Shipment Creation')],
+            ['value' => self::STATUS_PLP_AWAITING_SHIPMENT, 'label' => __('Awaiting Shipment Creation')],
+            ['value' => self::STATUS_PLP_COMPLETED, 'label' => __('Completed')]
         ];
     }
 
@@ -52,47 +54,15 @@ class Status implements OptionSourceInterface
     public function getActionPermissions($status)
     {
         $permissions = [
-            self::STATUS_OPEN => [
+            self::STATUS_PLP_OPENED => [
                 'can_add_orders' => true,
-                'can_remove_orders' => true,
-                'can_close' => false
-            ],
-            self::STATUS_COLLECTING => [
-                'can_add_orders' => false,
-                'can_remove_orders' => false,
-                'can_close' => false
-            ],
-            self::STATUS_FORMED => [
-                'can_add_orders' => false,
-                'can_remove_orders' => false,
-                'can_close' => true
-            ],
-            self::STATUS_PROCESSING => [
-                'can_add_orders' => false,
-                'can_remove_orders' => false,
-                'can_close' => false
-            ],
-            self::STATUS_PROCESSED => [
-                'can_add_orders' => false,
-                'can_remove_orders' => false,
-                'can_close' => false
-            ],
-            self::STATUS_CREATING_SHIPMENT => [
-                'can_add_orders' => false,
-                'can_remove_orders' => false,
-                'can_close' => false
-            ],
-            self::STATUS_CLOSED => [
-                'can_add_orders' => false,
-                'can_remove_orders' => true,
-                'can_close' => false
+                'can_send_to_cws' => true,
             ]
         ];
 
         return $permissions[$status] ?? [
             'can_add_orders' => false,
-            'can_remove_orders' => false,
-            'can_close' => false
+            'can_send_to_cws' => false,
         ];
     }
 }

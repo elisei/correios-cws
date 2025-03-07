@@ -12,15 +12,23 @@ namespace O2TI\SigepWebCarrier\Controller\Adminhtml\Plp;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
-use Magento\Framework\View\Result\PageFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\LocalizedException;
+use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
+use O2TI\SigepWebCarrier\Model\PlpFactory;
 use O2TI\SigepWebCarrier\Model\Session\PlpSession;
 
 class NewAction extends Action
 {
     /**
-     * @var PageFactory
+     * @var PlpFactory
      */
-    protected $resultPageFactory;
+    protected $plpFactory;
+
+    /**
+     * @var PlpRepositoryInterface
+     */
+    protected $plpRepository;
 
     /**
      * @var PlpSession
@@ -29,33 +37,55 @@ class NewAction extends Action
 
     /**
      * @param Context $context
-     * @param PageFactory $resultPageFactory
+     * @param PlpFactory $plpFactory
+     * @param PlpRepositoryInterface $plpRepository
      * @param PlpSession $plpSession
      */
     public function __construct(
         Context $context,
-        PageFactory $resultPageFactory,
+        PlpFactory $plpFactory,
+        PlpRepositoryInterface $plpRepository,
         PlpSession $plpSession
     ) {
-        $this->resultPageFactory = $resultPageFactory;
+        $this->plpFactory = $plpFactory;
+        $this->plpRepository = $plpRepository;
         $this->plpSession = $plpSession;
         parent::__construct($context);
     }
 
     /**
-     * Create new PLP
+     * Create new PLP and redirect to edit page
      *
-     * @return \Magento\Framework\Controller\ResultInterface
+     * @return ResultInterface
      */
     public function execute()
     {
-        // Limpa o ID da PLP atual da sessão
         $this->plpSession->setCurrentPlpId(null);
 
-        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
-        $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__('New PLP'));
-        return $resultPage;
+        try {
+            $plp = $this->plpFactory->create();
+            $plp->setStatus('opened');
+            $plp->setStoreId(1);
+
+            $this->plpRepository->save($plp);
+            $this->plpSession->setCurrentPlpId($plp->getId());
+            $this->messageManager->addSuccessMessage(__('New PLP has been created.'));
+            
+            return $this->resultRedirectFactory->create()->setPath(
+                '*/*/edit',
+                ['id' => $plp->getId(), '_current' => true]
+            );
+            
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
+        } catch (\Exception $e) {
+            $this->messageManager->addExceptionMessage(
+                $e,
+                __('Something went wrong while creating the PLP.')
+            );
+        }
+        
+        return $this->resultRedirectFactory->create()->setPath('*/*/');
     }
 
     /**

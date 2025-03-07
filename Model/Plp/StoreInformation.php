@@ -8,7 +8,7 @@
  * @license   See LICENSE for license details.
  */
 
-namespace O2TI\SigepWebCarrier\Model\Config\Source;
+namespace O2TI\SigepWebCarrier\Model\Plp;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -82,9 +82,9 @@ class StoreInformation
     public function getSenderData()
     {
         $storeId = $this->storeManager->getStore()->getId();
-        $regionId = $this->getStoreConfig('general/store_information/region_id', $storeId);
+        $regionId = $this->getStoreConfig('shipping/origin/region_id', $storeId);
         $region = $this->region->load($regionId);
-        $parsedStreet = $this->parseStreetAddress($this->getStoreConfig('general/store_information/street_line1', $storeId));
+        $parsedStreet = $this->parseStreetAddress($this->getStoreConfig('shipping/origin/street_line1', $storeId));
         $data = [
             'name' => $this->getStoreConfig('general/store_information/name', $storeId),
             'telephone' => $this->getStoreConfig('general/store_information/phone', $storeId),
@@ -94,11 +94,11 @@ class StoreInformation
                 $parsedStreet[0],
                 $parsedStreet[1],
                 $parsedStreet[2],
-                $this->getStoreConfig('general/store_information/street_line2', $storeId) ?: 'BAIRRO - Fixado',
+                $this->getStoreConfig('shipping/origin/street_line2', $storeId) ?: 'BAIRRO',
             ],
-            'city' => $this->getStoreConfig('general/store_information/city', $storeId),
+            'city' => $this->getStoreConfig('shipping/origin/city', $storeId),
             'region_code' => $region->getCode(),
-            'postcode' => $this->getStoreConfig('general/store_information/postcode', $storeId)
+            'postcode' => $this->getStoreConfig('shipping/origin/postcode', $storeId)
         ];
         
         return $data;

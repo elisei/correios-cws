@@ -95,6 +95,23 @@
                 </item>
             </argument>
         </field>
+        <field name="can_send_to_cws">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Send To Correios Web Service</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">can_send_to_cws</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                    <item name="disabled" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+        </field>
         <field name="can_add_orders">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -103,40 +120,6 @@
                     <item name="formElement" xsi:type="string">checkbox</item>
                     <item name="source" xsi:type="string">plp</item>
                     <item name="dataScope" xsi:type="string">can_add_orders</item>
-                    <item name="prefer" xsi:type="string">toggle</item>
-                    <item name="valueMap" xsi:type="array">
-                        <item name="true" xsi:type="string">1</item>
-                        <item name="false" xsi:type="string">0</item>
-                    </item>
-                    <item name="disabled" xsi:type="boolean">true</item>
-                </item>
-            </argument>
-        </field>
-        <field name="can_remove_orders">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">boolean</item>
-                    <item name="label" xsi:type="string" translate="true">Allow Removing Orders</item>
-                    <item name="formElement" xsi:type="string">checkbox</item>
-                    <item name="source" xsi:type="string">plp</item>
-                    <item name="dataScope" xsi:type="string">can_remove_orders</item>
-                    <item name="prefer" xsi:type="string">toggle</item>
-                    <item name="valueMap" xsi:type="array">
-                        <item name="true" xsi:type="string">1</item>
-                        <item name="false" xsi:type="string">0</item>
-                    </item>
-                    <item name="disabled" xsi:type="boolean">true</item>
-                </item>
-            </argument>
-        </field>
-        <field name="can_close">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">boolean</item>
-                    <item name="label" xsi:type="string" translate="true">Allow Closing PLP</item>
-                    <item name="formElement" xsi:type="string">checkbox</item>
-                    <item name="source" xsi:type="string">plp</item>
-                    <item name="dataScope" xsi:type="string">can_close</item>
                     <item name="prefer" xsi:type="string">toggle</item>
                     <item name="valueMap" xsi:type="array">
                         <item name="true" xsi:type="string">1</item>
