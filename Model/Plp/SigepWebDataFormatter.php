@@ -80,7 +80,6 @@ class SigepWebDataFormatter
         $package = $this->getPackageDimensions($weight);
         
         $serviceCode = $this->getServiceCode($collectedData['order_info']['shipping_method']);
-        $declaredValue = $this->formatTotal($collectedData['order_info']['subtotal']);
         
         $formattedData = [
             'sequencial' => $collectedData['order_info']['order_id'],
@@ -102,6 +101,7 @@ class SigepWebDataFormatter
         ];
         
         // Erro no formato do serviço, revisar com o apoio dos correios.
+        // $declaredValue = $collectedData['order_info']['subtotal'];
         // $formattedData = $this->processAdditionalServices($formattedData, $serviceCode, $declaredValue);
         
         return $formattedData;
@@ -364,17 +364,6 @@ class SigepWebDataFormatter
         }
         
         return number_format($weight, 3, '.', '') * 100;
-    }
-
-    /**
-     * Format total
-     *
-     * @param float $total
-     * @return string
-     */
-    protected function formatTotal($total)
-    {
-        return number_format($total, 2, '.', '');
     }
 
     /**
