@@ -10,12 +10,14 @@
 
 namespace O2TI\SigepWebCarrier\Model\Config\Source;
 
+use Magento\Framework\Data\OptionSourceInterface;
+
 /**
  * Class Label Type - Source model for label type options.
  *
  * @api
  */
-class LabelType implements \Magento\Framework\Option\ArrayInterface
+class LabelType implements OptionSourceInterface
 {
     /**
      * Options getter.

@@ -10,12 +10,12 @@
 
 namespace O2TI\SigepWebCarrier\Model\Config\Source;
 
+use Magento\Framework\Data\OptionSourceInterface;
+
 /**
  * Class PrintLayout - Source model for print layout options.
- *
- * @api
  */
-class PrintLayout implements \Magento\Framework\Option\ArrayInterface
+class PrintLayout implements OptionSourceInterface
 {
     /**
      * Options getter.

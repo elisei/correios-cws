@@ -10,12 +10,12 @@
 
 namespace O2TI\SigepWebCarrier\Model\Config\Source;
 
+use Magento\Framework\Data\OptionSourceInterface;
+
 /**
  * Class Label Format - Source model for label format options.
- *
- * @api
  */
-class LabelFormat implements \Magento\Framework\Option\ArrayInterface
+class LabelFormat implements OptionSourceInterface
 {
     /**
      * Options getter.

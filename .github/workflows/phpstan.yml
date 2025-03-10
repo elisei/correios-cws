@@ -37,6 +37,10 @@ jobs:
       - name: Install Dependencies
         run: composer install --prefer-dist --no-interaction --no-progress
 
+      # Verificar a versão do PHPStan instalada
+      - name: Check PHPStan Version
+        run: vendor/bin/phpstan --version
+
       - name: Remove auth.json
         if: always()
         run: rm -f auth.json

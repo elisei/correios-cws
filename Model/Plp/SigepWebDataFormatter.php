@@ -101,7 +101,8 @@ class SigepWebDataFormatter
             'larguraInformada' => (string)$package['width'],
         ];
         
-        $formattedData = $this->processAdditionalServices($formattedData, $serviceCode, $declaredValue);
+        // Erro no formato do serviço, revisar com o apoio dos correios.
+        // $formattedData = $this->processAdditionalServices($formattedData, $serviceCode, $declaredValue);
         
         return $formattedData;
     }
@@ -129,10 +130,22 @@ class SigepWebDataFormatter
             $additionalServices = $this->servicesRepository->getByCode($serviceCode);
             
             if ($declaredValue && $additionalServices->getHasVd()) {
-                $declaredValue = max($declaredValue, $additionalServices->getDeclaredMinValue());
-                $declaredValue = min($declaredValue, $additionalServices->getDeclaredMaxValue());
-                $formattedData['valorDeclarado'] = $declaredValue;
-                $services[] = '019';
+                $declaredValueFloat = (float)$declaredValue;
+                $minValue = $additionalServices->getDeclaredMinValue();
+                $maxValue = $additionalServices->getDeclaredMaxValue();
+                
+                $declaredValueFloat = max($declaredValueFloat, $minValue);
+                $declaredValueFloat = min($declaredValueFloat, $maxValue);
+
+                $formattedValue = number_format((float)($declaredValueFloat + 0.01), 2, '.', '');
+                unset($formattedData['valorDeclarado']);
+
+                $services['valorDeclarado'] = (float)$formattedValue;
+                $services['codigoServicoAdicional'] = '019';
+            }
+
+            if (!$additionalServices->getHasVd()) {
+                unset($formattedData['valorDeclarado']);
             }
 
             if ($avisoRecebimento && $additionalServices->getHasAr()) {
@@ -144,20 +157,6 @@ class SigepWebDataFormatter
             }
         } catch (NoSuchEntityException $e) {
             $this->logger->error(__('Service %s not found: %1', $serviceCode, $e->getMessage()));
-            
-            // Fallback to basic configuration
-            if ($avisoRecebimento) {
-                $services[] = '001';
-            }
-            
-            if ($maoPropria) {
-                $services[] = '002';
-            }
-            
-            if ($declaredValue) {
-                $formattedData['valorDeclarado'] = $declaredValue;
-                $services[] = '019';
-            }
         }
         
         $formattedData['listaServicoAdicional'] = $services;

@@ -36,7 +36,7 @@
     "require-dev": {
         "magento/magento-coding-standard": "*",
         "phpmd/phpmd": "^2.13",
-        "phpstan/phpstan": "^1.6.8",
+        "phpstan/phpstan": "1.12.16",
         "phpstan/extension-installer": "^1.2",
         "phpstan/phpstan-deprecation-rules": "^1.0",
         "phpstan/phpstan-phpunit": "^1.0",

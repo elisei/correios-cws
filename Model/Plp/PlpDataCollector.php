@@ -197,7 +197,7 @@ class PlpDataCollector extends AbstractPlpOperation
         $collectedData = [
             'order_info' => [
                 'order_id' => $order->getEntityId(),
-                'subtotal' => $order->getSubtotal(),
+                'subtotal' => $order->getBaseSubTotal(),
                 'increment_id' => $order->getIncrementId(),
                 'created_at' => $order->getCreatedAt(),
                 'customer_email' => $order->getCustomerEmail(),

@@ -91,7 +91,7 @@ class Save extends Action
                 $this->dataPersistor->clear('plp');
 
                 if ($this->getRequest()->getParam('back') === 'edit'
-                || $this->getRequest()->getParam('saveandcontinue')) {
+                || (bool)$this->getRequest()->getParam('saveandcontinue')) {
                     return $resultRedirect->setPath('*/*/edit', ['id' => $model->getId(), '_current' => false]);
                 }
 

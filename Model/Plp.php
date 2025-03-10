@@ -23,7 +23,7 @@ class Plp extends AbstractModel implements PlpInterface
 
     /**
      * @param \Magento\Framework\Model\Context $context
-     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Registry $registry @deprecated 102.0.0
      * @param Status $statusModel
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
