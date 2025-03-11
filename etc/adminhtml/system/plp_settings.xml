@@ -30,7 +30,7 @@
             <source_model>O2TI\SigepWebCarrier\Model\Config\Source\PrintLayout</source_model>
             <config_path>carriers/sigep_web_carrier/print_layout</config_path>
         </field>
-        <field id="allowed_status" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+        <field id="allowed_status" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
             <label>Status Allowed for create Label</label>
             <source_model>O2TI\SigepWebCarrier\Model\Config\Source\FilterStatus</source_model>
             <config_path>carriers/sigep_web_carrier/allowed_status</config_path>

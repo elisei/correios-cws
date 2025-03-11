@@ -27,7 +27,7 @@
                 <handling_type>F</handling_type>
                 <handling_action>O</handling_action>
                 <is_online>1</is_online>
-                <sallowspecific>1</sallowspecific>
+                <allowspecific>1</allowspecific>
                 <specificcountry>BR</specificcountry>
                 <correios_id></correios_id>
                 <auto_declared>0</auto_declared>
