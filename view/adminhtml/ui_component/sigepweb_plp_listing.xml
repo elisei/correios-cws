@@ -35,7 +35,6 @@
             </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
-        <aclResource>O2TI_SigepWebCarrier::plp_view</aclResource>
         <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="sigepweb_plp_listing_data_source">
             <settings>
                 <requestFieldName>id</requestFieldName>

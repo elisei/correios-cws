@@ -97,7 +97,7 @@ class PlpLabelDownloadCommand extends Command
 
             if (!$plpId) {
                 $output->writeln('<e>'. __('Please provide a PLP ID, receipt ID, or use the --all option') .'</e>');
-                return Command::FAILURE;
+                return 0;
             }
 
             $output->writeln('<info>'. __('Downloading labels for PLP ID: %1', $plpId) .'</info>');
@@ -127,17 +127,17 @@ class PlpLabelDownloadCommand extends Command
                     }
                 }
                 
-                return Command::SUCCESS;
+                return 1;
             }
 
             if (!$result['success']) {
                 $output->writeln('<e>'. __('%1', $result['message']) .'</e>');
-                return Command::FAILURE;
+                return 0;
             }
             
         } catch (\Exception $e) {
             $output->writeln('<e>' . $e->getMessage() . '</e>');
-            return Command::FAILURE;
+            return 0;
         }
     }
 }

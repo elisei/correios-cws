@@ -97,7 +97,7 @@ class PlpLabelRequestCommand extends Command
                     __('Please provide a PLP ID or use the --all option to process all PLPs')
                     .'</error>'
                 );
-                return Command::FAILURE;
+                return 0;
             }
 
             $output->writeln('<info>'. __('Requesting labels for PLP ID: %1', $plpId) .'</info>');
@@ -126,17 +126,17 @@ class PlpLabelRequestCommand extends Command
                         );
                     }
                 }
-                return Command::SUCCESS;
+                return 1;
             }
 
             if (!$result['success']) {
                 $output->writeln('<error>'. __('%1', $result['message']) .'</error>');
-                return Command::FAILURE;
+                return 0;
             }
 
         } catch (\Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
-            return Command::FAILURE;
+            return 0;
         }
     }
 }

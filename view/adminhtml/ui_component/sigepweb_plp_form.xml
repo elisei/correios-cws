@@ -41,10 +41,6 @@
             <button name="save_and_continue">
                 <class>save</class>
                 <label translate="true">Save and Continue Edit</label>
-                <data_attribute>
-                    <name>mage-init</name>
-                    <value>{"button": {"event": "saveAndContinueEdit", "target": "#edit_form"}}</value>
-                </data_attribute>
             </button>
             <button name="save">
                 <class>primary</class>
@@ -57,20 +53,18 @@
             <dep>sigepweb_plp_form.sigepweb_plp_form_data_source</dep>
         </deps>
     </settings>
-    <dataSource name="sigepweb_plp_form_data_source" component="Magento_Ui/js/form/provider">
-        <settings>
-            <submitUrl path="*/*/save"/>
-        </settings>
+    <dataSource name="sigepweb_plp_form_data_source">
         <argument name="dataProvider" xsi:type="configurableObject">
             <argument name="class" xsi:type="string">O2TI\SigepWebCarrier\Ui\Component\FormDataProvider</argument>
             <argument name="name" xsi:type="string">plp_form_data_source</argument>
             <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
             <argument name="requestFieldName" xsi:type="string">id</argument>
-        </argument>
-        <argument name="data" xsi:type="array">
-            <item name="js_config" xsi:type="array">
-                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
-            </item>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="*/*/save"/>
+                    <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+                </item>
+            </argument>
         </argument>
     </dataSource>
     <fieldset name="general">
@@ -142,33 +136,6 @@
                 </item>
             </argument>
         </field>
-        <!-- 
-        O processamento em lote dos correios é muito deficitário, estou desativando e acompanharei a prometida evolução na API.
-        <field name="nome_arquivo_lote">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">File Name</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">plp</item>
-                    <item name="dataScope" xsi:type="string">nome_arquivo_lote</item>
-                    <item name="disabled" xsi:type="boolean">true</item>
-                </item>
-            </argument>
-        </field>
-        <field name="id_lote">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="dataType" xsi:type="string">text</item>
-                    <item name="label" xsi:type="string" translate="true">Id Lote</item>
-                    <item name="formElement" xsi:type="string">input</item>
-                    <item name="source" xsi:type="string">plp</item>
-                    <item name="dataScope" xsi:type="string">id_lote</item>
-                    <item name="disabled" xsi:type="boolean">true</item>
-                </item>
-            </argument>
-        </field>
-        -->
         <field name="can_add_orders">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -207,10 +174,6 @@
                     <updateUrl path="mui/index/render"/>
                     <externalFilterMode>true</externalFilterMode>
                     <realTimeLink>true</realTimeLink>
-                    <filterUrlParams>
-                        <param name="id">*</param>
-                    </filterUrlParams>
-                    <showPager>true</showPager>
                 </settings>
             </insertListing>
         </fieldset>

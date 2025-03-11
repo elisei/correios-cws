@@ -92,7 +92,7 @@ class PlpShipmentCreateCommand extends Command
 
             if (!$plpId) {
                 $output->writeln('<e>'. __('Please provide a PLP ID') .'</e>');
-                return Command::FAILURE;
+                return 0;
             }
 
             $output->writeln('<info>'. __('Creating shipments for PLP ID: %1', $plpId) .'</info>');
@@ -127,17 +127,17 @@ class PlpShipmentCreateCommand extends Command
                     }
                 }
                 
-                return Command::SUCCESS;
+                return 1;
             }
 
             if (!$result['success']) {
                 $output->writeln('<e>'. __('%1', $result['message']) .'</e>');
-                return Command::FAILURE;
+                return 0;
             }
             
         } catch (\Exception $e) {
             $output->writeln('<e>' . $e->getMessage() . '</e>');
-            return Command::FAILURE;
+            return 0;
         }
     }
 }

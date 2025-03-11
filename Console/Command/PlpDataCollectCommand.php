@@ -96,7 +96,7 @@ class PlpDataCollectCommand extends Command
 
             if (!$plpId) {
                 $output->writeln('<error>'. __('Please provide a PLP ID') . '</error>');
-                return Command::FAILURE;
+                return 0;
             }
 
             $output->writeln('<info>' . __('Processing PLP ID: %1', $plpId) . '</info>');
@@ -119,17 +119,17 @@ class PlpDataCollectCommand extends Command
                     $output->writeln('<comment>'. __('Check logs for error details.').'</comment>');
                 }
                 
-                return Command::SUCCESS;
+                return 1;
             }
 
             if (!$result['success']) {
                 $output->writeln('<error>' . __('Error: %s', $result['message']) . '</error>');
-                return Command::FAILURE;
+                return 0;
             }
             
         } catch (\Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
-            return Command::FAILURE;
+            return 0;
         }
     }
 }
