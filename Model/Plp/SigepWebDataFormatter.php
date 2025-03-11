@@ -86,7 +86,7 @@ class SigepWebDataFormatter
             'remetente' => $this->formatSenderData($senderData),
             'destinatario' => $this->formatRecipientData($collectedData),
             'codigoServico' => $serviceCode,
-            'numeroNotaFiscal' => '',
+            'numeroNotaFiscal' => $this->getInvoiceIncrementId($collectedData),
             'numeroCartaoPostagem' => $this->config->getPostingCard(),
             'itensDeclaracaoConteudo' => $this->formatItemsDeclaration($collectedData['items']),
             'pesoInformado' => $weight,
@@ -105,6 +105,21 @@ class SigepWebDataFormatter
         // $formattedData = $this->processAdditionalServices($formattedData, $serviceCode, $declaredValue);
         
         return $formattedData;
+    }
+    
+    /**
+     * Get Invoice Increment ID from order data
+     *
+     * @param array $collectedData
+     * @return string
+     */
+    protected function getInvoiceIncrementId($collectedData)
+    {
+        if (isset($collectedData['order_info']['invoice_increment_id'])) {
+            return $collectedData['order_info']['invoice_increment_id'];
+        }
+        
+        return $collectedData['order_info']['increment_id'] ?? '';
     }
 
     /**

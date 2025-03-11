@@ -17,30 +17,20 @@ use O2TI\SigepWebCarrier\Model\Session\PlpSession;
 class PlpOrder extends AbstractDataProvider
 {
     /**
-     * @var RequestInterface
-     */
-    protected $request;
-
-    /**
      * @var PlpSession
      */
     protected $plpSession;
 
     /**
-     * @var array
-     */
-    protected $loadedData;
-
-    /**
      * @var CollectionFactory
      */
-    protected $collection;
+    protected $collectionFactory;
 
     /**
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
-     * @param CollectionFactory $collection
+     * @param CollectionFactory $collectionFactory
      * @param PlpSession $plpSession
      * @param array $meta
      * @param array $data
@@ -49,14 +39,33 @@ class PlpOrder extends AbstractDataProvider
         $name,
         $primaryFieldName,
         $requestFieldName,
-        CollectionFactory $collection,
+        CollectionFactory $collectionFactory,
         PlpSession $plpSession,
         array $meta = [],
         array $data = []
     ) {
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
-        $this->collection = $collection;
+        $this->collectionFactory = $collectionFactory;
         $this->plpSession = $plpSession;
+    }
+
+    /**
+     * Get collection
+     *
+     * @return \O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\Collection
+     */
+    public function getCollection()
+    {
+        if ($this->collection === null) {
+            $this->collection = $this->collectionFactory->create();
+            $plpId = $this->plpSession->getCurrentPlpId();
+            
+            if ($plpId) {
+                $this->collection->addFieldToFilter('plp_id', $plpId);
+            }
+        }
+        
+        return $this->collection;
     }
 
     /**
@@ -66,24 +75,11 @@ class PlpOrder extends AbstractDataProvider
      */
     public function getData()
     {
-        if (isset($this->loadedData)) {
-            return $this->loadedData;
-        }
-
-        $plpId = $this->plpSession->getCurrentPlpId();
-        $items = [];
-
-        if ($plpId) {
-            $collection = $this->collection->create();
-            $collection->addFieldToFilter('plp_id', $plpId);
-            $items = $collection->getData();
-        }
+        $collection = $this->getCollection();
         
-        $this->loadedData = [
-            'totalRecords' => count($items),
-            'items' => $items
+        return [
+            'totalRecords' => $collection->getSize(),
+            'items' => $collection->getData()
         ];
-
-        return $this->loadedData;
     }
 }

@@ -10,44 +10,41 @@
 
 namespace O2TI\SigepWebCarrier\Ui\Component\Listing\Column;
 
-use Magento\Framework\View\Element\UiComponent\ContextInterface;
-use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
-use Magento\Framework\UrlInterface;
-use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\UiComponentFactory;
+use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use O2TI\SigepWebCarrier\Model\Plp\Source\StatusItem;
 
-class OrderLink extends Column
+class StatusItemColumn extends Column
 {
     /**
-     * @var UrlInterface
+     * @var StatusItem
      */
-    protected $urlBuilder;
+    protected $statusItem;
 
     /**
-     * @var Escaper
+     * @var array
      */
-    protected $escaper;
+    protected $statusOptions;
 
     /**
-     * Construct.
+     * Constructor
      *
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
-     * @param UrlInterface $urlBuilder
-     * @param Escaper $escaper
+     * @param StatusItem $statusItem
      * @param array $components
      * @param array $data
      */
     public function __construct(
         ContextInterface $context,
         UiComponentFactory $uiComponentFactory,
-        UrlInterface $urlBuilder,
-        Escaper $escaper,
+        StatusItem $statusItem,
         array $components = [],
         array $data = []
     ) {
-        $this->urlBuilder = $urlBuilder;
-        $this->escaper = $escaper;
+        $this->statusItem = $statusItem;
+        $this->statusOptions = array_column($this->statusItem->toOptionArray(), 'label', 'value');
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
 
@@ -61,18 +58,11 @@ class OrderLink extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as & $item) {
-                if (isset($item['order_id']) && !empty($item['order_id'])) {
-                    $url = $this->urlBuilder->getUrl(
-                        'sales/order/view',
-                        ['order_id' => $item['order_id']]
-                    );
-                    $escapedUrl = $this->escaper->escapeUrl($url);
-                    $escapedLabel = $this->escaper->escapeHtml('#' . $item['order_id']);
-                    $item[$this->getData('name')] = '<a href="' . $escapedUrl . '">' . $escapedLabel . '</a>';
+                if (isset($item['status']) && isset($this->statusOptions[$item['status']])) {
+                    $item['status'] = $this->statusOptions[$item['status']];
                 }
             }
         }
-
         return $dataSource;
     }
 }

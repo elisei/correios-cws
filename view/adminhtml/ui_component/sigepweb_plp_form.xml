@@ -35,6 +35,9 @@
                 <class>reset</class>
                 <label translate="true">Reset</label>
             </button>
+            <button name="get_declaration" class="O2TI\SigepWebCarrier\Block\Adminhtml\Plp\Edit\Button\GetDeclaration"/>
+            <button name="get_shipping_report" class="O2TI\SigepWebCarrier\Block\Adminhtml\Plp\Edit\Button\GetShippingReport"/>
+            <button name="get_shipping_report_totals" class="O2TI\SigepWebCarrier\Block\Adminhtml\Plp\Edit\Button\GetShippingReportTotals"/>
             <button name="save_and_continue">
                 <class>save</class>
                 <label translate="true">Save and Continue Edit</label>
@@ -207,6 +210,7 @@
                     <filterUrlParams>
                         <param name="id">*</param>
                     </filterUrlParams>
+                    <showPager>true</showPager>
                 </settings>
             </insertListing>
         </fieldset>

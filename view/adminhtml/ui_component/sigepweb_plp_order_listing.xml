@@ -36,6 +36,10 @@
             </settings>
         </dataProvider>
     </dataSource>
+    <listingToolbar name="listing_top">
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
     <columns name="plp_order_columns">
         <column name="order_id" class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\OrderLink">
             <settings>
@@ -51,9 +55,11 @@
                 <bodyTmpl>ui/grid/cells/html</bodyTmpl>
             </settings>
         </column>
-        <column name="status">
+        <column name="status" class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\StatusItemColumn">
             <settings>
-                <filter>text</filter>
+                <filter>select</filter>
+                <options class="O2TI\SigepWebCarrier\Model\Plp\Source\StatusItem"/>
+                <dataType>select</dataType>
                 <label translate="true">Status</label>
             </settings>
         </column>
@@ -61,24 +67,22 @@
             <settings>
                 <filter>text</filter>
                 <label translate="true">Data Collected</label>
+                <resizeDefaultWidth>300</resizeDefaultWidth>
+                <resizeEnabled>true</resizeEnabled>
             </settings>
         </column>
         <column name="processing_data">
             <settings>
                 <filter>text</filter>
                 <label translate="true">Processing Data</label>
+                <resizeDefaultWidth>300</resizeDefaultWidth>
+                <resizeEnabled>true</resizeEnabled>
             </settings>
         </column>
         <column name="error_message">
             <settings>
                 <filter>text</filter>
                 <label translate="true">Error Message</label>
-            </settings>
-        </column>
-        <column name="order_id">
-            <settings>
-                <filter>text</filter>
-                <label translate="true">Order ID</label>
             </settings>
         </column>
         <actionsColumn name="actions" class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\PlpOrderActions">

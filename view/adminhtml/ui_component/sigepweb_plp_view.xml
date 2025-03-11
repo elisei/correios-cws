@@ -30,6 +30,9 @@
                 <class>back</class>
                 <label translate="true">Back</label>
             </button>
+            <button name="get_declaration" class="O2TI\SigepWebCarrier\Block\Adminhtml\Plp\Edit\Button\GetDeclaration"/>
+            <button name="get_shipping_report" class="O2TI\SigepWebCarrier\Block\Adminhtml\Plp\Edit\Button\GetShippingReport"/>
+            <button name="get_shipping_report_totals" class="O2TI\SigepWebCarrier\Block\Adminhtml\Plp\Edit\Button\GetShippingReportTotals"/>
         </buttons>
         <namespace>sigepweb_plp_view</namespace>
         <dataScope>data</dataScope>

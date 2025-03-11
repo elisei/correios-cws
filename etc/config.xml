@@ -26,9 +26,9 @@
                 <handling_type>F</handling_type>
                 <handling_action>O</handling_action>
                 <is_online>1</is_online>
-                <sallowspecific>0</sallowspecific>
+                <sallowspecific>1</sallowspecific>
                 <specificcountry>BR</specificcountry>
-                <correios_id>virtualjoias</correios_id>
+                <correios_id></correios_id>
                 <auto_declared>0</auto_declared>
                 <mao_propria>0</mao_propria>
                 <aviso_de_recebimento>0</aviso_de_recebimento>

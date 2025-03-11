@@ -199,6 +199,7 @@ class PlpDataCollector extends AbstractPlpOperation
                 'order_id' => $order->getEntityId(),
                 'subtotal' => $order->getBaseSubTotal(),
                 'increment_id' => $order->getIncrementId(),
+                'invoice_increment_id' => $this->getInvoiceIncrementId($order),
                 'created_at' => $order->getCreatedAt(),
                 'customer_email' => $order->getCustomerEmail(),
                 'customer_firstname' => $order->getCustomerFirstname(),
@@ -247,6 +248,24 @@ class PlpDataCollector extends AbstractPlpOperation
         return $collectedData;
     }
 
+    /**
+     * Get invoice increment ID from order
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @return string
+     */
+    protected function getInvoiceIncrementId($order)
+    {
+        // Get invoice collection
+        $invoices = $order->getInvoiceCollection();
+        
+        if ($invoices->getSize() > 0) {
+            $invoice = $invoices->getFirstItem();
+            return $invoice->getIncrementId();
+        }
+        
+        return '';
+    }
     /**
      * Calculate total weight from items if order weight is not set
      *
