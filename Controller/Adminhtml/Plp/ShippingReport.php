@@ -100,11 +100,7 @@ class ShippingReport extends Action implements HttpGetActionInterface
 
         try {
             $plp = $this->plpRepository->getById($plpId);
-            if (!$plp || !in_array($plp->getStatus(), [
-                PlpStatus::STATUS_PLP_COMPLETED,
-                PlpStatus::STATUS_PLP_AWAITING_SHIPMENT,
-                PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION
-            ])) {
+            if (!$plp || $plp->getStatus() !== PlpStatus::STATUS_PLP_COMPLETED) {
                 $this->messageManager->addErrorMessage(
                     __('Shipping report is only available for completed or in-process PLPs')
                 );

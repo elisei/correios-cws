@@ -101,9 +101,9 @@ class GetShippingReport implements ButtonProviderInterface
     {
         return $this->plpSession->getCurrentPlpId();
     }
-
+    
     /**
-     * Check if shipping report can be downloaded
+     * Check if declaration can be downloaded
      *
      * @return bool
      */
@@ -121,9 +121,7 @@ class GetShippingReport implements ButtonProviderInterface
                 return false;
             }
             
-            return in_array($plp->getStatus(), [
-                PlpStatus::STATUS_PLP_COMPLETED
-            ]);
+            return $plp->getStatus() === PlpStatus::STATUS_PLP_COMPLETED;
             
         } catch (\Exception $e) {
             return false;
