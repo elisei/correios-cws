@@ -23,6 +23,7 @@ interface PlpOrderInterface
     public const SHIPMENT_ID = 'shipment_id';
     public const COLLECTED_DATA = 'collected_data';
     public const PROCESSING_DATA = 'processing_data';
+    public const USERNAME = 'username';
 
     /**
      * Get Entity Id
@@ -143,4 +144,19 @@ interface PlpOrderInterface
      * @return $this
      */
     public function setProcessingData($processingData);
+
+    /**
+     * Get Username
+     *
+     * @return string|null
+     */
+    public function getUsername();
+
+    /**
+     * Set Username
+     *
+     * @param string|null $username
+     * @return $this
+     */
+    public function setUsername($username);
 }

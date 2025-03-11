@@ -38,10 +38,11 @@ interface PlpRepositoryInterface
      *
      * @param int $plpId
      * @param string[] $orderIds
+     * @param string|null $username
      * @return bool
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function addOrderToPlp($plpId, array $orderIds);
+    public function addOrderToPlp($plpId, array $orderIds, $username = null);
 
     /**
      * Update order status in PLP

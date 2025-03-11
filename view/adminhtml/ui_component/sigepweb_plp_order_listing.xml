@@ -85,6 +85,12 @@
                 <label translate="true">Error Message</label>
             </settings>
         </column>
+        <column name="username">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Username</label>
+            </settings>
+        </column>
         <actionsColumn name="actions" class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\PlpOrderActions">
             <settings>
                 <indexField>entity_id</indexField>

@@ -173,7 +173,7 @@ class PlpRepository implements PlpRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function addOrderToPlp($plpId, $orderId)
+    public function addOrderToPlp($plpId, $orderId, $username = null)
     {
         try {
             $orderIds = is_array($orderId) ? $orderId : [$orderId];
@@ -198,7 +198,7 @@ class PlpRepository implements PlpRepositoryInterface
                 $plpOrder = $this->plpOrderFactory->create();
                 $plpOrder->setPlpId($plpId)
                     ->setOrderId($id)
-                    ->setStatus('pending_collection');
+                    ->setUsername($username);
                 
                 $this->plpOrderResource->save($plpOrder);
             }

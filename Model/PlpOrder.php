@@ -152,4 +152,20 @@ class PlpOrder extends AbstractModel implements PlpOrderInterface
     {
         return $this->setData(self::PROCESSING_DATA, $processingData);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUsername()
+    {
+        return $this->getData(self::USERNAME);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setUsername($username)
+    {
+        return $this->setData(self::USERNAME, $username);
+    }
 }

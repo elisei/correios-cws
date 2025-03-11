@@ -15,6 +15,7 @@ use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Exception\LocalizedException;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
+use Magento\Backend\Model\Auth\Session as AuthSession;
 
 class AddOrders extends Action
 {
@@ -29,17 +30,25 @@ class AddOrders extends Action
     private $plpRepository;
 
     /**
+     * @var AuthSession
+     */
+    private $authSession;
+
+    /**
      * @param Context $context
      * @param JsonFactory $resultJsonFactory
      * @param PlpRepositoryInterface $plpRepository
+     * @param AuthSession $authSession
      */
     public function __construct(
         Context $context,
         JsonFactory $resultJsonFactory,
-        PlpRepositoryInterface $plpRepository
+        PlpRepositoryInterface $plpRepository,
+        AuthSession $authSession
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->plpRepository = $plpRepository;
+        $this->authSession = $authSession;
         parent::__construct($context);
     }
 
@@ -54,6 +63,10 @@ class AddOrders extends Action
         $plpId = $this->getRequest()->getParam('plp_id');
         $plp = $this->plpRepository->getById($plpId);
         $orderIds = $this->getRequest()->getParam('order_ids');
+        
+        // Get current admin user username
+        $adminUser = $this->authSession->getUser();
+        $username = $adminUser ? $adminUser->getUserName() : null;
         
         if (!$plp->getId()) {
             return $resultJson->setData([
@@ -75,11 +88,11 @@ class AddOrders extends Action
                 $orderIds = explode(',', $orderIds);
             }
             
-            $this->plpRepository->addOrderToPlp($plpId, $orderIds);
+            $this->plpRepository->addOrderToPlp($plpId, $orderIds, $username);
             
             return $resultJson->setData([
                 'success' => true,
-                'message' => __('Orders were successfully added to the PLP.')
+                'message' => __('Orders were successfully added to the PLP by %1.', $username)
             ]);
         } catch (LocalizedException $e) {
             return $resultJson->setData([

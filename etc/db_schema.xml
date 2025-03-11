@@ -76,6 +76,8 @@
                 comment="Dados coletados do pedido em JSON"/>
         <column xsi:type="text" name="processing_data" nullable="true"
                 comment="Dados do processamento em JSON"/>
+        <column xsi:type="varchar" name="username" nullable="true" length="32"
+                comment="Username"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
