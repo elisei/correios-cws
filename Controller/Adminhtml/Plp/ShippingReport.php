@@ -17,16 +17,16 @@ use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Filesystem\Driver\File as DriverFile;
 use Magento\Framework\Exception\LocalizedException;
 use Psr\Log\LoggerInterface;
-use O2TI\SigepWebCarrier\Model\Plp\DeclarationProcessor;
+use O2TI\SigepWebCarrier\Model\Plp\ShippingReportProcessor;
 use O2TI\SigepWebCarrier\Model\Session\PlpSession;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
 use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
 
 /**
- * Class Declaration
- * Controller for downloading declaration in PDF format.
+ * Class ShippingReport
+ * Controller for downloading shipping report in PDF format.
  */
-class Declaration extends Action implements HttpGetActionInterface
+class ShippingReport extends Action implements HttpGetActionInterface
 {
     /**
      * Authorization level of a basic admin session
@@ -34,9 +34,9 @@ class Declaration extends Action implements HttpGetActionInterface
     public const ADMIN_RESOURCE = 'O2TI_SigepWebCarrier::plp';
 
     /**
-     * @var DeclarationProcessor
+     * @var ShippingReportProcessor
      */
-    protected $declarationProcessor;
+    protected $shipReportProcessor;
 
     /**
      * @var LoggerInterface
@@ -60,7 +60,7 @@ class Declaration extends Action implements HttpGetActionInterface
 
     /**
      * @param Context $context
-     * @param DeclarationProcessor $declarationProcessor
+     * @param ShippingReportProcessor $shipReportProcessor
      * @param LoggerInterface $logger
      * @param DriverFile $driverFile
      * @param PlpSession $plpSession
@@ -68,14 +68,14 @@ class Declaration extends Action implements HttpGetActionInterface
      */
     public function __construct(
         Context $context,
-        DeclarationProcessor $declarationProcessor,
+        ShippingReportProcessor $shipReportProcessor,
         LoggerInterface $logger,
         DriverFile $driverFile,
         PlpSession $plpSession,
         PlpRepositoryInterface $plpRepository
     ) {
         parent::__construct($context);
-        $this->declarationProcessor = $declarationProcessor;
+        $this->shipReportProcessor = $shipReportProcessor;
         $this->logger = $logger;
         $this->driverFile = $driverFile;
         $this->plpSession = $plpSession;
@@ -102,23 +102,23 @@ class Declaration extends Action implements HttpGetActionInterface
             $plp = $this->plpRepository->getById($plpId);
             if (!$plp || $plp->getStatus() !== PlpStatus::STATUS_PLP_COMPLETED) {
                 $this->messageManager->addErrorMessage(
-                    __('Declaration is only available for completed PLPs')
+                    __('Shipping report is only available for completed or in-process PLPs')
                 );
                 return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
             }
             
-            $declarationResult = $this->declarationProcessor->processDeclaration($plpId);
+            $reportResult = $this->shipReportProcessor->processReport($plpId);
             
-            if (!$declarationResult['success']) {
+            if (!$reportResult['success']) {
                 throw new LocalizedException(
-                    __('Failed to generate declaration: %1', $declarationResult['message'] ?? '')
+                    __('Failed to generate shipping report: %1', $reportResult['message'] ?? '')
                 );
             }
             
-            if (isset($declarationResult['filepath']) && $this->driverFile->isExists($declarationResult['filepath'])) {
-                $filePath = $declarationResult['filepath'];
+            if (isset($reportResult['filepath']) && $this->driverFile->isExists($reportResult['filepath'])) {
+                $filePath = $reportResult['filepath'];
                 $content = $this->driverFile->fileGetContents($filePath);
-                $filename = $declarationResult['filename'];
+                $filename = $reportResult['filename'];
                 
                 $response = $this->getResponse();
                 $response->setHeader('Content-Type', 'application/pdf');
@@ -128,7 +128,7 @@ class Declaration extends Action implements HttpGetActionInterface
                 return $response;
             }
             
-            throw new LocalizedException(__('Declaration file not found'));
+            throw new LocalizedException(__('Report file not found'));
             
         } catch (LocalizedException $exc) {
             $this->messageManager->addErrorMessage($exc->getMessage());
@@ -136,7 +136,7 @@ class Declaration extends Action implements HttpGetActionInterface
         } catch (\Exception $exc) {
             $this->logger->critical($exc);
             $this->messageManager->addErrorMessage(
-                __('An error occurred while generating the declaration. Please check the logs for details.')
+                __('An error occurred while generating the shipping report. Please check the logs for details.')
             );
             return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
         }

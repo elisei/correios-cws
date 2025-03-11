@@ -24,7 +24,7 @@ use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
 
 /**
  * Class Declaration
- * Controller for downloading declaration content in HTML format.
+ * Controller for downloading declaration in PDF format.
  */
 class Declaration extends Action implements HttpGetActionInterface
 {
@@ -102,7 +102,7 @@ class Declaration extends Action implements HttpGetActionInterface
             $plp = $this->plpRepository->getById($plpId);
             if (!$plp || $plp->getStatus() !== PlpStatus::STATUS_PLP_COMPLETED) {
                 $this->messageManager->addErrorMessage(
-                    __('Declaration content is only available for completed PLPs')
+                    __('Declaration is only available for completed PLPs')
                 );
                 return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
             }
@@ -111,7 +111,7 @@ class Declaration extends Action implements HttpGetActionInterface
             
             if (!$declarationResult['success']) {
                 throw new LocalizedException(
-                    __('Failed to process declaration content: %1', $declarationResult['message'] ?? '')
+                    __('Failed to generate declaration: %1', $declarationResult['message'] ?? '')
                 );
             }
             
@@ -121,12 +121,14 @@ class Declaration extends Action implements HttpGetActionInterface
                 $filename = $declarationResult['filename'];
                 
                 $response = $this->getResponse();
-                $response->setHeader('Content-Type', 'text/html');
+                $response->setHeader('Content-Type', 'application/pdf');
                 $response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
                 $response->setBody($content);
                 
                 return $response;
             }
+            
+            throw new LocalizedException(__('Declaration file not found'));
             
         } catch (LocalizedException $exc) {
             $this->messageManager->addErrorMessage($exc->getMessage());
@@ -134,7 +136,7 @@ class Declaration extends Action implements HttpGetActionInterface
         } catch (\Exception $exc) {
             $this->logger->critical($exc);
             $this->messageManager->addErrorMessage(
-                __('An error occurred while downloading the declaration. Please check the logs for details.')
+                __('An error occurred while generating the declaration. Please check the logs for details.')
             );
             return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
         }
