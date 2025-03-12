@@ -50,13 +50,12 @@ class RemoveOrder extends Action
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
-        $plpId = $this->getRequest()->getParam('plp_id');
-        $orderId = $this->getRequest()->getParam('order_id');
+        $plpId = (int) $this->getRequest()->getParam('plp_id');
         $refererUrl = $this->_redirect->getRefererUrl();
 
         try {
             $plpOrder = $this->plpOrderFactory->create();
-            $this->plpOrderResource->loadByPlpAndOrder($plpOrder, $plpId, $orderId);
+            $this->plpOrderResource->loadByEntityId($plpOrder, $plpId);
 
             if (!$plpOrder->getId()) {
                 $this->messageManager->addErrorMessage(__('Order was not found in PLP.'));

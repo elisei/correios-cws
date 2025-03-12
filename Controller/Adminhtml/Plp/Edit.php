@@ -51,12 +51,18 @@ class Edit extends Action
      */
     public function execute()
     {
-        $plpId = $this->getRequest()->getParam('id');
-        $resultPage = $this->resultPageFactory->create();
+        $this->plpSession->setCurrentPlpId(null);
 
-        $resultPage->getConfig()->getTitle()->prepend(__('New PLP'));
+        $plpId = $this->getRequest()->getParam('id');
+
         if ($plpId) {
             $this->plpSession->setCurrentPlpId($plpId);
+        }
+
+        $resultPage = $this->resultPageFactory->create();
+        $resultPage->getConfig()->getTitle()->prepend(__('New PLP'));
+
+        if ($plpId) {
             $resultPage->getConfig()->getTitle()->prepend(__('Edit PLP #%1', $plpId));
         }
         

@@ -36,27 +36,27 @@ class ShippingReport extends Action implements HttpGetActionInterface
     /**
      * @var ShippingReportProcessor
      */
-    protected $shipReportProcessor;
+    private $shipReportProcessor;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    private $logger;
 
     /**
      * @var DriverFile
      */
-    protected $driverFile;
+    private $driverFile;
 
     /**
      * @var PlpSession
      */
-    protected $plpSession;
+    private $plpSession;
 
     /**
      * @var PlpRepositoryInterface
      */
-    protected $plpRepository;
+    private $plpRepository;
 
     /**
      * @param Context $context
@@ -102,7 +102,7 @@ class ShippingReport extends Action implements HttpGetActionInterface
             $plp = $this->plpRepository->getById($plpId);
             if (!$plp || $plp->getStatus() !== PlpStatus::STATUS_PLP_COMPLETED) {
                 $this->messageManager->addErrorMessage(
-                    __('Shipping report is only available for completed or in-process PLPs')
+                    __('Shipping report is only available for completed PLPs')
                 );
                 return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
             }

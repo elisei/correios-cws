@@ -25,17 +25,17 @@ class GetShippingReport implements ButtonProviderInterface
     /**
      * @var Context
      */
-    protected $context;
+    private $context;
 
     /**
      * @var PlpSession
      */
-    protected $plpSession;
+    private $plpSession;
 
     /**
      * @var PlpRepositoryInterface
      */
-    protected $plpRepository;
+    private $plpRepository;
 
     /**
      * @param Context $context
@@ -75,7 +75,7 @@ class GetShippingReport implements ButtonProviderInterface
         if (!$this->canDownload()) {
             $data['disabled'] = true;
             $data['class'] .= ' disabled';
-            $data['title'] = __('Shipping report is only available for completed or in-process PLPs');
+            $data['title'] = __('Shipping report is only available for completed PLPs');
         }
 
         return $data;
@@ -103,7 +103,7 @@ class GetShippingReport implements ButtonProviderInterface
     }
     
     /**
-     * Check if declaration can be downloaded
+     * Check if shipping report can be downloaded
      *
      * @return bool
      */

@@ -36,27 +36,27 @@ class Declaration extends Action implements HttpGetActionInterface
     /**
      * @var DeclarationProcessor
      */
-    protected $declarationProcessor;
+    private $declarationProcessor;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    private $logger;
 
     /**
      * @var DriverFile
      */
-    protected $driverFile;
+    private $driverFile;
 
     /**
      * @var PlpSession
      */
-    protected $plpSession;
+    private $plpSession;
 
     /**
      * @var PlpRepositoryInterface
      */
-    protected $plpRepository;
+    private $plpRepository;
 
     /**
      * @param Context $context

@@ -25,17 +25,17 @@ class GetDeclaration implements ButtonProviderInterface
     /**
      * @var Context
      */
-    protected $context;
+    private $context;
 
     /**
      * @var PlpSession
      */
-    protected $plpSession;
+    private $plpSession;
 
     /**
      * @var PlpRepositoryInterface
      */
-    protected $plpRepository;
+    private $plpRepository;
 
     /**
      * @param Context $context
@@ -69,7 +69,7 @@ class GetDeclaration implements ButtonProviderInterface
             'label' => __('Download Declaration'),
             'class' => 'download declaration',
             'on_click' => sprintf("window.location.href = '%s';", $this->getDeclarationUrl()),
-            'sort_order' => 40
+            'sort_order' => 30
         ];
 
         if (!$this->canDownload()) {

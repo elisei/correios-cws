@@ -31,7 +31,7 @@ class PlpOrder extends AbstractDb
      *
      * @param \O2TI\SigepWebCarrier\Model\PlpOrder $plpOrder
      * @param int $plpId
-     * @param string $orderId
+     * @param int $orderId
      * @return $this
      */
     public function loadByPlpAndOrder($plpOrder, $plpId, $orderId)
@@ -39,8 +39,30 @@ class PlpOrder extends AbstractDb
         $connection = $this->getConnection();
         $select = $connection->select()
             ->from($this->getMainTable())
-            ->where('plp_id = ?', $plpId)
-            ->where('order_id = ?', $orderId);
+            ->where('plp_id = ?', (string) $plpId)
+            ->where('order_id = ?', (string) $orderId);
+
+        $data = $connection->fetchRow($select);
+        if ($data) {
+            $plpOrder->setData($data);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Load PlpOrder by entity_id
+     *
+     * @param \O2TI\SigepWebCarrier\Model\PlpOrder $plpOrder
+     * @param int $entityId
+     * @return $this
+     */
+    public function loadByEntityId($plpOrder, $entityId)
+    {
+        $connection = $this->getConnection();
+        $select = $connection->select()
+            ->from($this->getMainTable())
+            ->where('entity_id = ?', (int) $entityId);
 
         $data = $connection->fetchRow($select);
         if ($data) {

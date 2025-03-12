@@ -98,28 +98,20 @@ class PdfReportGenerator
         try {
             $pdf = new Zend_Pdf();
             
-            // Calculate total number of pages first
-            $itemsPerPage = 20; // Approximate number of items that fit on a page
+            $itemsPerPage = 20;
             $totalPages = ceil(count($reportData) / $itemsPerPage);
             
             $page = $this->createPdfPage($pdf);
-            
-            // Add header first
+
             $this->addReportHeader($page, $plpId, 1, $totalPages);
-            
-            // Add sender information below the header
             $this->addSenderInformation($page);
-            
-            // Add column headers
             $this->addColumnHeaders($page);
             
-            // Add data rows
-            $currentY = 600; // Adjusted for the new layout with sender info below title
+            $currentY = 600;
             $rowHeight = 25;
             $pageIndex = 0;
             
             foreach ($reportData as $index => $data) {
-                // Check if we need a new page
                 if ($currentY <= 100) {
                     $pageIndex++;
                     $page = $this->createPdfPage($pdf);
@@ -133,11 +125,9 @@ class PdfReportGenerator
                 $currentY -= $rowHeight;
             }
             
-            // Save PDF to file
             $filename = $this->generateReportFilename($plpId);
             $filePath = $this->getReportFilePath($filename);
-            
-            // Save the PDF
+
             $pdfData = $pdf->render();
             $this->driver->filePutContents($filePath, $pdfData);
             
@@ -168,7 +158,6 @@ class PdfReportGenerator
         $page = $pdf->newPage(Zend_Pdf_Page::SIZE_A4);
         $pdf->pages[] = $page;
         
-        // Set default font with smaller size
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 8);
         
         return $page;
@@ -183,35 +172,27 @@ class PdfReportGenerator
     {
         $senderData = $this->storeInformation->getSenderData();
         
-        // Get contract info from config
         $contract = $this->config->getContract();
         $postingCard = $this->config->getPostingCard();
         $correiosId = $this->config->getCorreiosId();
         
-        // Heading
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA_BOLD), 10);
         $page->drawText(__('Sender Information'), 30, 710, 'UTF-8');
         
-        // Set font for details
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 8);
-        
-        // Left column - Contract info
         $leftCol = 30;
         $page->drawText(__('Contract Number: %1', $contract), $leftCol, 695, 'UTF-8');
         $page->drawText(__('Card Number: %1', $postingCard), $leftCol, 685, 'UTF-8');
         $page->drawText(__('Administrative Code: %1', $correiosId), $leftCol, 675, 'UTF-8');
         
-        // Center column - Sender info
         $centerCol = 220;
         $page->drawText(__('Sender: %1', $senderData['name']), $centerCol, 695, 'UTF-8');
         $page->drawText(__('CNPJ: %1', $senderData['cpf_cnpj']), $centerCol, 685, 'UTF-8');
         $page->drawText(__('Phone: %1', $senderData['telephone']), $centerCol, 675, 'UTF-8');
         
-        // Right column - Email
         $rightCol = 410;
         $page->drawText(__('Email: %1', $senderData['email']), $rightCol, 695, 'UTF-8');
         
-        // Address (full width)
         $address = sprintf(
             '%s, %s %s, %s - %s/%s - CEP: %s',
             $senderData['street'][0],
@@ -225,7 +206,6 @@ class PdfReportGenerator
         
         $page->drawText(__('Address: %1', $address), $leftCol, 660, 'UTF-8');
         
-        // Divider line
         $page->drawLine(30, 650, 565, 650);
     }
 
@@ -239,18 +219,14 @@ class PdfReportGenerator
      */
     protected function addReportHeader(Zend_Pdf_Page $page, int $plpId, int $pageNumber = 1, int $totalPages = 1)
     {
-        // Title
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA_BOLD), 14);
         $page->drawText(__('Shipping Report - PLP #%1', $plpId), 30, 780, 'UTF-8');
         
-        // Date
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 8);
         $page->drawText(__('Generated on: %1', date('Y-m-d H:i:s')), 30, 760, 'UTF-8');
         
-        // Page number with total pages
         $page->drawText(__('Page %1 of %2', $pageNumber, $totalPages), 500, 760, 'UTF-8');
         
-        // Line
         $page->drawLine(30, 730, 565, 730);
     }
 
@@ -264,12 +240,9 @@ class PdfReportGenerator
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA_BOLD), 8);
         $page->setFillColor(new Zend_Pdf_Color_Rgb(0.8, 0.8, 0.8));
         
-        // Header background with adjusted margins
         $page->drawRectangle(30, 630, 565, 610);
-        
         $page->setFillColor(new Zend_Pdf_Color_Rgb(0, 0, 0));
         
-        // Column headers with adjusted positions
         $page->drawText('#', 40, 617, 'UTF-8');
         $page->drawText(__('Tracking'), 60, 617, 'UTF-8');
         $page->drawText(__('CEP'), 160, 617, 'UTF-8');
@@ -305,7 +278,7 @@ class PdfReportGenerator
         $tracking = $this->truncateText($data['tracking'], 20);
         $nfeNumber = $data['nfe'] ?? 'N/A';
 
-        $axisY = $axisY - 15; // Center text vertically in the row
+        $axisY = $axisY - 15;
         
         $page->drawText($rowNumber, 40, $axisY, 'UTF-8');
         $page->drawText($tracking, 60, $axisY, 'UTF-8');

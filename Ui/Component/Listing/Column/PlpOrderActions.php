@@ -53,13 +53,14 @@ class PlpOrderActions extends Column
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as & $item) {
                 if (isset($item['entity_id'])) {
+                    $plpId = $item['entity_id'];
+                    
                     $item[$this->getData('name')] = [
                         'remove' => [
                             'href' => $this->urlBuilder->getUrl(
                                 'sigepweb/plp/removeOrder',
                                 [
-                                    'plp_id' => $item['plp_id'],
-                                    'order_id' => $item['order_id']
+                                    'plp_id' => $plpId
                                 ]
                             ),
                             'label' => __('Remove'),

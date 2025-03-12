@@ -24,7 +24,7 @@ use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
 
 /**
  * Class ShippingReportTotals
- * Controller for downloading pre-shipping list in PDF format.
+ * Controller for downloading shipping report totals in PDF format.
  */
 class ShippingReportTotals extends Action implements HttpGetActionInterface
 {
@@ -36,27 +36,27 @@ class ShippingReportTotals extends Action implements HttpGetActionInterface
     /**
      * @var TotalsProcessor
      */
-    protected $totalsProcessor;
+    private $totalsProcessor;
 
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    private $logger;
 
     /**
      * @var DriverFile
      */
-    protected $driverFile;
+    private $driverFile;
 
     /**
      * @var PlpSession
      */
-    protected $plpSession;
+    private $plpSession;
 
     /**
      * @var PlpRepositoryInterface
      */
-    protected $plpRepository;
+    private $plpRepository;
 
     /**
      * @param Context $context
@@ -100,16 +100,18 @@ class ShippingReportTotals extends Action implements HttpGetActionInterface
 
         try {
             $plp = $this->plpRepository->getById($plpId);
-            if (!$plp) {
-                $this->messageManager->addErrorMessage(__('PLP not found'));
-                return $resultRedirect->setPath('*/*/index');
+            if (!$plp || $plp->getStatus() !== PlpStatus::STATUS_PLP_COMPLETED) {
+                $this->messageManager->addErrorMessage(
+                    __('Shipping report totals are only available for completed PLPs')
+                );
+                return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
             }
             
             $reportResult = $this->totalsProcessor->processPreShippingList($plpId);
             
             if (!$reportResult['success']) {
                 throw new LocalizedException(
-                    __('Failed to generate pre-shipping list: %1', $reportResult['message'] ?? '')
+                    __('Failed to generate shipping report totals: %1', $reportResult['message'] ?? '')
                 );
             }
             
@@ -126,7 +128,7 @@ class ShippingReportTotals extends Action implements HttpGetActionInterface
                 return $response;
             }
             
-            throw new LocalizedException(__('Pre-shipping list file not found'));
+            throw new LocalizedException(__('Shipping report totals file not found'));
             
         } catch (LocalizedException $exc) {
             $this->messageManager->addErrorMessage($exc->getMessage());
@@ -134,7 +136,7 @@ class ShippingReportTotals extends Action implements HttpGetActionInterface
         } catch (\Exception $exc) {
             $this->logger->critical($exc);
             $this->messageManager->addErrorMessage(
-                __('An error occurred while generating the pre-shipping list. Please check the logs for details.')
+                __('An error occurred while generating the shipping report totals. Please check the logs for details.')
             );
             return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
         }

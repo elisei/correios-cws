@@ -60,12 +60,17 @@ class View extends Action
      */
     public function execute()
     {
+        $this->plpSession->setCurrentPlpId(null);
+
         $plpId = $this->getRequest()->getParam('id');
+
+        if ($plpId) {
+            $this->plpSession->setCurrentPlpId($plpId);
+        }
+
         try {
             $plp = $this->plpRepository->getById($plpId);
 
-            $this->plpSession->setCurrentPlpId($plpId);
-            
             $resultPage = $this->resultPageFactory->create();
             $resultPage->getConfig()->getTitle()->prepend(__('View PLP #%1', $plp->getEntityId()));
             
