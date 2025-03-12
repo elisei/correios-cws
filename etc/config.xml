@@ -18,7 +18,6 @@
                 <title>Correios</title>
                 <model>O2TI\SigepWebCarrier\Model\Carrier</model>
                 <handling_fee>0</handling_fee>
-                <direction>20</direction>
                 <specificerrmsg>Este método de entrega não está disponível no momento.</specificerrmsg>
                 <free_method>min_value_available</free_method>
                 <servicos>03220,03298,04227</servicos>
