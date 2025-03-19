@@ -18,7 +18,7 @@
                     <resource id="O2TI_SigepWebCarrier::services_read" title="View Services" sortOrder="10" />
                     <resource id="O2TI_SigepWebCarrier::services_write" title="Modify Services" sortOrder="20" />
                     <resource id="O2TI_SigepWebCarrier::plp_view" title="Plp View" sortOrder="30" />
-                    <resource id="O2TI_SigepWebCarrier::plp_manage" title="Plp Manage" sortOrder="40" />
+                    <resource id="O2TI_SigepWebCarrier::plp_management" title="Plp Manage" sortOrder="40" />
                 </resource>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">
