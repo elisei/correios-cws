@@ -48,33 +48,6 @@ class StoreInformation
     }
 
     /**
-     * Parse street address into components
-     *
-     * @param string $fullAddress
-     * @return array
-     */
-    protected function parseStreetAddress($fullAddress)
-    {
-        $fullAddress = trim($fullAddress);
-
-        $streetName = $fullAddress;
-        $number = '';
-        $complement = '';
-
-        if (preg_match('/^(.*?),\s*(\d+)(?:\s*,\s*(.+))?$/u', $fullAddress, $matches)) {
-            $streetName = trim($matches[1]);
-            $number = $matches[2];
-            $complement = isset($matches[3]) ? trim($matches[3]) : '';
-        }
-
-        return [
-            $streetName,
-            $number ?: 'S/N',
-            $complement ?: ''
-        ];
-    }
-
-    /**
      * Get sender data from store information
      *
      * @return array
@@ -82,23 +55,22 @@ class StoreInformation
     public function getSenderData()
     {
         $storeId = $this->storeManager->getStore()->getId();
-        $regionId = $this->getStoreConfig('shipping/origin/region_id', $storeId);
+        $regionId = $this->getStoreConfig('carriers/sigep_web_carrier/sender_region_id', $storeId);
         $region = $this->region->load($regionId);
-        $parsedStreet = $this->parseStreetAddress($this->getStoreConfig('shipping/origin/street_line1', $storeId));
         $data = [
-            'name' => $this->getStoreConfig('general/store_information/name', $storeId),
-            'telephone' => $this->getStoreConfig('general/store_information/phone', $storeId),
-            'email' => $this->getStoreConfig('trans_email/ident_general/email', $storeId),
-            'cpf_cnpj' => $this->getStoreConfig('general/store_information/merchant_vat_number', $storeId),
+            'name' => $this->getStoreConfig('carriers/sigep_web_carrier/sender_name', $storeId),
+            'telephone' => $this->getStoreConfig('carriers/sigep_web_carrier/sender_cellphone', $storeId),
+            'email' => $this->getStoreConfig('carriers/sigep_web_carrier/sender_email', $storeId),
+            'cpf_cnpj' => $this->getStoreConfig('carriers/sigep_web_carrier/sender_cpf_cnpj', $storeId),
             'street' => [
-                $parsedStreet[0],
-                $parsedStreet[1],
-                $parsedStreet[2],
-                $this->getStoreConfig('shipping/origin/street_line2', $storeId) ?: 'BAIRRO',
+                $this->getStoreConfig('carriers/sigep_web_carrier/sender_street_1', $storeId),
+                $this->getStoreConfig('carriers/sigep_web_carrier/sender_street_2', $storeId),
+                $this->getStoreConfig('carriers/sigep_web_carrier/sender_street_3', $storeId),
+                $this->getStoreConfig('carriers/sigep_web_carrier/sender_street_4', $storeId),
             ],
-            'city' => $this->getStoreConfig('shipping/origin/city', $storeId),
+            'city' => $this->getStoreConfig('carriers/sigep_web_carrier/sender_city', $storeId),
             'region_code' => $region->getCode(),
-            'postcode' => $this->getStoreConfig('shipping/origin/postcode', $storeId)
+            'postcode' => $this->getStoreConfig('carriers/sigep_web_carrier/sender_postcode', $storeId)
         ];
         
         return $data;
