@@ -324,7 +324,7 @@ class PdfReportGenerator
      */
     protected function getReportFilePath($filename)
     {
-        $mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+        $mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $dirPath = 'sigepweb/reports';
         
         if (!$this->driver->isDirectory($mediaDirectory->getAbsolutePath($dirPath))) {

@@ -533,7 +533,7 @@ class PlpLabelDownload extends AbstractPlpOperation
      */
     protected function getLabelFilePath($fileName)
     {
-        $mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
+        $mediaDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $dirPath = 'sigepweb/labels';
         
         if (!$this->driver->isDirectory($mediaDirectory->getAbsolutePath($dirPath))) {

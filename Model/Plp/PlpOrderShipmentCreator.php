@@ -370,7 +370,7 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         
         $shipment->addTrack($track);
         
-        $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::VAR_DIR);
+        $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
         $relativeFilePath = 'sigepweb/labels/' . $processingData['labelFileName'];
         
         if ($mediaDirectory->isExist($relativeFilePath)) {

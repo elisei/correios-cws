@@ -146,7 +146,7 @@ class PlpSubmitService
      */
     protected function getFilePath($fileName)
     {
-        $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::VAR_DIR);
+        $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
         $dirPath = 'sigepweb/plp';
         
         return $mediaDirectory->getAbsolutePath($dirPath . '/' . $fileName);
