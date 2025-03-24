@@ -1,6 +1,6 @@
-# Módulo de Carrier para SigepWeb
+# Módulo de Carrier para CWS
 
-Crie cotações de entrega diretamente na API do SigepWeb (Correios), com tabela de contigência para casos de queda da API, além disso tenha acompanhamento com tracking page e email ao cliente para acompanhamento de entregas.
+Crie cotações de entrega diretamente na API do Cws (Correios), com tabela de contigência para casos de queda da API, além disso tenha acompanhamento com tracking page e email ao cliente para acompanhamento de entregas.
 
 ## Badges
 [![Magento - Coding Quality](https://github.com/elisei/sigep-web-carrier/actions/workflows/magento-coding-quality.yml/badge.svg)](https://github.com/elisei/sigep-web-carrier/actions/workflows/magento-coding-quality.yml)
