@@ -88,7 +88,14 @@ class PlpSingleSubmitService
             if ($this->config->hasDebug()) {
                 $this->logger->debug('PLP Sync API Response', ['response' => $response]);
             }
-            
+
+            if (isset($response['msgs'])) {
+                $result = [
+                    'success' => false,
+                    'message' => __($response['msgs'])
+                ];
+            }
+
             $result['data'] = $response;
 
         } catch (\Exception $e) {

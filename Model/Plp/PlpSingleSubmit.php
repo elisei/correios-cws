@@ -68,7 +68,7 @@ class PlpSingleSubmit extends AbstractPlpOperation
         $this->failurePlpStatus = PlpStatus::STATUS_PLP_COLLECTING_DATA;
         
         $this->expectedTypeFilter = 'status';
-        $this->expectedOrderStatus = PlpStatusItem::STATUS_ITEM_COLLECTION_COMPLETED;
+        $this->expectedOrderStatus = [PlpStatusItem::STATUS_ITEM_COLLECTION_COMPLETED, PlpStatusItem::STATUS_ITEM_SUBMIT_ERROR];
         $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_SUBMIT;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_SUBMIT_CREATED;
         $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_SUBMIT_ERROR;
