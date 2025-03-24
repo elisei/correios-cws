@@ -16,6 +16,11 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="sigepweb_fallback_update" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\UpdateFallbackRulesCommand</item>
+                <item name="sigepweb_plp_data_collect" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpDataCollectCommand</item>
+                <item name="sigepweb_plp_single_submit" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpSingleSubmitCommand</item>
+                <item name="sigepweb_plp_label" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpLabelRequestCommand</item>
+                <item name="sigepweb_plp_label_download" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpLabelDownloadCommand</item>
+                <item name="sigepweb_plp_create_shipments" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpShipmentCreateCommand</item>
             </argument>
         </arguments>
     </type>
@@ -113,10 +118,173 @@
         </arguments>
     </type>
 
+    <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpSubmitService">
+        <arguments>
+            <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpSyncService">
+        <arguments>
+            <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpSingleSubmitService">
+        <arguments>
+            <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpAsyncLabelService">
+        <arguments>
+            <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpLabelDownloadService">
+        <arguments>
+            <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpDeclarationContent">
+        <arguments>
+            <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Model\Plp\ShippingReportProcessor">
+        <arguments>
+            <argument name="plpRepository" xsi:type="object">O2TI\SigepWebCarrier\Api\PlpRepositoryInterface</argument>
+            <argument name="plpOrderCollectionFactory" xsi:type="object">O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\CollectionFactory</argument>
+            <argument name="pdfReportGenerator" xsi:type="object">O2TI\SigepWebCarrier\Model\Plp\PdfReportGenerator</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+    
+    <type name="O2TI\SigepWebCarrier\Model\Plp\PdfReportGenerator">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem</argument>
+            <argument name="driver" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="fileIo" xsi:type="object">Magento\Framework\Filesystem\Io\File</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Controller\Adminhtml\Plp\ShippingReport">
+        <arguments>
+            <argument name="shippingReportProcessor" xsi:type="object">O2TI\SigepWebCarrier\Model\Plp\ShippingReportProcessor</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="driverFile" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="plpSession" xsi:type="object">O2TI\SigepWebCarrier\Model\Session\PlpSession</argument>
+            <argument name="plpRepository" xsi:type="object">O2TI\SigepWebCarrier\Api\PlpRepositoryInterface</argument>
+        </arguments>
+    </type>
+
+<type name="O2TI\SigepWebCarrier\Model\Plp\ShippingReportTotalsProcessor">
+        <arguments>
+            <argument name="plpRepository" xsi:type="object">O2TI\SigepWebCarrier\Api\PlpRepositoryInterface</argument>
+            <argument name="plpOrderCollectionFactory" xsi:type="object">O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\CollectionFactory</argument>
+            <argument name="pdfReportGenerator" xsi:type="object">O2TI\SigepWebCarrier\Model\Plp\PdfReportTotalsGenerator</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+    
+    <type name="O2TI\SigepWebCarrier\Model\Plp\PdfReportTotalsGenerator">
+        <arguments>
+            <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem</argument>
+            <argument name="driver" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="fileIo" xsi:type="object">Magento\Framework\Filesystem\Io\File</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Controller\Adminhtml\Plp\ShippingReportTotals">
+        <arguments>
+            <argument name="shippingReportProcessor" xsi:type="object">O2TI\SigepWebCarrier\Model\Plp\ShippingReportTotalsProcessor</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="driverFile" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
+            <argument name="plpSession" xsi:type="object">O2TI\SigepWebCarrier\Model\Session\PlpSession</argument>
+            <argument name="plpRepository" xsi:type="object">O2TI\SigepWebCarrier\Api\PlpRepositoryInterface</argument>
+        </arguments>
+    </type>
+
     <!-- Carrier Configuration -->
     <type name="O2TI\SigepWebCarrier\Model\Carrier">
         <arguments>
             <argument name="correiosService" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Service\CorreiosService</argument>
         </arguments>
     </type>
+
+    <!-- Interface Preferences -->
+    <preference for="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface"
+                type="O2TI\SigepWebCarrier\Model\PlpRepository"/>
+    <preference for="O2TI\SigepWebCarrier\Api\Data\PlpInterface"
+                type="O2TI\SigepWebCarrier\Model\Plp"/>
+    <preference for="O2TI\SigepWebCarrier\Api\Data\PlpOrderInterface"
+                type="O2TI\SigepWebCarrier\Model\PlpOrder"/>
+    <preference for="O2TI\SigepWebCarrier\Api\Data\PlpSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults"/>
+
+    <!-- Virtual Types -->
+    <virtualType name="O2TI\SigepWebCarrier\Model\ResourceModel\Plp\Grid\Collection" 
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">sales_shipment_correios_plp</argument>
+            <argument name="resourceModel" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\Plp</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\Grid\Collection" 
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">sales_shipment_correios_plp_order</argument>
+            <argument name="resourceModel" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder</argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Data Providers para UI Components -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="sigepweb_plp_listing_data_source" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\Plp\Grid\Collection</item>
+                <item name="sigepweb_plp_order_listing_data_source" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Ui\Component\Listing\DataProvider\PlpOrder">
+        <arguments>
+            <argument name="collectionFactory" xsi:type="object">O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\CollectionFactory</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\Grid\Collection" 
+                type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">sales_shipment_correios_plp_order</argument>
+            <argument name="resourceModel" xsi:type="string">O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="O2TI\SigepWebCarrier\Model\Session\PlpSession" type="Magento\Framework\Session\Generic">
+        <arguments>
+            <argument name="name" xsi:type="string">plp_session</argument>
+        </arguments>
+    </virtualType>
 </config>

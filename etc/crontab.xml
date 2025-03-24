@@ -28,7 +28,10 @@
             <schedule>30 22 * * 1-6</schedule>
         </job>
         <job name="sigepweb_update_fallback_rules" instance="O2TI\SigepWebCarrier\Cron\UpdateFallbackRules" method="execute">
-            <schedule>0 3 1-7 * * MON</schedule>
+            <schedule>0 3 1-7 * 1-6</schedule>
+        </job>
+        <job name="sigepweb_plp_complete_process" instance="O2TI\SigepWebCarrier\Cron\PlpCompleteProcessCron" method="execute">
+            <schedule>* * * * 1-5</schedule>
         </job>
     </group>
 </config>

@@ -10,12 +10,12 @@
 
 namespace O2TI\SigepWebCarrier\Model\Config\Source;
 
+use Magento\Framework\Data\OptionSourceInterface;
+
 /**
  * Class Format - Source model for package format options.
- *
- * @api
  */
-class Environment implements \Magento\Framework\Option\ArrayInterface
+class Environment implements OptionSourceInterface
 {
     /**
      * Options getter.

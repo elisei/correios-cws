@@ -165,6 +165,52 @@ class Config
     }
 
     /**
+     * Get Label Type
+     *
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getLabelType(?int $storeId = null): string
+    {
+        return (string)$this->getConfigValue('label_type', $storeId);
+    }
+
+    /**
+     * Get Label Format
+     *
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getLabelFormat(?int $storeId = null): string
+    {
+        return (string)$this->getConfigValue('label_format', $storeId);
+    }
+
+    /**
+     * Get Print Layout
+     *
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getPrintLayout(?int $storeId = null): string
+    {
+        return (string)$this->getConfigValue('print_layout', $storeId);
+    }
+
+    /**
+     * Get Base URL
+     *
+     * @param int|null $storeId
+     * @return array
+     */
+    public function getAllowedStatus(?int $storeId = null): array
+    {
+        $status = $this->getConfigValue('allowed_status', $storeId);
+
+        return isset($status) ? explode(',', $status) : [];
+    }
+
+    /**
      * Get Default Weight
      *
      * @param int|null $storeId

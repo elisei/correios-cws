@@ -92,10 +92,10 @@ class UpdateFallbackRulesCommand extends Command
             );
 
             $output->writeln('<info>Fallback service rules updated successfully!</info>');
-            return Command::SUCCESS;
+            return 1;
         } catch (\Exception $e) {
             $output->writeln('<error>' . $e->getMessage() . '</error>');
-            return Command::FAILURE;
+            return 0;
         }
     }
 }

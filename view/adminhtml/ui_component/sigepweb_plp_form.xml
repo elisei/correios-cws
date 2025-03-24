@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">sigepweb_plp_form.plp_form_data_source</item>
+            <item name="deps" xsi:type="string">sigepweb_plp_form.plp_form_data_source</item>
+            <item name="component" xsi:type="string">O2TI_SigepWebCarrier/js/form/plp-form</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">PLP Information</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">sigepweb_plp_form</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="back">
+                <url path="*/*/"/>
+                <class>back</class>
+                <label translate="true">Back</label>
+            </button>
+            <button name="reset">
+                <class>reset</class>
+                <label translate="true">Reset</label>
+            </button>
+            <button name="get_declaration" class="O2TI\SigepWebCarrier\Block\Adminhtml\Plp\Edit\Button\GetDeclaration"/>
+            <button name="get_shipping_report" class="O2TI\SigepWebCarrier\Block\Adminhtml\Plp\Edit\Button\GetShippingReport"/>
+            <button name="get_shipping_report_totals" class="O2TI\SigepWebCarrier\Block\Adminhtml\Plp\Edit\Button\GetShippingReportTotals"/>
+            <button name="save_and_continue">
+                <class>save</class>
+                <label translate="true">Save and Continue Edit</label>
+            </button>
+            <button name="save">
+                <class>primary</class>
+                <label translate="true">Save</label>
+            </button>
+        </buttons>
+        <namespace>sigepweb_plp_form</namespace>
+        <dataScope>data</dataScope>
+        <deps>
+            <dep>sigepweb_plp_form.sigepweb_plp_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="sigepweb_plp_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">O2TI\SigepWebCarrier\Ui\Component\FormDataProvider</argument>
+            <argument name="name" xsi:type="string">plp_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="*/*/save"/>
+                    <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+    <fieldset name="general">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">PLP Information</item>
+                <item name="collapsible" xsi:type="boolean">false</item>
+            </item>
+        </argument>
+
+        <field name="entity_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="dataScope" xsi:type="string">entity_id</item>
+                </item>
+            </argument>
+        </field>
+        <field name="store_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magento\Store\Model\System\Store</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">int</item>
+                    <item name="label" xsi:type="string" translate="true">Store View</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">store_id</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                    <item name="visible" xsi:type="boolean">true</item>
+                    <item name="default" xsi:type="string">0</item>
+                </item>
+            </argument>
+        </field>
+        <field name="status">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">O2TI\SigepWebCarrier\Model\Plp\Source\Status</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Status</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">status</item>
+                    <item name="default" xsi:type="string">opened</item>
+                    <item name="disabled" xsi:type="boolean">true</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="can_send_to_cws">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Send To Correios Web Service</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">can_send_to_cws</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="can_add_orders">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Allow Adding Orders</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="source" xsi:type="string">plp</item>
+                    <item name="dataScope" xsi:type="string">can_add_orders</item>
+                    <item name="default" xsi:type="string">1</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <fieldset name="associated_orders">
+            <settings>
+                <label translate="true">Associated Orders</label>
+                <collapsible>false</collapsible>
+                <opened>true</opened>
+            </settings>
+            <insertListing name="sigepweb_plp_order_listing">
+                <settings>
+                    <autoRender>true</autoRender>
+                    <dataScope>sigepweb_plp_order_listing</dataScope>
+                    <ns>sigepweb_plp_order_listing</ns>
+                    <externalProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing_data_source</externalProvider>
+                    <selectionsProvider>sigepweb_plp_order_listing.sigepweb_plp_order_listing.plp_order_columns.ids</selectionsProvider>
+                    <dataLinks>
+                        <imports>true</imports>
+                        <exports>false</exports>
+                    </dataLinks>
+                    <updateUrl path="mui/index/render"/>
+                    <externalFilterMode>true</externalFilterMode>
+                    <realTimeLink>true</realTimeLink>
+                </settings>
+            </insertListing>
+        </fieldset>
+
+        <container name="select_orders_container">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/form/components/button</item>
+                    <item name="template" xsi:type="string">ui/form/components/button/container</item>
+                    <item name="title" xsi:type="string" translate="true">Select Orders</item>
+                    <item name="buttonClasses" xsi:type="string">action-primary</item>
+                    <item name="additionalClasses" xsi:type="string">admin__field-medium admin__field-tooltip</item>
+                    <item name="displayArea" xsi:type="string">insideGroup</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                    <item name="actions" xsi:type="array">
+                        <item name="0" xsi:type="array">
+                            <item name="targetName" xsi:type="string">${ $.parentName }.order_selection_modal</item>
+                            <item name="actionName" xsi:type="string">openModal</item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </container>
+
+        <modal name="order_selection_modal" component="O2TI_SigepWebCarrier/js/order-selection-modal">
+            <settings>
+                <options>
+                    <option name="title" xsi:type="string" translate="true">Select Orders</option>
+                    <option name="buttons" xsi:type="array">
+                        <item name="0" xsi:type="array">
+                            <item name="text" xsi:type="string" translate="true">Cancel</item>
+                            <item name="class" xsi:type="string">action-secondary</item>
+                            <item name="actions" xsi:type="array">
+                                <item name="0" xsi:type="array">
+                                    <item name="targetName" xsi:type="string">${ $.name }</item>
+                                    <item name="actionName" xsi:type="string">closeModal</item>
+                                </item>
+                            </item>
+                        </item>
+                        <item name="1" xsi:type="array">
+                            <item name="text" xsi:type="string" translate="true">Add Selected Orders</item>
+                            <item name="class" xsi:type="string">action-primary</item>
+                            <item name="actions" xsi:type="array">
+                                <item name="0" xsi:type="array">
+                                    <item name="targetName" xsi:type="string">${ $.name }</item>
+                                    <item name="actionName" xsi:type="string">addSelectedOrders</item>
+                                </item>
+                            </item>
+                        </item>
+                    </option>
+                </options>
+                <deps>
+                    <dep>order_selection_modal.order_selection_listing</dep>
+                </deps>
+            </settings>
+            <insertListing name="order_selection_listing">
+                <settings>
+                    <dataScope>order_selection_listing</dataScope>
+                    <ns>order_selection_listing</ns>
+                    <externalProvider>${ $.ns }.order_selection_listing_data_source</externalProvider>
+                    <selectionsProvider>${ $.ns }.order_selection_listing.order_selection_columns.ids</selectionsProvider>
+                    <dataLinks>
+                        <exports>false</exports>
+                        <imports>true</imports>
+                    </dataLinks>
+                    <autoRender>true</autoRender>
+                    <realTimeLink>true</realTimeLink>
+                    <behaviourType>simple</behaviourType>
+                    <externalFilterMode>true</externalFilterMode>
+                </settings>
+            </insertListing>
+        </modal>
+    </fieldset>
+</form>

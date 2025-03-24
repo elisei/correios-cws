@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * O2TI Sigep Web Carrier.
+ *
+ * Copyright © 2025 O2TI. All rights reserved.
+ *
+ * @author    Bruno Elisei <brunoelisei@o2ti.com>
+ * @license   See LICENSE for license details.
+ */
+ -->
+<include xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_include.xsd">
+    <group id="plp_settings" translate="label" type="text" sortOrder="500" showInDefault="1" showInWebsite="1" showInStore="1">
+        <label>PLP Settings</label>
+        <depends>
+            <field id="*/*/credentials/has_credentials">1</field>
+        </depends>
+        <field id="label_type" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Label Type</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\LabelType</source_model>
+            <config_path>carriers/sigep_web_carrier/label_type</config_path>
+        </field>
+        <field id="label_format" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Label Format</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\LabelFormat</source_model>
+            <config_path>carriers/sigep_web_carrier/label_format</config_path>
+        </field>
+        <field id="print_layout" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Print Layout</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\PrintLayout</source_model>
+            <config_path>carriers/sigep_web_carrier/print_layout</config_path>
+        </field>
+        <field id="allowed_status" translate="label" type="multiselect" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+            <label>Status Allowed for create Label</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\FilterStatus</source_model>
+            <config_path>carriers/sigep_web_carrier/allowed_status</config_path>
+        </field>
+        <group id="plp_sender" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Sender Data</label>
+            <field id="name" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Name</label>
+                <validate>required-entry</validate>
+                <config_path>carriers/sigep_web_carrier/sender_name</config_path>
+            </field>
+            <field id="cellphone" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Cellphone</label>
+                <config_path>carriers/sigep_web_carrier/sender_cellphone</config_path>
+                <validate>required-entry validate-number minimum-length-11 maximum-length-11</validate>
+                <comment>Será usado para comunicação via SMS pelos Correios. Use somente números, deve ser um celular com ddd.</comment>
+            </field>
+            <field id="email" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Email</label>
+                <validate>required-entry</validate>
+                <config_path>carriers/sigep_web_carrier/sender_email</config_path>
+            </field>
+            <field id="cpf_cnpj" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>CPF ou CNPJ</label>
+                <validate>required-entry validate-number minimum-length-11 maximum-length-14</validate>
+                <config_path>carriers/sigep_web_carrier/sender_cpf_cnpj</config_path>
+                <comment>Deve utilizar o mesmo do seu contrato. Use somente números.</comment>
+            </field>
+            <field id="street_1" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Logradouro</label>
+                <validate>required-entry</validate>
+                <config_path>carriers/sigep_web_carrier/sender_street_1</config_path>
+                <comment>Rua, avenida, travessa...</comment>
+            </field>
+            <field id="street_2" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Número</label>
+                <validate>required-entry</validate>
+                <config_path>carriers/sigep_web_carrier/sender_street_2</config_path>
+            </field>
+            <field id="street_3" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Complemento</label>
+                <config_path>carriers/sigep_web_carrier/sender_street_3</config_path>
+            </field>
+            <field id="street_4" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Bairro</label>
+                <validate>required-entry</validate>
+                <config_path>carriers/sigep_web_carrier/sender_street_4</config_path>
+            </field>
+            <field id="city" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>City</label>
+                <validate>required-entry</validate>
+                <config_path>carriers/sigep_web_carrier/sender_city</config_path>
+            </field>
+            <field id="postcode" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Postcode</label>
+                <validate>required-entry</validate>
+                <config_path>carriers/sigep_web_carrier/sender_postcode</config_path>
+            </field>
+            <field id="country_id" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Country</label>
+                <source_model>Magento\Directory\Model\Config\Source\Country</source_model>
+                <frontend_class>countries</frontend_class>
+                <can_be_empty>1</can_be_empty>
+                <config_path>carriers/sigep_web_carrier/sender_country_id</config_path>
+            </field>
+            <field id="region_id" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">
+                <label>Region/State</label>
+                <validate>required-entry</validate>
+                <config_path>carriers/sigep_web_carrier/sender_region_id</config_path>
+            </field>
+        </group>    
+    </group>
+</include>

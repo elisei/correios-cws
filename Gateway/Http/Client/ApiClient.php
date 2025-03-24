@@ -12,6 +12,7 @@ namespace O2TI\SigepWebCarrier\Gateway\Http\Client;
 
 use Laminas\Http\ClientFactory;
 use Laminas\Http\Request;
+use Laminas\Http\Client\Adapter\Curl;
 use Laminas\Http\Header\Authorization;
 use Magento\Framework\Exception\InvalidArgumentException;
 use Magento\Framework\Exception\LocalizedException;
@@ -55,6 +56,11 @@ class ApiClient
     private $config;
 
     /**
+     * @var string|null
+     */
+    private $rawResponse = null;
+
+    /**
      * @param ClientFactory $httpClientFactory
      * @param LoggerInterface $logger
      * @param Json $json
@@ -87,6 +93,16 @@ class ApiClient
     }
 
     /**
+     * Get raw response
+     *
+     * @return string|null
+     */
+    public function getRawResponse()
+    {
+        return $this->rawResponse;
+    }
+
+    /**
      * Send API Request
      *
      * @param string $uri
@@ -95,9 +111,15 @@ class ApiClient
      * @param string $method
      * @return array
      * @throws LocalizedException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function request(string $uri, array $headers, array $request = [], string $method = 'POST'): array
-    {
+    public function request(
+        string $uri,
+        array $headers,
+        array $request = [],
+        string $method = 'POST'
+    ): array {
         try {
             $client = $this->httpClientFactory->create();
             $client->setUri($uri);
@@ -112,6 +134,8 @@ class ApiClient
 
             $response = $client->send();
             $responseBody = $response->getBody();
+            $this->rawResponse = $responseBody;
+
             $data = $this->json->unserialize($responseBody);
 
             $this->logApiInteraction($uri, $headers, $request, $data);
@@ -120,6 +144,69 @@ class ApiClient
         } catch (InvalidArgumentException $exc) {
             $this->logApiError($uri, $headers, $request, $exc->getMessage());
             throw new LocalizedException(__('Invalid JSON was returned by the Correios'));
+        }
+    }
+
+    /**
+     * Send API Request and get raw content response
+     *
+     * @param string $uri
+     * @param array $headers
+     * @param array $request
+     * @param string $method
+     * @return string
+     * @throws LocalizedException
+     */
+    public function requestContent(
+        string $uri,
+        array $headers,
+        array $request = [],
+        string $method = 'GET'
+    ): string {
+        try {
+            $client = $this->httpClientFactory->create();
+            $client->setUri($uri);
+    
+            // Prepare headers but ensure Accept header is appropriate for content
+            if (!isset($headers['Accept'])) {
+                $headers['Accept'] = 'text/html,application/xhtml+xml';
+            }
+    
+            $client->setHeaders($headers);
+            $client->setMethod($method);
+            
+            if ($method === Request::METHOD_POST) {
+                $client->setRawBody($this->json->serialize($request));
+            }
+    
+            // Configure client for potentially large responses
+            $client->setOptions([
+                'timeout' => 60,
+                'keepalive' => true
+            ]);
+    
+            $response = $client->send();
+            $responseBody = $response->getBody();
+            $this->rawResponse = $responseBody;
+            
+            // Log the interaction
+            if ($this->config->hasDebug()) {
+                $this->logger->debug(
+                    'Correios API Content Request',
+                    [
+                        'uri' => $uri,
+                        'headers' => $this->filterDebugData($headers),
+                        'request' => $this->filterDebugData($request),
+                        'response_status' => $response->getStatusCode(),
+                        'response_size' => strlen($responseBody)
+                    ]
+                );
+            }
+    
+            return $responseBody;
+        } catch (\Exception $exc) {
+            $this->logApiError($uri, $headers, $request, $exc->getMessage());
+            throw new LocalizedException(__('Error requesting content from Correios API: %1', $exc->getMessage()));
         }
     }
 
