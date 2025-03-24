@@ -100,6 +100,15 @@ class PlpAsyncLabelService
             if ($this->config->hasDebug()) {
                 $this->logger->debug('Async Label API Response', ['response' => $response]);
             }
+
+            if (isset($response['msgs'])) {
+                $result = [
+                    'success' => false,
+                    'message' => __(
+                        implode('; ' , $response['msgs'])
+                    )
+                ];
+            }
             
             $result['data'] = $response;
 

@@ -92,7 +92,9 @@ class PlpSingleSubmitService
             if (isset($response['msgs'])) {
                 $result = [
                     'success' => false,
-                    'message' => __($response['msgs'])
+                    'message' => __(
+                        implode('; ' , $response['msgs'])
+                    )
                 ];
             }
 

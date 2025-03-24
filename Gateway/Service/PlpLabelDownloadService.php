@@ -98,6 +98,15 @@ class PlpLabelDownloadService
                 ];
                 return $result;
             }
+
+            if (isset($response['msgs'])) {
+                $result = [
+                    'success' => false,
+                    'message' => __(
+                        implode('; ' , $response['msgs'])
+                    )
+                ];
+            }
             
             $result['data'] = $response;
 
