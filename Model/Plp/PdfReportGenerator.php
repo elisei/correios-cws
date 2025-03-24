@@ -275,7 +275,7 @@ class PdfReportGenerator
         $customerZip = $data['customer_zip'] ?? 'N/A';
         $declaredWeight = $data['declared_weight'] ?? 'N/A';
         $serviceCode = $data['service_code'] ?? 'N/A';
-        $tracking = $this->truncateText($data['tracking'], 20);
+        $tracking = $this->truncateText($data['tracking'] ?? 'N/A', 20);
         $nfeNumber = $data['nfe'] ?? 'N/A';
 
         $axisY = $axisY - 15;
