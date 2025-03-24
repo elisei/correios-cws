@@ -13,6 +13,7 @@ Crie cotações de entrega diretamente na API do Cws (Correios), com tabela de c
 - Tabela de contingência dinâmica
 - Email de atualização de entrega
 - Página de acompanhamento de entrega
+- Geração de Etiqueta de Envio (novo)
 
 ## Instalação e Configuração
 
