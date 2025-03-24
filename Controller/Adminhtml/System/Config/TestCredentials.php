@@ -87,7 +87,6 @@ class TestCredentials extends Action
             $response = $this->authService->getAuthToken();
             
             // Save values to configuration
-            $this->configWriter->save('carriers/sigep_web_carrier/environment', $response['environment']);
             $this->configWriter->save('carriers/sigep_web_carrier/contract', $response['contract']);
             // $this->configWriter->save('carriers/sigep_web_carrier/posting_card', $response['numero']);
             $this->configWriter->save('carriers/sigep_web_carrier/direction', $response['direction']);
