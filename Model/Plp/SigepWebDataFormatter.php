@@ -177,7 +177,7 @@ class SigepWebDataFormatter
             $this->logger->error(__('Service %s not found: %1', $serviceCode, $e->getMessage()));
         }
         
-        $formattedData['listaServicoAdicional'] = $services;
+        $formattedData['listaServicoAdicional'][] = $services;
         return $formattedData;
     }
 
