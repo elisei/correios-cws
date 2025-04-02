@@ -90,9 +90,11 @@
                 <label translate="true">Grand Total</label>
             </settings>
         </column>
-        <column name="status">
+        <column name="status" component="Magento_Ui/js/grid/columns/select">
             <settings>
-                <filter>text</filter>
+                <filter>select</filter>
+                <options class="Magento\Sales\Ui\Component\Listing\Column\Status\Options"/>
+                <dataType>select</dataType>
                 <label translate="true">Status</label>
             </settings>
         </column>

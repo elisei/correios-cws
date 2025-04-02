@@ -80,7 +80,13 @@ class OrderSelection extends DataProvider
      */
     public function getData()
     {
+        // Get the search criteria from parent
+        $searchCriteria = $this->getSearchCriteria();
+        
+        // Create the base collection
         $collection = $this->orderGridCollection->create();
+        
+        // Apply filters to exclude orders already in PLP
         $plpOrderCollection = $this->plpOrderCollection->create();
         $existingOrderIds = $plpOrderCollection->getColumnValues('order_id');
         $allowedStatus = $this->config->getAllowedStatus();
@@ -93,7 +99,41 @@ class OrderSelection extends DataProvider
         }
 
         $collection->addFieldToFilter('status', ['in' => $allowedStatus]);
-        $collection->setOrder('entity_id', 'DESC');
+        $collection->setPageSize(20);
+
+        if ($searchCriteria) {
+            foreach ($searchCriteria->getFilterGroups() as $filterGroup) {
+                $fields = [];
+                $conditions = [];
+                
+                foreach ($filterGroup->getFilters() as $filter) {
+                    $fields[] = $filter->getField();
+                    $conditions[] = [$filter->getConditionType() => $filter->getValue()];
+                }
+                
+                if ($fields) {
+                    $collection->addFieldToFilter($fields, $conditions);
+                }
+            }
+
+            if ($searchCriteria->getSortOrders()) {
+                foreach ($searchCriteria->getSortOrders() as $sortOrder) {
+                    $field = $sortOrder->getField();
+                    if ($field) {
+                        $direction = $sortOrder->getDirection() === 'ASC' ? 'ASC' : 'DESC';
+                        $collection->addOrder($field, $direction);
+                    }
+                }
+            }
+            
+            if ($searchCriteria->getCurrentPage()) {
+                $collection->setCurPage($searchCriteria->getCurrentPage());
+            }
+
+            if ($searchCriteria->getPageSize()) {
+                $collection->setPageSize($searchCriteria->getPageSize());
+            }
+        }
 
         $result = [
             'totalRecords' => $collection->getSize(),

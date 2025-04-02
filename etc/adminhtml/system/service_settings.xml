@@ -15,8 +15,9 @@
         <depends>
             <field id="*/*/credentials/has_credentials">1</field>
         </depends>
-        <field id="auto_declared" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+        <field id="auto_declared" translate="label,comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
             <label>Declared Price</label>
+            <comment>When active and if available for the delivery method, the insurance value will be added.</comment>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/sigep_web_carrier/auto_declared</config_path>
         </field>

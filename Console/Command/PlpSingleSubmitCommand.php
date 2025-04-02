@@ -91,7 +91,7 @@ class PlpSingleSubmitCommand extends Command
             $plpId = $input->getArgument(self::PLP_ID_ARGUMENT);
             
             if (!$plpId) {
-                $output->writeln('<e>'. __('Please provide a PLP ID.') .'</e>');
+                $output->writeln('<error>'. __('Please provide a PLP ID.') .'</error>');
                 return 0;
             }
 
@@ -113,12 +113,12 @@ class PlpSingleSubmitCommand extends Command
             }
 
             if (!$result['success']) {
-                $output->writeln('<e>'. __('%1', $result['message']) .'</e>');
+                $output->writeln('<error>'. __('%1', $result['message']) .'</error>');
                 return 0;
             }
 
         } catch (\Exception $e) {
-            $output->writeln('<e>' . $e->getMessage() . '</e>');
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
             return 0;
         }
     }

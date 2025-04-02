@@ -100,9 +100,8 @@ class SigepWebDataFormatter
             'larguraInformada' => (string)$package['width'],
         ];
         
-        // Erro no formato do serviço, revisar com o apoio dos correios.
-        // $declaredValue = $collectedData['order_info']['subtotal'];
-        // $formattedData = $this->processAdditionalServices($formattedData, $serviceCode, $declaredValue);
+        $declaredValue = $collectedData['order_info']['subtotal'];
+        $formattedData = $this->processAdditionalServices($formattedData, $serviceCode, $declaredValue);
         
         return $formattedData;
     }
@@ -155,8 +154,12 @@ class SigepWebDataFormatter
                 $formattedValue = number_format((float)($declaredValueFloat + 0.01), 2, '.', '');
                 unset($formattedData['valorDeclarado']);
 
-                $services['valorDeclarado'] = (float)$formattedValue;
-                $services['codigoServicoAdicional'] = '019';
+                $services['valorDeclarado'] = (string)$formattedValue;
+                $codeServAdicional = '019';
+                if ($serviceCode === '03298') {
+                    $codeServAdicional = '064';
+                }
+                $services['codigoServicoAdicional'] = $codeServAdicional;
             }
 
             if (!$additionalServices->getHasVd()) {
@@ -214,12 +217,6 @@ class SigepWebDataFormatter
         }
 
         $weightInGrams = (int)($weightInKg * 1000);
-        
-        $this->logger->info(__(
-            'Finding package for weight: %1 grams (%2 kg)',
-            $weightInGrams,
-            $weightInKg
-        ));
 
         uasort($rules, function ($ruleA, $ruleB) {
             $weightA = $this->convertRuleWeightToGrams($ruleA['max_weight']);
@@ -231,11 +228,6 @@ class SigepWebDataFormatter
             $maxWeightInGrams = $this->convertRuleWeightToGrams($rule['max_weight']);
 
             if ($weightInGrams <= $maxWeightInGrams) {
-                $this->logger->info(__(
-                    'Selected package: %1 (max weight: %2 grams)',
-                    $rule['description'],
-                    $maxWeightInGrams
-                ));
 
                 return [
                     'type' => (int)$rule['format'],

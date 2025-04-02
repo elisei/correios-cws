@@ -295,8 +295,6 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             return $cachedData;
         }
 
-        $this->_logger->info('Cache miss for key: ' . $cacheKey);
-
         try {
             $priceResponse = $this->quoteService->price(
                 $sourcePostcode,
@@ -321,8 +319,6 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
 
             // Only cache non-fallback responses
             $this->responseCache->save($cacheKey, $dataToCache);
-
-            $this->_logger->info('Generate Cache miss for key: ' . $cacheKey);
         
             return $dataToCache;
         } catch (Exception $exc) {
@@ -613,7 +609,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         if (!$this->getConfigData('auto_declared')) {
             return 0;
         }
-        return (float)$request->getPackageValue();
+        return (float)$request->getBaseSubtotalInclTax();
     }
 
     /**
@@ -757,12 +753,6 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
 
         // Convert weight to grams for comparison
         $weightInGrams = (int)($weightInKg * 1000);
-        
-        $this->_logger->info(sprintf(
-            'Finding package for weight: %d grams (%f kg)',
-            $weightInGrams,
-            $weightInKg
-        ));
 
         // Sort rules by max_weight ascending
         uasort($rules, function ($ruleWeigthA, $ruleWeigthB) {
@@ -775,12 +765,6 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             $maxWeightInGrams = $this->convertRuleWeightToGrams($rule['max_weight']);
 
             if ($weightInGrams <= $maxWeightInGrams) {
-                $this->_logger->info(sprintf(
-                    'Selected package: %s (max weight: %d grams)',
-                    $rule['description'],
-                    $maxWeightInGrams
-                ));
-
                 return [
                     'type' => (int)$rule['format'],
                     'height' => (int)$rule['height'],

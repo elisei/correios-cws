@@ -154,8 +154,12 @@ class QuoteService
             if ($declaredValue && $additionalServices->getHasVd()) {
                 $declaredValue = max($declaredValue, $additionalServices->getDeclaredMinValue());
                 $declaredValue = min($declaredValue, $additionalServices->getDeclaredMaxValue());
+                $codeServAdicional = '019';
+                if ($service === '03298') {
+                    $codeServAdicional = '064';
+                }
                 $item['vlDeclarado'] = $declaredValue;
-                $item['servicosAdicionais'][] = ['coServAdicional' => '019'];
+                $item['servicosAdicionais'][] = ['coServAdicional' => $codeServAdicional];
             }
 
             if ($avisorecebimento && $additionalServices->getHasAr()) {

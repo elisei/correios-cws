@@ -334,6 +334,7 @@ CNPJ,CNPJ
 "Status Allowed for create Label","Status Allowed for create Label"
 "Service Settings","Service Settings"
 "Declared Price","Declared Price"
+"When active and if available for the delivery method, the insurance value will be added.","When active and if available for the delivery method, the insurance value will be added."
 "Own Hand","Own Hand"
 "Receipt Notice","Receipt Notice"
 "Maximum Package Weight (please check with your carrier for maximum supported shipping weight)","Maximum Package Weight (please check with your carrier for maximum supported shipping weight)"

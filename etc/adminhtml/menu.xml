@@ -13,7 +13,7 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <add id="O2TI_SigepWebCarrier::sigep"
-             title="SigepWeb Carrier"
+             title="Correios CWS"
              translate="title"
              module="O2TI_SigepWebCarrier"
              sortOrder="50"

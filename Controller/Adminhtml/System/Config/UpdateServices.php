@@ -235,10 +235,12 @@ class UpdateServices extends Action
                 $serviceData['hasMp'] = true;
                 break;
             case 'VD':
+            case 'VDS':
                 $serviceData['hasVd'] = true;
                 $serviceData['declaredMinValue'] = $additional['vlMinDeclarado'] ?? 0.00;
                 $serviceData['declaredMaxValue'] = $additional['vlMaxDeclarado'] ?? 0.00;
                 break;
+                
         }
     }
 
