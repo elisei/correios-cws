@@ -37,13 +37,13 @@
         <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" 
                 comment="Store ID"/>
         <column xsi:type="varchar" name="status" nullable="false" length="50" default="opened"
-                comment="Status da PLP"/>
+                comment="Status da PPN"/>
         <!-- <column xsi:type="varchar" name="id_lote" nullable="true" length="50"
                 comment="ID do Lote"/>
         <column xsi:type="varchar" name="nome_arquivo_lote" nullable="true" length="250"
                 comment="Nome do Arquivo do Lote"/> -->
         <column xsi:type="boolean" name="can_send_to_cws" nullable="false" default="false"
-                comment="Enviar a PLP aos Correios"/>
+                comment="Enviar a PPN aos Correios"/>
         <column xsi:type="boolean" name="can_add_orders" nullable="false" default="true"
             comment="Permite adicionar novos pedidos"/>
         <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
@@ -59,11 +59,11 @@
     </table>
     
     <table name="sales_shipment_correios_plp_order" resource="default" engine="innodb" 
-           comment="Relacionamento entre PLP e Pedidos">
+           comment="Relacionamento entre PPN e Pedidos">
          <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"
                 comment="Entity ID"/>
         <column xsi:type="int" name="plp_id" padding="10" unsigned="true" nullable="false"
-                comment="PLP ID"/>
+                comment="PPN ID"/>
         <column xsi:type="varchar" name="order_id" length="32" nullable="false"
                 comment="Order ID"/>
         <column xsi:type="varchar" name="status" nullable="false" length="32" default="pending_collection"

@@ -67,9 +67,9 @@ class ShippingReportTotalsProcessor
     }
 
     /**
-     * Process pre-shipping list for a PLP
+     * Process pre-shipping list for a PPN
      *
-     * @param int $plpId PLP ID
+     * @param int $plpId PPN ID
      * @return array
      * @throws LocalizedException
      *
@@ -81,14 +81,14 @@ class ShippingReportTotalsProcessor
         try {
             $plp = $this->plpRepository->getById($plpId);
             if (!$plp) {
-                throw new LocalizedException(__('PLP with ID %1 not found', $plpId));
+                throw new LocalizedException(__('PPN with ID %1 not found', $plpId));
             }
 
             $collection = $this->plpOrderCollec->create();
             $collection->addFieldToFilter('plp_id', $plpId);
 
             if ($collection->getSize() === 0) {
-                throw new LocalizedException(__('No orders found in PLP %1', $plpId));
+                throw new LocalizedException(__('No orders found in PPN %1', $plpId));
             }
 
             $reportData = [];
@@ -138,7 +138,7 @@ class ShippingReportTotalsProcessor
             }
 
             if (empty($reportData)) {
-                throw new LocalizedException(__('No valid data found for pre-shipping list in PLP %1', $plpId));
+                throw new LocalizedException(__('No valid data found for pre-shipping list in PPN %1', $plpId));
             }
 
             $result = $this->pdfReportTotals->generatePreShippingList($reportData, $plpId);

@@ -36,7 +36,7 @@ class Delete extends Action
     }
 
     /**
-     * Delete PLP action
+     * Delete PPN action
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
@@ -49,11 +49,11 @@ class Delete extends Action
         if ($plpId) {
             try {
                 $this->plpRepository->deleteById($plpId);
-                $this->messageManager->addSuccessMessage(__('The PLP has been deleted.'));
+                $this->messageManager->addSuccessMessage(__('The PPN has been deleted.'));
                 
                 return $resultRedirect->setPath('*/*/');
             } catch (NoSuchEntityException $e) {
-                $this->messageManager->addErrorMessage(__('This PLP no longer exists.'));
+                $this->messageManager->addErrorMessage(__('This PPN no longer exists.'));
                 
                 return $resultRedirect->setPath('*/*/');
             } catch (LocalizedException $e) {
@@ -62,14 +62,14 @@ class Delete extends Action
                 return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
             } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage(
-                    __('Could not delete the PLP: %1', $e->getMessage())
+                    __('Could not delete the PPN: %1', $e->getMessage())
                 );
                 
                 return $resultRedirect->setPath('*/*/edit', ['id' => $plpId]);
             }
         }
         
-        $this->messageManager->addErrorMessage(__('We can\'t find a PLP to delete.'));
+        $this->messageManager->addErrorMessage(__('We can\'t find a PPN to delete.'));
         
         return $resultRedirect->setPath('*/*/');
     }

@@ -137,7 +137,7 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
     {
         $this->operationName = 'shipment creation';
         
-        // Define PLP statuses
+        // Define PPN statuses
         $this->expectedPlpStatus = PlpStatus::STATUS_PLP_AWAITING_SHIPMENT;
         $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
         $this->successPlpStatus = PlpStatus::STATUS_PLP_COMPLETED;
@@ -182,11 +182,11 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
      */
     protected function getNoOrdersMessage($plpId)
     {
-        return __('No PLP orders with labels found in PLP %1', $plpId);
+        return __('No PPN orders with labels found in PPN %1', $plpId);
     }
 
     /**
-     * Execute shipment creation for orders in a PLP with custom email flag
+     * Execute shipment creation for orders in a PPN with custom email flag
      *
      * @param int $plpId
      * @param bool $sendEmail Overrides the class-level setting
@@ -201,7 +201,7 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
     }
 
     /**
-     * Process individual PLP order
+     * Process individual PPN order
      *
      * @param object $plpOrder
      * @param array $result
@@ -285,7 +285,7 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
     }
     
     /**
-     * Update final PLP status based on processing results
+     * Update final PPN status based on processing results
      *
      * @param object $plp
      * @param int $successCount
@@ -314,17 +314,17 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         $errorCount = $this->result['data']['error_count'];
         
         if ($successCount > 0 && $errorCount == 0) {
-            $this->result['message'] = __('Successfully created %1 shipments for PLP %2', $successCount, $plpId);
+            $this->result['message'] = __('Successfully created %1 shipments for PPN %2', $successCount, $plpId);
         } elseif ($successCount > 0 && $errorCount > 0) {
             $this->result['message'] = __(
-                'Created %1 shipments for PLP %2 with %3 errors',
+                'Created %1 shipments for PPN %2 with %3 errors',
                 $successCount,
                 $plpId,
                 $errorCount
             );
         } elseif ($successCount == 0 && $errorCount > 0) {
             $this->result['success'] = false;
-            $this->result['message'] = __('Failed to create any shipments for PLP %1 (%2 errors)', $plpId, $errorCount);
+            $this->result['message'] = __('Failed to create any shipments for PPN %1 (%2 errors)', $plpId, $errorCount);
         }
         
         $this->result['processed'] = $successCount;

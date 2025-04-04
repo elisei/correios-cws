@@ -45,7 +45,7 @@ class Edit extends Action
     }
 
     /**
-     * Edit PLP action
+     * Edit PPN action
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
@@ -60,10 +60,10 @@ class Edit extends Action
         }
 
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__('New PLP'));
+        $resultPage->getConfig()->getTitle()->prepend(__('New PPN'));
 
         if ($plpId) {
-            $resultPage->getConfig()->getTitle()->prepend(__('Edit PLP #%1', $plpId));
+            $resultPage->getConfig()->getTitle()->prepend(__('Edit PPN #%1', $plpId));
         }
         
         return $resultPage;

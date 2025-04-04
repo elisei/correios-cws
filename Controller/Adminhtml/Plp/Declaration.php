@@ -94,7 +94,7 @@ class Declaration extends Action implements HttpGetActionInterface
         $plpId = $this->plpSession->getCurrentPlpId();
         
         if (!$plpId) {
-            $this->messageManager->addErrorMessage(__('PLP ID is required'));
+            $this->messageManager->addErrorMessage(__('PPN ID is required'));
             return $resultRedirect->setPath('*/*/index');
         }
 

@@ -72,9 +72,9 @@ class ShippingReportProcessor
     }
 
     /**
-     * Process shipping report for a PLP
+     * Process shipping report for a PPN
      *
-     * @param int $plpId PLP ID
+     * @param int $plpId PPN ID
      * @return array
      * @throws LocalizedException
      *
@@ -85,14 +85,14 @@ class ShippingReportProcessor
         try {
             $plp = $this->plpRepository->getById($plpId);
             if (!$plp) {
-                throw new LocalizedException(__('PLP with ID %1 not found', $plpId));
+                throw new LocalizedException(__('PPN with ID %1 not found', $plpId));
             }
 
             $collection = $this->plpOrderCollec->create();
             $collection->addFieldToFilter('plp_id', $plpId);
 
             if ($collection->getSize() === 0) {
-                throw new LocalizedException(__('No orders found in PLP %1', $plpId));
+                throw new LocalizedException(__('No orders found in PPN %1', $plpId));
             }
 
             $reportData = [];
@@ -126,7 +126,7 @@ class ShippingReportProcessor
             }
 
             if (empty($reportData)) {
-                throw new LocalizedException(__('No valid data found for shipping report in PLP %1', $plpId));
+                throw new LocalizedException(__('No valid data found for shipping report in PPN %1', $plpId));
             }
 
             $result = $this->pdfReportGenerator->generate($reportData, $plpId);

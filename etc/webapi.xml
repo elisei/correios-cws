@@ -49,7 +49,7 @@
         </resources>
     </route>
 
-    <!-- PLP Manamger -->
+    <!-- PPN Manamger -->
     <route url="/V1/sigepweb/plp" method="POST">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="save"/>
         <resources>

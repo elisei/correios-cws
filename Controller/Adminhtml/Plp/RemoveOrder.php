@@ -58,12 +58,12 @@ class RemoveOrder extends Action
             $this->plpOrderResource->loadByEntityId($plpOrder, $plpId);
 
             if (!$plpOrder->getId()) {
-                $this->messageManager->addErrorMessage(__('Order was not found in PLP.'));
+                $this->messageManager->addErrorMessage(__('Order was not found in PPN.'));
             }
 
             if ($plpOrder->getId()) {
                 $this->plpOrderResource->delete($plpOrder);
-                $this->messageManager->addSuccessMessage(__('Order has been removed from PLP.'));
+                $this->messageManager->addSuccessMessage(__('Order has been removed from PPN.'));
             }
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(

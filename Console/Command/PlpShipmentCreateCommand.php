@@ -31,7 +31,7 @@ class PlpShipmentCreateCommand extends Command
     public const FORCE_OPTION = 'force';
 
     /**
-     * PLP ID argument
+     * PPN ID argument
      */
     public const PLP_ID_ARGUMENT = 'plp_id';
 
@@ -62,11 +62,11 @@ class PlpShipmentCreateCommand extends Command
     protected function configure()
     {
         $this->setName(self::COMMAND_NAME)
-            ->setDescription('Create shipments for PLP orders with labels')
+            ->setDescription('Create shipments for PPN orders with labels')
             ->addArgument(
                 self::PLP_ID_ARGUMENT,
                 InputArgument::OPTIONAL,
-                'Specific PLP ID to create shipments for'
+                'Specific PPN ID to create shipments for'
             )
             ->addOption(
                 self::FORCE_OPTION,
@@ -91,11 +91,11 @@ class PlpShipmentCreateCommand extends Command
             $plpId = $input->getArgument(self::PLP_ID_ARGUMENT);
 
             if (!$plpId) {
-                $output->writeln('<error>'. __('Please provide a PLP ID') .'</error>');
+                $output->writeln('<error>'. __('Please provide a PPN ID') .'</error>');
                 return 0;
             }
 
-            $output->writeln('<info>'. __('Creating shipments for PLP ID: %1', $plpId) .'</info>');
+            $output->writeln('<info>'. __('Creating shipments for PPN ID: %1', $plpId) .'</info>');
                 
             $result = $this->shipmentCreator->execute($plpId);
             

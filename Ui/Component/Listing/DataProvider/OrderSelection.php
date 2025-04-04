@@ -88,7 +88,7 @@ class OrderSelection extends DataProvider
         // Create the base collection
         $collection = $this->orderGridCollection->create();
         
-        // Apply filters to exclude orders already in PLP
+        // Apply filters to exclude orders already in PPN
         $plpOrderCollection = $this->plpOrderCollection->create();
         $existingOrderIds = $plpOrderCollection->getColumnValues('order_id');
         $allowedStatus = $this->config->getAllowedStatus();

@@ -26,7 +26,7 @@ O módulo Correios CWS para Magento 2 oferece uma solução completa para integr
 - **Email de atualização de entrega**: Notificação automática para seus clientes
 - **Página de acompanhamento de entrega**: Interface para o cliente acompanhar o status do pedido
 - **Geração de Etiqueta de Envio**: Impressão de etiquetas no formato oficial dos Correios
-- **Gestão de PLP**: Criação e gerenciamento de Pré-Listas de Postagem
+- **Gestão de PPN**: Criação e gerenciamento de Pré-Listas de Postagem
 - **Impressão em Lote**: Imprima múltiplas etiquetas de uma só vez
 - **Configuração de Frete Grátis**: Criação de regras por preço, região ou SKU
 

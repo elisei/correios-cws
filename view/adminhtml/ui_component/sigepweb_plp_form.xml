@@ -17,7 +17,7 @@
             <item name="deps" xsi:type="string">sigepweb_plp_form.plp_form_data_source</item>
             <item name="component" xsi:type="string">O2TI_SigepWebCarrier/js/form/plp-form</item>
         </item>
-        <item name="label" xsi:type="string" translate="true">PLP Information</item>
+        <item name="label" xsi:type="string" translate="true">PPN Information</item>
         <item name="config" xsi:type="array">
             <item name="dataScope" xsi:type="string">data</item>
             <item name="namespace" xsi:type="string">sigepweb_plp_form</item>
@@ -70,7 +70,7 @@
     <fieldset name="general">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
-                <item name="label" xsi:type="string" translate="true">PLP Information</item>
+                <item name="label" xsi:type="string" translate="true">PPN Information</item>
                 <item name="collapsible" xsi:type="boolean">false</item>
             </item>
         </argument>

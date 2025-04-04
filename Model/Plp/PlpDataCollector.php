@@ -91,9 +91,9 @@ class PlpDataCollector extends AbstractPlpOperation
      */
     protected function initialize()
     {
-        $this->operationName = 'PLP data collection';
+        $this->operationName = 'PPN data collection';
         
-        // Define PLP statuses
+        // Define PPN statuses
         $this->expectedPlpStatus = PlpStatus::STATUS_PLP_OPENED;
         $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_COLLECTING_DATA;
         $this->successPlpStatus = PlpStatus::STATUS_PLP_COLLECTING_DATA;
@@ -115,11 +115,11 @@ class PlpDataCollector extends AbstractPlpOperation
      */
     protected function getNoOrdersMessage($plpId)
     {
-        return __('No pending orders found for processing in PLP %1', $plpId);
+        return __('No pending orders found for processing in PPN %1', $plpId);
     }
 
     /**
-     * Process individual PLP order
+     * Process individual PPN order
      *
      * @param object $plpOrder
      * @param array $result
@@ -141,7 +141,7 @@ class PlpDataCollector extends AbstractPlpOperation
             return true;
         } catch (LocalizedException $exc) {
             $this->logger->error(__(
-                'Error collecting data for order %1 in PLP %2: %3',
+                'Error collecting data for order %1 in PPN %2: %3',
                 $plpOrder->getOrderId(),
                 $plpOrder->getPlpId(),
                 $exc->getMessage()
@@ -158,7 +158,7 @@ class PlpDataCollector extends AbstractPlpOperation
     }
     
     /**
-     * Update final PLP status based on processing results
+     * Update final PPN status based on processing results
      *
      * @param object $plp
      * @param int $successCount
@@ -286,7 +286,7 @@ class PlpDataCollector extends AbstractPlpOperation
     }
 
     /**
-     * Check if all orders in a PLP have been processed
+     * Check if all orders in a PPN have been processed
      *
      * @param int $plpId
      * @return bool

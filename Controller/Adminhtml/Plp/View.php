@@ -54,7 +54,7 @@ class View extends Action
     }
 
     /**
-     * View PLP action
+     * View PPN action
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
@@ -72,11 +72,11 @@ class View extends Action
             $plp = $this->plpRepository->getById($plpId);
 
             $resultPage = $this->resultPageFactory->create();
-            $resultPage->getConfig()->getTitle()->prepend(__('View PLP #%1', $plp->getEntityId()));
+            $resultPage->getConfig()->getTitle()->prepend(__('View PPN #%1', $plp->getEntityId()));
             
             return $resultPage;
         } catch (NoSuchEntityException $e) {
-            $this->messageManager->addErrorMessage(__('This PLP no longer exists.'));
+            $this->messageManager->addErrorMessage(__('This PPN no longer exists.'));
             $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
             return $resultRedirect->setPath('*/*/');
         }

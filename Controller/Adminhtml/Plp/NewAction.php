@@ -54,7 +54,7 @@ class NewAction extends Action
     }
 
     /**
-     * Create new PLP and redirect to edit page
+     * Create new PPN and redirect to edit page
      *
      * @return ResultInterface
      */
@@ -69,7 +69,7 @@ class NewAction extends Action
 
             $this->plpRepository->save($plp);
             $this->plpSession->setCurrentPlpId($plp->getId());
-            $this->messageManager->addSuccessMessage(__('New PLP has been created.'));
+            $this->messageManager->addSuccessMessage(__('New PPN has been created.'));
             
             return $this->resultRedirectFactory->create()->setPath(
                 '*/*/edit',
@@ -81,7 +81,7 @@ class NewAction extends Action
         } catch (\Exception $e) {
             $this->messageManager->addExceptionMessage(
                 $e,
-                __('Something went wrong while creating the PLP.')
+                __('Something went wrong while creating the PPN.')
             );
         }
         

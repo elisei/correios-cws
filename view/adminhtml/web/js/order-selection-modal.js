@@ -20,7 +20,7 @@ define([
         },
 
         /**
-         * Adds selected orders to the PLP
+         * Adds selected orders to the PPN
          */
         addSelectedOrders: function () {
             var selections = this.getSelections();
@@ -31,7 +31,7 @@ define([
                 var plpId = formData.entity_id;
                 
                 if (!plpId) {
-                    alert($t('Please save the PLP first before adding orders.'));
+                    alert($t('Please save the PPN first before adding orders.'));
                     return;
                 }
                 

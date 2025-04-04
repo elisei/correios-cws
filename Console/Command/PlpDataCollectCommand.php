@@ -30,7 +30,7 @@ class PlpDataCollectCommand extends Command
     public const FORCE_OPTION = 'force';
 
     /**
-     * PLP ID argument
+     * PPN ID argument
      */
     public const PLP_ID_ARGUMENT = 'plp_id';
 
@@ -70,7 +70,7 @@ class PlpDataCollectCommand extends Command
             ->addArgument(
                 self::PLP_ID_ARGUMENT,
                 InputArgument::OPTIONAL,
-                'Specific PLP ID to collect data for'
+                'Specific PPN ID to collect data for'
             )
             ->addOption(
                 self::FORCE_OPTION,
@@ -95,11 +95,11 @@ class PlpDataCollectCommand extends Command
             $plpId = $input->getArgument(self::PLP_ID_ARGUMENT);
 
             if (!$plpId) {
-                $output->writeln('<error>'. __('Please provide a PLP ID') . '</error>');
+                $output->writeln('<error>'. __('Please provide a PPN ID') . '</error>');
                 return 0;
             }
 
-            $output->writeln('<info>' . __('Processing PLP ID: %1', $plpId) . '</info>');
+            $output->writeln('<info>' . __('Processing PPN ID: %1', $plpId) . '</info>');
             
             $result = $this->plpDataCollector->execute($plpId);
             

@@ -16,7 +16,7 @@ namespace O2TI\SigepWebCarrier\Api;
 interface PlpRepositoryInterface
 {
     /**
-     * Save PLP
+     * Save PPN
      *
      * @param \O2TI\SigepWebCarrier\Api\Data\PlpInterface $plp
      * @return \O2TI\SigepWebCarrier\Api\Data\PlpInterface
@@ -25,7 +25,7 @@ interface PlpRepositoryInterface
     public function save(\O2TI\SigepWebCarrier\Api\Data\PlpInterface $plp);
 
     /**
-     * Get PLP by ID
+     * Get PPN by ID
      *
      * @param int $plpId
      * @return \O2TI\SigepWebCarrier\Api\Data\PlpInterface
@@ -34,7 +34,7 @@ interface PlpRepositoryInterface
     public function getById($plpId);
 
     /**
-     * Add orders to PLP
+     * Add orders to PPN
      *
      * @param int $plpId
      * @param string[] $orderIds
@@ -45,7 +45,7 @@ interface PlpRepositoryInterface
     public function addOrderToPlp($plpId, array $orderIds, $username = null);
 
     /**
-     * Update order status in PLP
+     * Update order status in PPN
      *
      * @param int $plpId
      * @param string $orderId
@@ -58,7 +58,7 @@ interface PlpRepositoryInterface
     public function updateOrderStatus($plpId, $orderId, $status, $errorMessage = null, $shipmentId = null);
 
     /**
-     * Delete PLP
+     * Delete PPN
      *
      * @param int $plpId
      * @return bool

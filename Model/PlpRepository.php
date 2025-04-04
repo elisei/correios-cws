@@ -119,7 +119,7 @@ class PlpRepository implements PlpRepositoryInterface
             $this->resource->save($plp);
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
-                __('Could not save PLP: %1', $exception->getMessage()),
+                __('Could not save PPN: %1', $exception->getMessage()),
                 $exception
             );
         }
@@ -134,7 +134,7 @@ class PlpRepository implements PlpRepositoryInterface
         $plp = $this->plpFactory->create();
         $this->resource->load($plp, $plpId);
         if (!$plp->getId()) {
-            throw new NoSuchEntityException(__('PLP with id "%1" does not exist.', $plpId));
+            throw new NoSuchEntityException(__('PPN with id "%1" does not exist.', $plpId));
         }
         return $plp;
     }
@@ -148,7 +148,7 @@ class PlpRepository implements PlpRepositoryInterface
             $this->resource->delete($plp);
         } catch (\Exception $exception) {
             throw new CouldNotDeleteException(
-                __('Could not delete PLP: %1', $exception->getMessage())
+                __('Could not delete PPN: %1', $exception->getMessage())
             );
         }
         return true;
@@ -178,7 +178,7 @@ class PlpRepository implements PlpRepositoryInterface
         try {
             $orderIds = is_array($orderId) ? $orderId : [$orderId];
             
-            // Verifica pedidos já existentes na PLP
+            // Verifica pedidos já existentes na PPN
             $existingOrders = [];
             foreach ($orderIds as $id) {
                 $plpOrder = $this->plpOrderFactory->create();
@@ -190,7 +190,7 @@ class PlpRepository implements PlpRepositoryInterface
             
             if (!empty($existingOrders)) {
                 throw new CouldNotSaveException(
-                    __('Orders "%1" are already in PLP "%2"', implode(', ', $existingOrders), $plpId)
+                    __('Orders "%1" are already in PPN "%2"', implode(', ', $existingOrders), $plpId)
                 );
             }
 
@@ -206,7 +206,7 @@ class PlpRepository implements PlpRepositoryInterface
             return true;
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
-                __('Could not add order(s) to PLP: %1', $exception->getMessage()),
+                __('Could not add order(s) to PPN: %1', $exception->getMessage()),
                 $exception
             );
         }
@@ -225,7 +225,7 @@ class PlpRepository implements PlpRepositoryInterface
             
             if (!$plpOrder->getId()) {
                 throw new NoSuchEntityException(
-                    __('Order with id "%1" does not exist in PLP "%2".', $orderId, $plpId)
+                    __('Order with id "%1" does not exist in PPN "%2".', $orderId, $plpId)
                 );
             }
             
@@ -272,7 +272,7 @@ class PlpRepository implements PlpRepositoryInterface
 
             if ($plp->getStatus() === 'processing') {
                 throw new LocalizedException(
-                    __('Cannot delete PLP that is being processed.')
+                    __('Cannot delete PPN that is being processed.')
                 );
             }
             
@@ -282,7 +282,7 @@ class PlpRepository implements PlpRepositoryInterface
             throw $e;
         } catch (\Exception $e) {
             throw new CouldNotDeleteException(
-                __('Could not delete PLP: %1', $e->getMessage())
+                __('Could not delete PPN: %1', $e->getMessage())
             );
         }
     }
@@ -298,7 +298,7 @@ class PlpRepository implements PlpRepositoryInterface
             
             if (!$plpOrder->getId()) {
                 throw new NoSuchEntityException(
-                    __('Order with id "%1" does not exist in PLP "%2".', $orderId, $plpId)
+                    __('Order with id "%1" does not exist in PPN "%2".', $orderId, $plpId)
                 );
             }
             
@@ -325,7 +325,7 @@ class PlpRepository implements PlpRepositoryInterface
             
             if (!$plpOrder->getId()) {
                 throw new NoSuchEntityException(
-                    __('Order with id "%1" does not exist in PLP "%2".', $orderId, $plpId)
+                    __('Order with id "%1" does not exist in PPN "%2".', $orderId, $plpId)
                 );
             }
             

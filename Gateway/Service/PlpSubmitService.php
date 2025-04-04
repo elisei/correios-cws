@@ -83,7 +83,7 @@ class PlpSubmitService
     }
 
     /**
-     * Submit PLP file to Correios API
+     * Submit PPN file to Correios API
      *
      * @param string $fileName
      * @return array
@@ -92,7 +92,7 @@ class PlpSubmitService
     {
         $result = [
             'success' => true,
-            'message' => __('PLP file submitted successfully'),
+            'message' => __('PPN file submitted successfully'),
             'data' => []
         ];
 
@@ -126,20 +126,20 @@ class PlpSubmitService
 
             if (!isset($response['idLote'])) {
                 $result['success'] = false;
-                $result['message'] = __('Failed to submit PLP: Invalid API response');
+                $result['message'] = __('Failed to submit PPN: Invalid API response');
             }
 
         } catch (\Exception $exc) {
             $this->logger->critical($exc);
             $result['success'] = false;
-            $result['message'] = __('Error submitting PLP file: %1', $exc->getMessage());
+            $result['message'] = __('Error submitting PPN file: %1', $exc->getMessage());
         }
 
         return $result;
     }
 
     /**
-     * Get file path for the PLP file
+     * Get file path for the PPN file
      *
      * @param string $fileName
      * @return string

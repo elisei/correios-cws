@@ -78,7 +78,7 @@ class Save extends Action
                 try {
                     $model = $this->plpRepository->getById($plpId);
                 } catch (LocalizedException $e) {
-                    $this->messageManager->addErrorMessage(__('This PLP no longer exists.'));
+                    $this->messageManager->addErrorMessage(__('This PPN no longer exists.'));
                     return $resultRedirect->setPath('*/*/');
                 }
             }
@@ -87,7 +87,7 @@ class Save extends Action
 
             try {
                 $this->plpRepository->save($model);
-                $this->messageManager->addSuccessMessage(__('You saved the PLP.'));
+                $this->messageManager->addSuccessMessage(__('You saved the PPN.'));
                 $this->dataPersistor->clear('plp');
 
                 if ($this->getRequest()->getParam('back') === 'edit'
@@ -99,7 +99,7 @@ class Save extends Action
             } catch (LocalizedException $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
             } catch (\Exception $e) {
-                $this->messageManager->addExceptionMessage($e, __('Something went wrong while saving the PLP.'));
+                $this->messageManager->addExceptionMessage($e, __('Something went wrong while saving the PPN.'));
             }
 
             $this->dataPersistor->set('plp', $data);

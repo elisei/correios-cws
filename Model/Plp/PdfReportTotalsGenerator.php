@@ -169,7 +169,7 @@ class PdfReportTotalsGenerator
         
         $page->drawRectangle(30, 780, 565, 745, Zend_Pdf_Page::SHAPE_DRAW_STROKE);
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA_BOLD), 14);
-        $page->drawText('PRÉ - LISTA DE POSTAGEM - PLP - SIGEP WEB', 95, 758, 'UTF-8');
+        $page->drawText('PRÉ - LISTA DE POSTAGEM - PPN - SIGEP WEB', 95, 758, 'UTF-8');
         
         $page->drawRectangle(30, 745, 565, 630, Zend_Pdf_Page::SHAPE_DRAW_STROKE);
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 11);

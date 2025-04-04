@@ -56,31 +56,31 @@ abstract class AbstractPlpOperation
      *
      * @var string
      */
-    protected $operationName = 'PLP operation';
+    protected $operationName = 'PPN operation';
     
     /**
-     * Expected PLP status for this operation
+     * Expected PPN status for this operation
      *
      * @var string
      */
     protected $expectedPlpStatus;
     
     /**
-     * In-progress PLP status for this operation
+     * In-progress PPN status for this operation
      *
      * @var string
      */
     protected $inProgressPlpStatus;
     
     /**
-     * Success PLP status for this operation
+     * Success PPN status for this operation
      *
      * @var string
      */
     protected $successPlpStatus;
     
     /**
-     * Failure PLP status for this operation
+     * Failure PPN status for this operation
      *
      * @var string
      */
@@ -162,9 +162,9 @@ abstract class AbstractPlpOperation
     abstract protected function initialize();
     
     /**
-     * Process an individual PLP order
+     * Process an individual PPN order
      *
-     * @param object $plpOrder The PLP order to process
+     * @param object $plpOrder The PPN order to process
      * @param array $result Reference to result array to update processing statistics
      * @return bool True if processing was successful
      */
@@ -241,10 +241,10 @@ abstract class AbstractPlpOperation
         ];
 
         if ($successCount > 0 && $errorCount == 0) {
-            $result['message'] = __('Successfully %1 %2 items for PLP %3', $operationName, $successCount, $plpId);
+            $result['message'] = __('Successfully %1 %2 items for PPN %3', $operationName, $successCount, $plpId);
         } elseif ($successCount > 0 && $errorCount > 0) {
             $result['message'] = __(
-                '%1 %2 items for PLP %3 with %4 errors',
+                '%1 %2 items for PPN %3 with %4 errors',
                 $operationName,
                 $successCount,
                 $plpId,
@@ -253,7 +253,7 @@ abstract class AbstractPlpOperation
         } elseif ($successCount == 0 && $errorCount > 0) {
             $result['success'] = false;
             $result['message'] = __(
-                'Failed to %1 any items for PLP %2 (%3 errors)',
+                'Failed to %1 any items for PPN %2 (%3 errors)',
                 $operationName,
                 $plpId,
                 $errorCount
@@ -264,12 +264,12 @@ abstract class AbstractPlpOperation
     }
 
     /**
-     * Get PLP by ID with flexible validation
+     * Get PPN by ID with flexible validation
      *
      * @param int $plpId
-     * @param string|null $expectedStatus Expected PLP status (optional)
+     * @param string|null $expectedStatus Expected PPN status (optional)
      * @param bool $strictValidation If true, error on invalid status
-     * @return array|object Returns array with error or PLP object
+     * @return array|object Returns array with error or PPN object
      *
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
@@ -279,12 +279,12 @@ abstract class AbstractPlpOperation
             $plp = $this->plpRepository->getById($plpId);
             
             if (!$plp) {
-                return $this->createErrorResponse(__('PLP does not exist'));
+                return $this->createErrorResponse(__('PPN does not exist'));
             }
 
             if ($expectedStatus !== null && $plp->getStatus() !== $expectedStatus) {
                 $message = __(
-                    'PLP is not in expected status. Current: %1, Expected: %2',
+                    'PPN is not in expected status. Current: %1, Expected: %2',
                     $plp->getStatus(),
                     $expectedStatus
                 );
@@ -301,7 +301,7 @@ abstract class AbstractPlpOperation
         } catch (\Exception $exc) {
             $this->logger->critical($exc);
             return $this->createErrorResponse(
-                __('Error retrieving PLP %1: %2', $plpId, $exc->getMessage()),
+                __('Error retrieving PPN %1: %2', $plpId, $exc->getMessage()),
                 [],
                 $exc
             );
@@ -312,7 +312,7 @@ abstract class AbstractPlpOperation
      * Handle exception safely
      *
      * @param \Exception $exc Exception to handle
-     * @param int $plpId PLP ID
+     * @param int $plpId PPN ID
      * @param string|null $customOperationName Operation being performed (optional override)
      * @param string|null $failureStatus Status to set on failure (optional override)
      * @return array Error response
@@ -324,7 +324,7 @@ abstract class AbstractPlpOperation
         $failureStatus = $failureStatus ?? $this->failurePlpStatus;
         
         $errorResponse = $this->createErrorResponse(
-            __('Error during %1 for PLP %2: %3', $operationName, $plpId, $exc->getMessage()),
+            __('Error during %1 for PPN %2: %3', $operationName, $plpId, $exc->getMessage()),
             [],
             $exc
         );
@@ -345,9 +345,9 @@ abstract class AbstractPlpOperation
     }
     
     /**
-     * Update PLP order status and optionally save processing data
+     * Update PPN order status and optionally save processing data
      *
-     * @param object $plpOrder PLP order object
+     * @param object $plpOrder PPN order object
      * @param string $status New status to set
      * @param array|null $processingData Optional processing data to save
      * @param array|null $collectData Optional collected data to save
@@ -385,7 +385,7 @@ abstract class AbstractPlpOperation
             return true;
         } catch (\Exception $exc) {
             $this->logger->error(__(
-                'Error updating PLP order status for ID %1: %2',
+                'Error updating PPN order status for ID %1: %2',
                 $plpOrder->getId(),
                 $exc->getMessage()
             ));
@@ -394,9 +394,9 @@ abstract class AbstractPlpOperation
     }
     
     /**
-     * Get PLP orders with specific processing status
+     * Get PPN orders with specific processing status
      *
-     * @param int $plpId PLP ID
+     * @param int $plpId PPN ID
      * @param array|string $processingStatus Status(es) to filter by
      * @param string|null $typeFilter Type for Filter
      * @return \O2TI\SigepWebCarrier\Model\ResourceModel\PlpOrder\Collection
@@ -442,7 +442,7 @@ abstract class AbstractPlpOperation
     }
     
     /**
-     * Template method for executing PLP operations
+     * Template method for executing PPN operations
      *
      * @param int $plpId
      * @return array
@@ -492,7 +492,7 @@ abstract class AbstractPlpOperation
 
                 } catch (\Exception $exc) {
                     $this->logger->error(__(
-                        'Error processing order %1 in PLP %2: %3',
+                        'Error processing order %1 in PPN %2: %3',
                         $plpOrder->getOrderId(),
                         $plpId,
                         $exc->getMessage()
@@ -556,11 +556,11 @@ abstract class AbstractPlpOperation
      */
     protected function getNoOrdersMessage($plpId)
     {
-        return __('No eligible orders found for %1 in PLP %2', $this->operationName, $plpId);
+        return __('No eligible orders found for %1 in PPN %2', $this->operationName, $plpId);
     }
     
     /**
-     * Update final PLP status based on processing results
+     * Update final PPN status based on processing results
      *
      * @param object $plp
      * @param int $successCount

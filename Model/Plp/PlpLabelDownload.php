@@ -113,7 +113,7 @@ class PlpLabelDownload extends AbstractPlpOperation
     {
         $this->operationName = 'label download';
         
-        // Define PLP statuses
+        // Define PPN statuses
         $this->expectedPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
         $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_FILE_CREATION;
         $this->successPlpStatus = PlpStatus::STATUS_PLP_AWAITING_SHIPMENT;
@@ -160,11 +160,11 @@ class PlpLabelDownload extends AbstractPlpOperation
      */
     protected function getNoOrdersMessage($plpId)
     {
-        return __('No PLP orders with receipt IDs found in PLP %1', $plpId);
+        return __('No PPN orders with receipt IDs found in PPN %1', $plpId);
     }
 
     /**
-     * Process individual PLP order
+     * Process individual PPN order
      *
      * @param object $plpOrder
      * @param array $result
@@ -180,7 +180,7 @@ class PlpLabelDownload extends AbstractPlpOperation
             if (empty($processingData)) {
                 // phpcs:ignore Magento2.Exceptions.DirectThrow
                 throw new LocalizedException(__(
-                    'PLP Order %1 has no processing data',
+                    'PPN Order %1 has no processing data',
                     $plpOrder->getId()
                 ));
             }
@@ -190,7 +190,7 @@ class PlpLabelDownload extends AbstractPlpOperation
             if (!isset($processingData['labelReceiptId'])) {
                 // phpcs:ignore Magento2.Exceptions.DirectThrow
                 throw new LocalizedException(__(
-                    'PLP Order %1 has no label receipt ID',
+                    'PPN Order %1 has no label receipt ID',
                     $plpOrder->getId()
                 ));
             }
@@ -255,7 +255,7 @@ class PlpLabelDownload extends AbstractPlpOperation
     }
 
     /**
-     * Update final PLP status based on processing results
+     * Update final PPN status based on processing results
      *
      * @param object $plp
      * @param int $successCount
@@ -268,21 +268,21 @@ class PlpLabelDownload extends AbstractPlpOperation
         if ($successCount > 0 && $errorCount === 0 && $syncCount === 0) {
             $plp->setStatus($this->successPlpStatus);
             $this->logger->info(__(
-                'Setting PLP %1 status to %2 (success)',
+                'Setting PPN %1 status to %2 (success)',
                 $plp->getId(),
                 $this->successPlpStatus
             ));
         } elseif ($successCount > 0 || $syncCount > 0) {
             $plp->setStatus($this->expectedPlpStatus);
             $this->logger->info(__(
-                'Setting PLP %1 status to %2 (partial success)',
+                'Setting PPN %1 status to %2 (partial success)',
                 $plp->getId(),
                 $this->expectedPlpStatus
             ));
         } elseif ($errorCount) {
             $plp->setStatus($this->failurePlpStatus);
             $this->logger->info(__(
-                'Setting PLP %1 status to %2 (failure)',
+                'Setting PPN %1 status to %2 (failure)',
                 $plp->getId(),
                 $this->failurePlpStatus
             ));
@@ -298,7 +298,7 @@ class PlpLabelDownload extends AbstractPlpOperation
     }
 
     /**
-     * Reset failed PLP orders to their initial state
+     * Reset failed PPN orders to their initial state
      *
      * @param int $plpId
      */
@@ -336,7 +336,7 @@ class PlpLabelDownload extends AbstractPlpOperation
         $fileCount = count($this->result['files']);
         
         if ($successCount > 0) {
-            $this->result['message'] = __('Successfully downloaded %1 labels for PLP %2', $successCount, $plpId);
+            $this->result['message'] = __('Successfully downloaded %1 labels for PPN %2', $successCount, $plpId);
             
             if ($fileCount > 0) {
                 $this->result['message'] = __('%1 and saved %2 label files', $this->result['message'], $fileCount);
@@ -352,13 +352,13 @@ class PlpLabelDownload extends AbstractPlpOperation
         } elseif ($syncCount > 0) {
             $this->result['success'] = true;
             $this->result['message'] = __(
-                'All %1 labels for PLP %2 are still synchronizing. Try again later.',
+                'All %1 labels for PPN %2 are still synchronizing. Try again later.',
                 $syncCount,
                 $plpId
             );
         } elseif ($errorCount) {
             $this->result['success'] = false;
-            $this->result['message'] = __('Failed to download any labels for PLP %1', $plpId);
+            $this->result['message'] = __('Failed to download any labels for PPN %1', $plpId);
         }
     }
     
@@ -408,7 +408,7 @@ class PlpLabelDownload extends AbstractPlpOperation
     }
 
     /**
-     * Save download data to the PLP order
+     * Save download data to the PPN order
      *
      * @param object $plpOrder
      * @param array $processingData
@@ -493,7 +493,7 @@ class PlpLabelDownload extends AbstractPlpOperation
             return false;
         } catch (LocalizedException $exc) {
             $this->logger->error(__(
-                'Error saving label file for PLP Order %1: %2',
+                'Error saving label file for PPN Order %1: %2',
                 $plpOrder->getId(),
                 $exc->getMessage()
             ));

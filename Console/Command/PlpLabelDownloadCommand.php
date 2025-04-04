@@ -31,7 +31,7 @@ class PlpLabelDownloadCommand extends Command
     public const FORCE_OPTION = 'force';
 
     /**
-     * PLP ID argument
+     * PPN ID argument
      */
     public const PLP_ID_ARGUMENT = 'plp_id';
 
@@ -71,7 +71,7 @@ class PlpLabelDownloadCommand extends Command
             ->addArgument(
                 self::PLP_ID_ARGUMENT,
                 InputArgument::OPTIONAL,
-                'Specific PLP ID to download labels for'
+                'Specific PPN ID to download labels for'
             )
             ->addOption(
                 self::FORCE_OPTION,
@@ -96,11 +96,11 @@ class PlpLabelDownloadCommand extends Command
             $plpId = $input->getArgument(self::PLP_ID_ARGUMENT);
 
             if (!$plpId) {
-                $output->writeln('<error>'. __('Please provide a PLP ID, receipt ID, or use the --all option') .'</error>');
+                $output->writeln('<error>'. __('Please provide a PPN ID, receipt ID, or use the --all option') .'</error>');
                 return 0;
             }
 
-            $output->writeln('<info>'. __('Downloading labels for PLP ID: %1', $plpId) .'</info>');
+            $output->writeln('<info>'. __('Downloading labels for PPN ID: %1', $plpId) .'</info>');
             
             $result = $this->plpLabelDownload->execute($plpId);
             

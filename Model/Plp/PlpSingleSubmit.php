@@ -61,7 +61,7 @@ class PlpSingleSubmit extends AbstractPlpOperation
      */
     protected function initialize()
     {
-        $this->operationName = 'PLP submission';
+        $this->operationName = 'PPN submission';
         $this->expectedPlpStatus = PlpStatus::STATUS_PLP_COLLECTING_DATA;
         $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_IN_COMMUNICATION;
         $this->successPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_RECEIPT;
@@ -82,7 +82,7 @@ class PlpSingleSubmit extends AbstractPlpOperation
     protected function createInitialResult()
     {
         return $this->createSuccessResponse(
-            __('PLP submitted successfully'),
+            __('PPN submitted successfully'),
             [
                 'data' => [],
                 'success_orders' => 0,
@@ -99,11 +99,11 @@ class PlpSingleSubmit extends AbstractPlpOperation
      */
     protected function getNoOrdersMessage($plpId)
     {
-        return __('No orders with collected data found in PLP %1', $plpId);
+        return __('No orders with collected data found in PPN %1', $plpId);
     }
 
     /**
-     * Process individual PLP order
+     * Process individual PPN order
      *
      * @param object $plpOrder
      * @param array $result
@@ -146,7 +146,7 @@ class PlpSingleSubmit extends AbstractPlpOperation
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
             $this->logger->error(__(
-                'Error submitting PLP order %1: %2',
+                'Error submitting PPN order %1: %2',
                 $plpOrder->getId(),
                 $errorMessage
             ));
@@ -164,7 +164,7 @@ class PlpSingleSubmit extends AbstractPlpOperation
     }
     
     /**
-     * Update final PLP status based on processing results
+     * Update final PPN status based on processing results
      *
      * @param object $plp
      * @param int $successCount

@@ -67,9 +67,9 @@ class DeclarationProcessor
     }
 
     /**
-     * Process declaration content for a PLP
+     * Process declaration content for a PPN
      *
-     * @param int $plpId PLP ID
+     * @param int $plpId PPN ID
      * @return array
      * @throws LocalizedException
      */
@@ -78,14 +78,14 @@ class DeclarationProcessor
         try {
             $plp = $this->plpRepository->getById($plpId);
             if (!$plp) {
-                throw new LocalizedException(__('PLP with ID %1 not found', $plpId));
+                throw new LocalizedException(__('PPN with ID %1 not found', $plpId));
             }
 
             $collection = $this->plpOrderCollec->create();
             $collection->addFieldToFilter('plp_id', $plpId);
 
             if ($collection->getSize() === 0) {
-                throw new LocalizedException(__('No orders found in PLP %1', $plpId));
+                throw new LocalizedException(__('No orders found in PPN %1', $plpId));
             }
 
             $orderIds = [];
@@ -100,7 +100,7 @@ class DeclarationProcessor
             }
 
             if (empty($orderIds)) {
-                throw new LocalizedException(__('No valid order IDs found in PLP %1', $plpId));
+                throw new LocalizedException(__('No valid order IDs found in PPN %1', $plpId));
             }
 
             $result = $this->declarationService->execute($orderIds);

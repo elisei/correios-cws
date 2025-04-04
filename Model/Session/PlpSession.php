@@ -17,7 +17,7 @@ class PlpSession extends SessionManager
     public const CURRENT_PLP_ID = 'current_plp_id';
 
     /**
-     * Set current PLP ID
+     * Set current PPN ID
      *
      * @param int $plpId
      * @return void
@@ -28,7 +28,7 @@ class PlpSession extends SessionManager
     }
 
     /**
-     * Get current PLP ID
+     * Get current PPN ID
      *
      * @return int|null
      */

@@ -53,7 +53,7 @@ class AddOrders extends Action
     }
 
     /**
-     * Add orders to PLP
+     * Add orders to PPN
      *
      * @return \Magento\Framework\Controller\Result\Json
      */
@@ -71,7 +71,7 @@ class AddOrders extends Action
         if (!$plp->getId()) {
             return $resultJson->setData([
                 'success' => false,
-                'message' => __('PLP ID is required.')
+                'message' => __('PPN ID is required.')
             ]);
         }
         
@@ -92,7 +92,7 @@ class AddOrders extends Action
             
             return $resultJson->setData([
                 'success' => true,
-                'message' => __('Orders were successfully added to the PLP by %1.', $username)
+                'message' => __('Orders were successfully added to the PPN by %1.', $username)
             ]);
         } catch (LocalizedException $e) {
             return $resultJson->setData([
@@ -102,7 +102,7 @@ class AddOrders extends Action
         } catch (\Exception $e) {
             return $resultJson->setData([
                 'success' => false,
-                'message' => __('Something went wrong while adding orders to the PLP.')
+                'message' => __('Something went wrong while adding orders to the PPN.')
             ]);
         }
     }

@@ -36,14 +36,14 @@ class Index extends Action
     }
 
     /**
-     * Index PLP action
+     * Index PPN action
      *
      * @return \Magento\Framework\Controller\ResultInterface
      */
     public function execute()
     {
         $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__('PLP Management'));
+        $resultPage->getConfig()->getTitle()->prepend(__('PPN Management'));
         return $resultPage;
     }
 

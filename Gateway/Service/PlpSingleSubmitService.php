@@ -65,7 +65,7 @@ class PlpSingleSubmitService
     }
 
     /**
-     * Execute PLP single submit with Correios API
+     * Execute PPN single submit with Correios API
      *
      * @param array $request
      * @return array
@@ -74,7 +74,7 @@ class PlpSingleSubmitService
     {
         $result = [
             'success' => true,
-            'message' => __('PLP single submit successful'),
+            'message' => __('PPN single submit successful'),
             'data' => []
         ];
 
@@ -86,7 +86,7 @@ class PlpSingleSubmitService
             );
             
             if ($this->config->hasDebug()) {
-                $this->logger->debug('PLP Sync API Response', ['response' => $response]);
+                $this->logger->debug('PPN Sync API Response', ['response' => $response]);
             }
 
             if (isset($response['msgs'])) {
@@ -103,7 +103,7 @@ class PlpSingleSubmitService
         } catch (\Exception $e) {
             $this->logger->critical($e);
             $result['success'] = false;
-            $result['message'] = __('Error syncing PLP: %1', $e->getMessage());
+            $result['message'] = __('Error syncing PPN: %1', $e->getMessage());
         }
 
         return $result;

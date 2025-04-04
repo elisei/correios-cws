@@ -115,7 +115,7 @@ class PlpCompleteProcessCron
      */
     public function execute()
     {
-        $this->logger->info(__('Starting Complete PLP Process cron job'));
+        $this->logger->info(__('Starting Complete PPN Process cron job'));
         
         try {
             // Get all enabled PLPs that are not completed
@@ -131,14 +131,14 @@ class PlpCompleteProcessCron
             foreach ($plps as $plp) {
                 try {
                     if (!$plp->getCanSendToCws()) {
-                        $this->logger->info(__('PLP ID %1 is not enabled for processing, skipping', $plp->getId()));
+                        $this->logger->info(__('PPN ID %1 is not enabled for processing, skipping', $plp->getId()));
                         continue;
                     }
                     
                     $this->processPLP($plp);
                     
                 } catch (\Exception $e) {
-                    $this->logger->error(__('Error processing PLP ID %1: %2', $plp->getId(), $e->getMessage()));
+                    $this->logger->error(__('Error processing PPN ID %1: %2', $plp->getId(), $e->getMessage()));
                     $this->processStats['failed_plps']++;
                 }
             }
@@ -146,7 +146,7 @@ class PlpCompleteProcessCron
             $this->logCompletionSummary();
             
         } catch (\Exception $e) {
-            $this->logger->critical(__('Complete PLP Process cron job failed: %1', $e->getMessage()));
+            $this->logger->critical(__('Complete PPN Process cron job failed: %1', $e->getMessage()));
         }
     }
 
@@ -172,7 +172,7 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Process a single PLP through all stages
+     * Process a single PPN through all stages
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return bool
@@ -184,7 +184,7 @@ class PlpCompleteProcessCron
     {
         $plpId = $plp->getId();
         $this->logger->info(
-            __('Beginning complete processing for PLP ID: %1 [Current Status: %2]', $plpId, $plp->getStatus())
+            __('Beginning complete processing for PPN ID: %1 [Current Status: %2]', $plpId, $plp->getStatus())
         );
         
         // Step 1: Data Collection (if needed)
@@ -194,7 +194,7 @@ class PlpCompleteProcessCron
                 return false;
             }
             
-            // Reload PLP to get updated status
+            // Reload PPN to get updated status
             $plp = $this->plpRepository->getById($plpId);
         }
         
@@ -205,7 +205,7 @@ class PlpCompleteProcessCron
                 return false;
             }
             
-            // Reload PLP to get updated status
+            // Reload PPN to get updated status
             $plp = $this->plpRepository->getById($plpId);
         }
         
@@ -216,7 +216,7 @@ class PlpCompleteProcessCron
                 return false;
             }
             
-            // Reload PLP to get updated status
+            // Reload PPN to get updated status
             $plp = $this->plpRepository->getById($plpId);
         }
         
@@ -227,7 +227,7 @@ class PlpCompleteProcessCron
                 return false;
             }
             
-            // Reload PLP to get updated status
+            // Reload PPN to get updated status
             $plp = $this->plpRepository->getById($plpId);
         }
         
@@ -242,7 +242,7 @@ class PlpCompleteProcessCron
             $plp = $this->plpRepository->getById($plpId);
             if ($plp->getStatus() === PlpStatus::STATUS_PLP_COMPLETED) {
                 $this->processStats['completed_plps']++;
-                $this->logger->info(__('PLP ID %1 completed successfully', $plpId));
+                $this->logger->info(__('PPN ID %1 completed successfully', $plpId));
             }
         }
         
@@ -250,7 +250,7 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Check if PLP needs data collection
+     * Check if PPN needs data collection
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return bool
@@ -261,14 +261,14 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Run data collection for a PLP
+     * Run data collection for a PPN
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return array
      */
     protected function runDataCollection($plp)
     {
-        $this->logger->info(__('Running data collection for PLP %1', $plp->getId()));
+        $this->logger->info(__('Running data collection for PPN %1', $plp->getId()));
         $result = $this->plpDataCollector->execute($plp->getId());
         
         if ($result['success']) {
@@ -280,7 +280,7 @@ class PlpCompleteProcessCron
         }
         
         $this->logger->info(__(
-            'Data collection for PLP %1: %2 (Processed: %3, Errors: %4)',
+            'Data collection for PPN %1: %2 (Processed: %3, Errors: %4)',
             $plp->getId(),
             $result['message'],
             $result['processed'],
@@ -291,7 +291,7 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Check if PLP needs submission
+     * Check if PPN needs submission
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return bool
@@ -302,14 +302,14 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Run submission for a PLP
+     * Run submission for a PPN
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return array
      */
     protected function runSubmission($plp)
     {
-        $this->logger->info(__('Running submission for PLP %1', $plp->getId()));
+        $this->logger->info(__('Running submission for PPN %1', $plp->getId()));
         $result = $this->plpSingleSubmit->execute($plp->getId());
         
         if ($result['success']) {
@@ -321,7 +321,7 @@ class PlpCompleteProcessCron
         }
         
         $this->logger->info(__(
-            'Submission for PLP %1: %2 (Processed: %3, Errors: %4)',
+            'Submission for PPN %1: %2 (Processed: %3, Errors: %4)',
             $plp->getId(),
             $result['message'],
             $result['processed'],
@@ -332,7 +332,7 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Check if PLP needs label requests
+     * Check if PPN needs label requests
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return bool
@@ -343,14 +343,14 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Run label requests for a PLP
+     * Run label requests for a PPN
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return array
      */
     protected function runLabelRequest($plp)
     {
-        $this->logger->info(__('Running label requests for PLP %1', $plp->getId()));
+        $this->logger->info(__('Running label requests for PPN %1', $plp->getId()));
         $result = $this->plpLabelRequest->execute($plp->getId());
         
         if ($result['success']) {
@@ -362,7 +362,7 @@ class PlpCompleteProcessCron
         }
         
         $this->logger->info(__(
-            'Label requests for PLP %1: %2 (Processed: %3, Errors: %4)',
+            'Label requests for PPN %1: %2 (Processed: %3, Errors: %4)',
             $plp->getId(),
             $result['message'],
             $result['processed'],
@@ -373,7 +373,7 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Check if PLP needs label downloads
+     * Check if PPN needs label downloads
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return bool
@@ -384,14 +384,14 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Run label downloads for a PLP
+     * Run label downloads for a PPN
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return array
      */
     protected function runLabelDownload($plp)
     {
-        $this->logger->info(__('Running label downloads for PLP %1', $plp->getId()));
+        $this->logger->info(__('Running label downloads for PPN %1', $plp->getId()));
         $result = $this->plpLabelDownload->execute($plp->getId());
         
         if ($result['success']) {
@@ -403,7 +403,7 @@ class PlpCompleteProcessCron
         }
         
         $this->logger->info(__(
-            'Label downloads for PLP %1: %2 (Processed: %3, Errors: %4)',
+            'Label downloads for PPN %1: %2 (Processed: %3, Errors: %4)',
             $plp->getId(),
             $result['message'],
             $result['processed'],
@@ -414,7 +414,7 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Check if PLP needs shipment creation
+     * Check if PPN needs shipment creation
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return bool
@@ -425,14 +425,14 @@ class PlpCompleteProcessCron
     }
 
     /**
-     * Run shipment creation for a PLP
+     * Run shipment creation for a PPN
      *
      * @param \O2TI\SigepWebCarrier\Model\Plp $plp
      * @return array
      */
     protected function runShipmentCreation($plp)
     {
-        $this->logger->info(__('Running shipment creation for PLP %1', $plp->getId()));
+        $this->logger->info(__('Running shipment creation for PPN %1', $plp->getId()));
         $result = $this->plpOrdShipCreator->execute($plp->getId());
         
         if ($result['success']) {
@@ -444,7 +444,7 @@ class PlpCompleteProcessCron
         }
         
         $this->logger->info(__(
-            'Shipment creation for PLP %1: %2 (Processed: %3, Errors: %4)',
+            'Shipment creation for PPN %1: %2 (Processed: %3, Errors: %4)',
             $plp->getId(),
             $result['message'],
             $result['processed'],
@@ -459,7 +459,7 @@ class PlpCompleteProcessCron
      */
     protected function logCompletionSummary()
     {
-        $this->logger->info(__('Complete PLP Process cron job Summary:'));
+        $this->logger->info(__('Complete PPN Process cron job Summary:'));
         $this->logger->info(__(
             'Total PLPs: %1, Completed: %2, Failed: %3',
             $this->processStats['total_plps'],

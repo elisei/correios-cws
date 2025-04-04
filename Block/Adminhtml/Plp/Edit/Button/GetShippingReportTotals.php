@@ -93,7 +93,7 @@ class GetShippingReportTotals implements ButtonProviderInterface
     }
 
     /**
-     * Get PLP ID from session
+     * Get PPN ID from session
      *
      * @return int|null
      */

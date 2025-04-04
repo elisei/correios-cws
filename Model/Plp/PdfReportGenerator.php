@@ -220,7 +220,7 @@ class PdfReportGenerator
     protected function addReportHeader(Zend_Pdf_Page $page, int $plpId, int $pageNumber = 1, int $totalPages = 1)
     {
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA_BOLD), 14);
-        $page->drawText(__('Shipping Report - PLP #%1', $plpId), 30, 780, 'UTF-8');
+        $page->drawText(__('Shipping Report - PPN #%1', $plpId), 30, 780, 'UTF-8');
         
         $page->setFont(Zend_Pdf_Font::fontWithName(Zend_Pdf_Font::FONT_HELVETICA), 8);
         $page->drawText(__('Generated on: %1', date('Y-m-d H:i:s')), 30, 760, 'UTF-8');

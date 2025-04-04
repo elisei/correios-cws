@@ -31,7 +31,7 @@ class PlpSingleSubmitCommand extends Command
     public const FORCE_OPTION = 'force';
 
     /**
-     * PLP ID argument
+     * PPN ID argument
      */
     public const PLP_ID_ARGUMENT = 'plp_id';
 
@@ -66,7 +66,7 @@ class PlpSingleSubmitCommand extends Command
             ->addArgument(
                 self::PLP_ID_ARGUMENT,
                 InputArgument::OPTIONAL,
-                'Specific PLP ID to submit'
+                'Specific PPN ID to submit'
             )
             ->addOption(
                 self::FORCE_OPTION,
@@ -91,11 +91,11 @@ class PlpSingleSubmitCommand extends Command
             $plpId = $input->getArgument(self::PLP_ID_ARGUMENT);
             
             if (!$plpId) {
-                $output->writeln('<error>'. __('Please provide a PLP ID.') .'</error>');
+                $output->writeln('<error>'. __('Please provide a PPN ID.') .'</error>');
                 return 0;
             }
 
-            $output->writeln('<info>'. __('Submitting PLP ID: %1', $plpId) .'</info>');
+            $output->writeln('<info>'. __('Submitting PPN ID: %1', $plpId) .'</info>');
             
             $result = $this->plpSingleSubmit->execute($plpId);
             
@@ -103,7 +103,7 @@ class PlpSingleSubmitCommand extends Command
                 $output->writeln(
                     '<info>'.
                     __(
-                        '%1: PLP %2 submitted',
+                        '%1: PPN %2 submitted',
                         $result['message'],
                         $plpId
                     ).

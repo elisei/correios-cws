@@ -65,8 +65,8 @@ class PlpOrderActions extends Column
                             ),
                             'label' => __('Remove'),
                             'confirm' => [
-                                'title' => __('Remove Order from PLP'),
-                                'message' => __('Are you sure you want to remove this order from the PLP?')
+                                'title' => __('Remove Order from PPN'),
+                                'message' => __('Are you sure you want to remove this order from the PPN?')
                             ]
                         ]
                     ];

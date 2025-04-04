@@ -31,7 +31,7 @@ class PlpLabelRequestCommand extends Command
     public const FORCE_OPTION = 'force';
 
     /**
-     * PLP ID argument
+     * PPN ID argument
      */
     public const PLP_ID_ARGUMENT = 'plp_id';
 
@@ -67,7 +67,7 @@ class PlpLabelRequestCommand extends Command
             ->addArgument(
                 self::PLP_ID_ARGUMENT,
                 InputArgument::OPTIONAL,
-                'Specific PLP ID to request labels for'
+                'Specific PPN ID to request labels for'
             )
             ->addOption(
                 self::FORCE_OPTION,
@@ -94,13 +94,13 @@ class PlpLabelRequestCommand extends Command
             if (!$plpId) {
                 $output->writeln(
                     '<error>'.
-                    __('Please provide a PLP ID or use the --all option to process all PLPs')
+                    __('Please provide a PPN ID or use the --all option to process all PLPs')
                     .'</error>'
                 );
                 return 0;
             }
 
-            $output->writeln('<info>'. __('Requesting labels for PLP ID: %1', $plpId) .'</info>');
+            $output->writeln('<info>'. __('Requesting labels for PPN ID: %1', $plpId) .'</info>');
             
             $result = $this->plpLabelRequest->execute($plpId);
             

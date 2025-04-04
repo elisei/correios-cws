@@ -63,7 +63,7 @@ class PlpLabelRequest extends AbstractPlpOperation
     {
         $this->operationName = 'label request';
         
-        // Define PLP statuses
+        // Define PPN statuses
         $this->expectedPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_RECEIPT;
         $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_FILE_CREATION;
         $this->successPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
@@ -105,11 +105,11 @@ class PlpLabelRequest extends AbstractPlpOperation
      */
     protected function getNoOrdersMessage($plpId)
     {
-        return __('No processed orders found in PLP %1', $plpId);
+        return __('No processed orders found in PPN %1', $plpId);
     }
 
     /**
-     * Process individual PLP order
+     * Process individual PPN order
      *
      * @param object $plpOrder
      * @param array $result
@@ -122,7 +122,7 @@ class PlpLabelRequest extends AbstractPlpOperation
 
             if (empty($processingData)) {
                 throw new LocalizedException(__(
-                    'PLP Order %d has no processing data',
+                    'PPN Order %d has no processing data',
                     $plpOrder->getId()
                 ));
             }
@@ -131,7 +131,7 @@ class PlpLabelRequest extends AbstractPlpOperation
             
             if (isset($processingData['labelReceiptId'])) {
                 $this->logger->info(__(
-                    'PLP Order %1 already has a label receipt ID: %2',
+                    'PPN Order %1 already has a label receipt ID: %2',
                     $plpOrder->getId(),
                     $processingData['labelReceiptId']
                 ));
@@ -141,7 +141,7 @@ class PlpLabelRequest extends AbstractPlpOperation
             
             if (!isset($processingData['tracking'])) {
                 throw new LocalizedException(__(
-                    'PLP Order %d has no tracking code',
+                    'PPN Order %d has no tracking code',
                     $plpOrder->getId()
                 ));
             }
@@ -186,7 +186,7 @@ class PlpLabelRequest extends AbstractPlpOperation
         } catch (\Exception $e) {
             $errorMessage = $e->getMessage();
             $this->logger->error(__(
-                'Error requesting label for PLP order %1: %2',
+                'Error requesting label for PPN order %1: %2',
                 $plpOrder->getId(),
                 $errorMessage
             ));
@@ -204,7 +204,7 @@ class PlpLabelRequest extends AbstractPlpOperation
     }
     
     /**
-     * Update final PLP status based on processing results
+     * Update final PPN status based on processing results
      *
      * @param object $plp
      * @param int $successCount

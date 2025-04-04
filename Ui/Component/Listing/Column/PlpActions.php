@@ -54,13 +54,6 @@ class PlpActions extends Column
             foreach ($dataSource['data']['items'] as & $item) {
                 if (isset($item['entity_id'])) {
                     $item[$this->getData('name')] = [
-                        'view' => [
-                            'href' => $this->urlBuilder->getUrl(
-                                'sigepweb/plp/view',
-                                ['id' => $item['entity_id']]
-                            ),
-                            'label' => __('View')
-                        ],
                         'edit' => [
                             'href' => $this->urlBuilder->getUrl(
                                 'sigepweb/plp/edit',
@@ -75,8 +68,8 @@ class PlpActions extends Column
                             ),
                             'label' => __('Delete'),
                             'confirm' => [
-                                'title' => __('Delete PLP'),
-                                'message' => __('Are you sure you want to delete this PLP?')
+                                'title' => __('Delete PPN'),
+                                'message' => __('Are you sure you want to delete this PPN?')
                             ]
                         ]
                     ];

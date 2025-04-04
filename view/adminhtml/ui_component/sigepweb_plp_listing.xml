@@ -20,7 +20,7 @@
             <button name="add">
                 <url path="*/*/new"/>
                 <class>primary</class>
-                <label translate="true">Create New PLP</label>
+                <label translate="true">Create New PPN</label>
             </button>
         </buttons>
         <spinner>sigepweb_plp_columns</spinner>
