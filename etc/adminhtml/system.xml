@@ -15,7 +15,7 @@
         <section id="carriers">
             <group id="sigep_web_carrier" translate="label, comment" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Correios</label>
-                <comment>Sigep Web integration module.</comment>
+                <comment>PPN integration module.</comment>
                 <!-- Group: Credentials -->
                 <include path="O2TI_SigepWebCarrier::system/credentials.xml"/>
                 <!-- Group: Basic Configuration -->
