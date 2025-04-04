@@ -77,6 +77,8 @@ class OrderSelection extends DataProvider
      * Get data
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function getData()
     {

@@ -21,7 +21,7 @@
              resource="O2TI_SigepWebCarrier::sigep"/>
 
         <add id="O2TI_SigepWebCarrier::plp_management"
-             title="PLP Management"
+             title="PPN Management"
              translate="title"
              module="O2TI_SigepWebCarrier"
              sortOrder="10"
