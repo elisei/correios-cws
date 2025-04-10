@@ -733,7 +733,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      * @param float $weightInKg Weight in kilograms
      * @return array Package dimensions with format, height, width, length and diameter
      */
-    private function findPackageByWeight(float $weightInKg): array
+    public function findPackageByWeight(float $weightInKg): array
     {
         $rules = $this->getPackageRules();
         
@@ -797,7 +797,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
      *
      * @return array Package dimensions
      */
-    private function getDefaultPackage(): array
+    public function getDefaultPackage(): array
     {
         $weight = $this->calculateTotalWeight($this->_request);
         return $this->findPackageByWeight($weight);

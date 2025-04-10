@@ -187,7 +187,7 @@ class SigepWebDataFormatter
      * @param float $weight Weight in grams
      * @return array Package dimensions
      */
-    protected function getPackageDimensions($weight)
+    public function getPackageDimensions($weight)
     {
         $weightInKg = $weight / 1000;
         return $this->findPackageByWeight($weightInKg);
@@ -199,7 +199,7 @@ class SigepWebDataFormatter
      * @param float $weightInKg Weight in kilograms
      * @return array Package dimensions with format, height, width, length and diameter
      */
-    protected function findPackageByWeight(float $weightInKg): array
+    public function findPackageByWeight(float $weightInKg): array
     {
         $rules = $this->config->getPackageRules();
         
