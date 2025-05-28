@@ -176,8 +176,11 @@ class SigepWebDataFormatter
         } catch (NoSuchEntityException $e) {
             $this->logger->error(__('Service %s not found: %1', $serviceCode, $e->getMessage()));
         }
-        
-        $formattedData['listaServicoAdicional'][] = $services;
+
+        if (!empty($services)) {
+            $formattedData['listaServicoAdicional'][] = $services;
+        }
+
         return $formattedData;
     }
 
