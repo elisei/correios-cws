@@ -55,7 +55,7 @@
         </constraint>
         <constraint xsi:type="foreign" referenceId="SALES_SHIPMENT_CORREIOS_PLP_STORE_ID_STORE_STORE_ID"
                     table="sales_shipment_correios_plp" column="store_id" referenceTable="store"
-                    referenceColumn="store_id" onDelete="CASCADE"/>
+                    referenceColumn="store_id" onDelete="SET NULL"/>
     </table>
     
     <table name="sales_shipment_correios_plp_order" resource="default" engine="innodb" 
@@ -84,7 +84,7 @@
         <constraint xsi:type="foreign" referenceId="SALES_SHIPMENT_CORREIOS_PLP_ORDER_PLP_ID_SALES_SHIPMENT_CORREIOS_PLP_ENTITY_ID"
                     table="sales_shipment_correios_plp_order" column="plp_id"
                     referenceTable="sales_shipment_correios_plp" referenceColumn="entity_id"
-                    onDelete="CASCADE"/>
+                    onDelete="SET NULL"/>
         <index referenceId="SALES_SHIPMENT_CORREIOS_PLP_ORDER_ORDER_ID" indexType="btree">
             <column name="order_id"/>
         </index>
