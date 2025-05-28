@@ -34,7 +34,7 @@
            comment="Tabela de PLPs dos Correios">
         <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="true"
                 comment="Entity ID"/>
-        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="false" 
+        <column xsi:type="smallint" name="store_id" padding="5" unsigned="true" nullable="true" 
                 comment="Store ID"/>
         <column xsi:type="varchar" name="status" nullable="false" length="50" default="opened"
                 comment="Status da PPN"/>
@@ -53,9 +53,6 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
-        <constraint xsi:type="foreign" referenceId="SALES_SHIPMENT_CORREIOS_PLP_STORE_ID_STORE_STORE_ID"
-                    table="sales_shipment_correios_plp" column="store_id" referenceTable="store"
-                    referenceColumn="store_id" onDelete="SET NULL"/>
     </table>
     
     <table name="sales_shipment_correios_plp_order" resource="default" engine="innodb" 
@@ -81,10 +78,6 @@
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
-        <constraint xsi:type="foreign" referenceId="SALES_SHIPMENT_CORREIOS_PLP_ORDER_PLP_ID_SALES_SHIPMENT_CORREIOS_PLP_ENTITY_ID"
-                    table="sales_shipment_correios_plp_order" column="plp_id"
-                    referenceTable="sales_shipment_correios_plp" referenceColumn="entity_id"
-                    onDelete="SET NULL"/>
         <index referenceId="SALES_SHIPMENT_CORREIOS_PLP_ORDER_ORDER_ID" indexType="btree">
             <column name="order_id"/>
         </index>
