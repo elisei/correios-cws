@@ -87,9 +87,7 @@ class PlpLabelDownloadService
                 'GET'
             );
             
-            if (isset($response['mensagem']) &&
-                strpos($response['mensagem'], 'PPN-291') !== false &&
-                strpos($response['mensagem'], 'Recibo em sincronização') !== false) {
+            if (isset($response['mensagem'])) {
                 $result['success'] = false;
                 $result['message'] = __('Receipt is still synchronizing. Please try again later.');
                 $result['data'] = [
