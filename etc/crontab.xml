@@ -13,13 +13,13 @@
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="default">
         <job name="sigep_update_created_status" instance="O2TI\SigepWebCarrier\Cron\UpdateTrackingStatus" method="execute">
-            <schedule>0 13,17,22 * * 1-5</schedule>
+            <schedule>30 18 * * 1-5</schedule>
         </job>
         <job name="sigep_update_init_status" instance="UpdateCompleteStatus" method="execute">
-            <schedule>* * * * 1-6</schedule>
+            <schedule>0 19 * * 1-6</schedule>
         </job>
         <job name="sigep_update_in_transit_status" instance="UpdateInTransitStatus" method="execute">
-            <schedule>30 9,11,21 * * 1-6</schedule>
+            <schedule>30 21 * * 1-6</schedule>
         </job>
         <job name="sigep_update_on_delivery_route_status" instance="UpdateOnDeliveryRouteStatus" method="execute">
             <schedule>0 9,12,16,23 * * 1-6</schedule>
@@ -30,7 +30,10 @@
         <job name="sigepweb_update_fallback_rules" instance="O2TI\SigepWebCarrier\Cron\UpdateFallbackRules" method="execute">
             <schedule>0 3 1-7 * 1-6</schedule>
         </job>
-        <job name="sigepweb_plp_complete_process" instance="O2TI\SigepWebCarrier\Cron\PlpCompleteProcessCron" method="execute">
+        <job name="sigepweb_plp_step_process" instance="O2TI\SigepWebCarrier\Cron\PlpProcessingCron" method="execute">
+            <schedule>* * * * 1-5</schedule>
+        </job>
+        <job name="sigepweb_plp_step_finalization" instance="O2TI\SigepWebCarrier\Cron\PlpFinalizationCron" method="execute">
             <schedule>* * * * 1-5</schedule>
         </job>
     </group>
