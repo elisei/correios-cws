@@ -65,5 +65,11 @@
                 <field id="active">1</field>
             </depends>
         </field>
+        <field id="show_home_delivery_info" translate="label,comment" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Show Home Delivery Information</label>
+            <comment>When enabled, displays a message when home delivery is not available and package must be picked up at an agency.</comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/sigep_web_carrier/show_home_delivery_info</config_path>
+        </field>
     </group>
 </include>
