@@ -650,8 +650,8 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
             $deadline,
             ($deadline > 1 ? __('dias úteis') : __('dia útil'))
         );
-        
-        if ($deadlineMessage) {
+
+        if ($deadlineMessage && $this->getConfigData('show_home_delivery_info')) {
             $methodTitle .= ' - ' . __('Entrega domiciliar indisponível. Retirar na Agência.');
         }
 
