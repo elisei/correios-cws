@@ -95,13 +95,11 @@ class PlpProcessingCron
      */
     public function execute()
     {
-        $this->logger->info(__('Starting PPN Processing cron job'));
         
         try {
             $plps = $this->getEligiblePlps();
             
             if ($plps->getSize() === 0) {
-                $this->logger->info(__('No eligible PLPs found to process'));
                 return;
             }
             
@@ -110,7 +108,6 @@ class PlpProcessingCron
             foreach ($plps as $plp) {
                 try {
                     if (!$plp->getCanSendToCws()) {
-                        $this->logger->info(__('PPN ID %1 is not enabled for processing, skipping', $plp->getId()));
                         continue;
                     }
                     
@@ -159,10 +156,7 @@ class PlpProcessingCron
     protected function processPLP($plp)
     {
         $plpId = $plp->getId();
-        $this->logger->info(
-            __('Beginning processing for PPN ID: %1 [Current Status: %2]', $plpId, $plp->getStatus())
-        );
-        
+
         // Step 1: Data Collection (if needed)
         if ($this->shouldCollectData($plp)) {
             $result = $this->runDataCollection($plp);
@@ -191,7 +185,6 @@ class PlpProcessingCron
             }
             
             $this->processStats['processed_plps']++;
-            $this->logger->info(__('PPN ID %1 processed successfully up to label request', $plpId));
         }
         
         return true;

@@ -85,13 +85,11 @@ class PlpFinalizationCron
      */
     public function execute()
     {
-        $this->logger->info(__('Starting PPN Finalization cron job'));
         
         try {
             $plps = $this->getEligiblePlps();
             
             if ($plps->getSize() === 0) {
-                $this->logger->info(__('No eligible PLPs found for finalization'));
                 return;
             }
             
@@ -100,7 +98,6 @@ class PlpFinalizationCron
             foreach ($plps as $plp) {
                 try {
                     if (!$plp->getCanSendToCws()) {
-                        $this->logger->info(__('PPN ID %1 is not enabled for finalization, skipping', $plp->getId()));
                         continue;
                     }
                     
@@ -146,9 +143,6 @@ class PlpFinalizationCron
     protected function processPLP($plp)
     {
         $plpId = $plp->getId();
-        $this->logger->info(
-            __('Beginning finalization for PPN ID: %1 [Current Status: %2]', $plpId, $plp->getStatus())
-        );
         
         // Step 1: Label Download (if needed)
         if ($this->shouldDownloadLabels($plp)) {
@@ -170,7 +164,6 @@ class PlpFinalizationCron
             $plp = $this->plpRepository->getById($plpId);
             if ($plp->getStatus() === PlpStatus::STATUS_PLP_COMPLETED) {
                 $this->processStats['completed_plps']++;
-                $this->logger->info(__('PPN ID %1 completed successfully', $plpId));
             }
         }
         
@@ -196,7 +189,6 @@ class PlpFinalizationCron
      */
     protected function runLabelDownload($plp)
     {
-        $this->logger->info(__('Running label downloads for PPN %1', $plp->getId()));
         $result = $this->plpLabelDownload->execute($plp->getId());
         
         if ($result['success']) {
@@ -206,14 +198,6 @@ class PlpFinalizationCron
         if ($result['errors']) {
             $this->processStats['label_downloads']['errors'] += $result['errors'];
         }
-        
-        $this->logger->info(__(
-            'Label downloads for PPN %1: %2 (Processed: %3, Errors: %4)',
-            $plp->getId(),
-            $result['message'],
-            $result['processed'],
-            $result['errors']
-        ));
         
         return $result;
     }

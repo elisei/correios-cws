@@ -122,7 +122,6 @@ class PlpCompleteProcessCron
             $plps = $this->getEligiblePlps();
             
             if ($plps->getSize() === 0) {
-                $this->logger->info(__('No eligible PLPs found to process'));
                 return;
             }
             
@@ -131,7 +130,6 @@ class PlpCompleteProcessCron
             foreach ($plps as $plp) {
                 try {
                     if (!$plp->getCanSendToCws()) {
-                        $this->logger->info(__('PPN ID %1 is not enabled for processing, skipping', $plp->getId()));
                         continue;
                     }
                     
@@ -183,9 +181,6 @@ class PlpCompleteProcessCron
     protected function processPLP($plp)
     {
         $plpId = $plp->getId();
-        $this->logger->info(
-            __('Beginning complete processing for PPN ID: %1 [Current Status: %2]', $plpId, $plp->getStatus())
-        );
         
         // Step 1: Data Collection (if needed)
         if ($this->shouldCollectData($plp)) {
@@ -242,7 +237,6 @@ class PlpCompleteProcessCron
             $plp = $this->plpRepository->getById($plpId);
             if ($plp->getStatus() === PlpStatus::STATUS_PLP_COMPLETED) {
                 $this->processStats['completed_plps']++;
-                $this->logger->info(__('PPN ID %1 completed successfully', $plpId));
             }
         }
         
@@ -268,7 +262,6 @@ class PlpCompleteProcessCron
      */
     protected function runDataCollection($plp)
     {
-        $this->logger->info(__('Running data collection for PPN %1', $plp->getId()));
         $result = $this->plpDataCollector->execute($plp->getId());
         
         if ($result['success']) {
@@ -278,14 +271,6 @@ class PlpCompleteProcessCron
         if ($result['errors']) {
             $this->processStats['data_collection']['errors'] += $result['errors'];
         }
-        
-        $this->logger->info(__(
-            'Data collection for PPN %1: %2 (Processed: %3, Errors: %4)',
-            $plp->getId(),
-            $result['message'],
-            $result['processed'],
-            $result['errors']
-        ));
         
         return $result;
     }
@@ -309,7 +294,6 @@ class PlpCompleteProcessCron
      */
     protected function runSubmission($plp)
     {
-        $this->logger->info(__('Running submission for PPN %1', $plp->getId()));
         $result = $this->plpSingleSubmit->execute($plp->getId());
         
         if ($result['success']) {
@@ -319,14 +303,6 @@ class PlpCompleteProcessCron
         if ($result['errors']) {
             $this->processStats['submission']['errors'] += $result['errors'];
         }
-        
-        $this->logger->info(__(
-            'Submission for PPN %1: %2 (Processed: %3, Errors: %4)',
-            $plp->getId(),
-            $result['message'],
-            $result['processed'],
-            $result['errors']
-        ));
         
         return $result;
     }
@@ -350,7 +326,6 @@ class PlpCompleteProcessCron
      */
     protected function runLabelRequest($plp)
     {
-        $this->logger->info(__('Running label requests for PPN %1', $plp->getId()));
         $result = $this->plpLabelRequest->execute($plp->getId());
         
         if ($result['success']) {
@@ -360,15 +335,7 @@ class PlpCompleteProcessCron
         if ($result['errors']) {
             $this->processStats['label_requests']['errors'] += $result['errors'];
         }
-        
-        $this->logger->info(__(
-            'Label requests for PPN %1: %2 (Processed: %3, Errors: %4)',
-            $plp->getId(),
-            $result['message'],
-            $result['processed'],
-            $result['errors']
-        ));
-        
+
         return $result;
     }
 
@@ -391,7 +358,6 @@ class PlpCompleteProcessCron
      */
     protected function runLabelDownload($plp)
     {
-        $this->logger->info(__('Running label downloads for PPN %1', $plp->getId()));
         $result = $this->plpLabelDownload->execute($plp->getId());
         
         if ($result['success']) {
@@ -401,14 +367,6 @@ class PlpCompleteProcessCron
         if ($result['errors']) {
             $this->processStats['label_downloads']['errors'] += $result['errors'];
         }
-        
-        $this->logger->info(__(
-            'Label downloads for PPN %1: %2 (Processed: %3, Errors: %4)',
-            $plp->getId(),
-            $result['message'],
-            $result['processed'],
-            $result['errors']
-        ));
         
         return $result;
     }
