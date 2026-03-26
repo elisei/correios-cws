@@ -121,7 +121,7 @@ class PlpSingleSubmit extends AbstractPlpOperation
             
             $serviceResult = $this->plpSingleService->execute($request);
 
-            iif (!$serviceResult['success'] || empty($serviceResult['data'])) {
+            if (!$serviceResult['success'] || empty($serviceResult['data'])) {
                 throw new LocalizedException(__('Service error: %1', $serviceResult['message'] ?? 'Unknown error'));
             }
 
