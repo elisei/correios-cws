@@ -85,32 +85,29 @@ class PlpFinalizationCron
      */
     public function execute()
     {
-        
         try {
             $plps = $this->getEligiblePlps();
-            
+
             if ($plps->getSize() === 0) {
                 return;
             }
-            
+
             $this->processStats['total_plps'] = $plps->getSize();
-            
+
             foreach ($plps as $plp) {
                 try {
                     if (!$plp->getCanSendToCws()) {
                         continue;
                     }
-                    
+
                     $this->processPLP($plp);
-                    
+
                 } catch (\Exception $e) {
                     $this->logger->error(__('Error finalizing PPN ID %1: %2', $plp->getId(), $e->getMessage()));
                     $this->processStats['failed_plps']++;
                 }
             }
-            
-            $this->logCompletionSummary();
-            
+
         } catch (\Exception $e) {
             $this->logger->critical(__('PPN Finalization cron job failed: %1', $e->getMessage()));
         }
@@ -130,7 +127,7 @@ class PlpFinalizationCron
                 PlpStatus::STATUS_PLP_AWAITING_SHIPMENT
             ]
         ]);
-        
+
         return $collection;
     }
 
@@ -143,30 +140,30 @@ class PlpFinalizationCron
     protected function processPLP($plp)
     {
         $plpId = $plp->getId();
-        
+
         // Step 1: Label Download (if needed)
         if ($this->shouldDownloadLabels($plp)) {
             $result = $this->runLabelDownload($plp);
             if (!$result['success']) {
                 return false;
             }
-            
+
             $plp = $this->plpRepository->getById($plpId);
         }
-        
+
         // Step 2: Shipment Creation (if needed)
         if ($this->shouldCreateShipments($plp)) {
             $result = $this->runShipmentCreation($plp);
             if (!$result['success']) {
                 return false;
             }
-            
+
             $plp = $this->plpRepository->getById($plpId);
             if ($plp->getStatus() === PlpStatus::STATUS_PLP_COMPLETED) {
                 $this->processStats['completed_plps']++;
             }
         }
-        
+
         return true;
     }
 
@@ -190,7 +187,7 @@ class PlpFinalizationCron
     protected function runLabelDownload($plp)
     {
         $result = $this->plpLabelDownload->execute($plp->getId());
-        
+
         if ($result['success']) {
             $this->processStats['label_downloads']['success'] += $result['processed'];
         }
@@ -198,7 +195,7 @@ class PlpFinalizationCron
         if ($result['errors']) {
             $this->processStats['label_downloads']['errors'] += $result['errors'];
         }
-        
+
         return $result;
     }
 
@@ -221,9 +218,8 @@ class PlpFinalizationCron
      */
     protected function runShipmentCreation($plp)
     {
-        $this->logger->info(__('Running shipment creation for PPN %1', $plp->getId()));
         $result = $this->plpOrdShipCreator->execute($plp->getId());
-        
+
         if ($result['success']) {
             $this->processStats['shipment_creation']['success'] += $result['processed'];
         }
@@ -231,41 +227,7 @@ class PlpFinalizationCron
         if ($result['errors']) {
             $this->processStats['shipment_creation']['errors'] += $result['errors'];
         }
-        
-        $this->logger->info(__(
-            'Shipment creation for PPN %1: %2 (Processed: %3, Errors: %4)',
-            $plp->getId(),
-            $result['message'],
-            $result['processed'],
-            $result['errors']
-        ));
-        
-        return $result;
-    }
 
-    /**
-     * Log completion summary
-     */
-    protected function logCompletionSummary()
-    {
-        $this->logger->info(__('PPN Finalization cron job Summary:'));
-        $this->logger->info(__(
-            'Total PLPs: %1, Completed: %2, Failed: %3',
-            $this->processStats['total_plps'],
-            $this->processStats['completed_plps'],
-            $this->processStats['failed_plps']
-        ));
-        
-        $this->logger->info(__(
-            'Label Downloads: Success: %1, Errors: %2',
-            $this->processStats['label_downloads']['success'],
-            $this->processStats['label_downloads']['errors']
-        ));
-        
-        $this->logger->info(__(
-            'Shipment Creation: Success: %1, Errors: %2',
-            $this->processStats['shipment_creation']['success'],
-            $this->processStats['shipment_creation']['errors']
-        ));
+        return $result;
     }
 }

@@ -115,34 +115,29 @@ class PlpCompleteProcessCron
      */
     public function execute()
     {
-        $this->logger->info(__('Starting Complete PPN Process cron job'));
-        
         try {
-            // Get all enabled PLPs that are not completed
             $plps = $this->getEligiblePlps();
-            
+
             if ($plps->getSize() === 0) {
                 return;
             }
-            
+
             $this->processStats['total_plps'] = $plps->getSize();
-            
+
             foreach ($plps as $plp) {
                 try {
                     if (!$plp->getCanSendToCws()) {
                         continue;
                     }
-                    
+
                     $this->processPLP($plp);
-                    
+
                 } catch (\Exception $e) {
                     $this->logger->error(__('Error processing PPN ID %1: %2', $plp->getId(), $e->getMessage()));
                     $this->processStats['failed_plps']++;
                 }
             }
-            
-            $this->logCompletionSummary();
-            
+
         } catch (\Exception $e) {
             $this->logger->critical(__('Complete PPN Process cron job failed: %1', $e->getMessage()));
         }
@@ -165,7 +160,7 @@ class PlpCompleteProcessCron
                 PlpStatus::STATUS_PLP_AWAITING_SHIPMENT,
             ]
         ]);
-        
+
         return $collection;
     }
 
@@ -181,65 +176,60 @@ class PlpCompleteProcessCron
     protected function processPLP($plp)
     {
         $plpId = $plp->getId();
-        
+
         // Step 1: Data Collection (if needed)
         if ($this->shouldCollectData($plp)) {
             $result = $this->runDataCollection($plp);
             if (!$result['success']) {
                 return false;
             }
-            
-            // Reload PPN to get updated status
+
             $plp = $this->plpRepository->getById($plpId);
         }
-        
+
         // Step 2: Submission (if needed)
         if ($this->shouldSubmit($plp)) {
             $result = $this->runSubmission($plp);
             if (!$result['success']) {
                 return false;
             }
-            
-            // Reload PPN to get updated status
+
             $plp = $this->plpRepository->getById($plpId);
         }
-        
+
         // Step 3: Label Request (if needed)
         if ($this->shouldRequestLabels($plp)) {
             $result = $this->runLabelRequest($plp);
             if (!$result['success']) {
                 return false;
             }
-            
-            // Reload PPN to get updated status
+
             $plp = $this->plpRepository->getById($plpId);
         }
-        
+
         // Step 4: Label Download (if needed)
         if ($this->shouldDownloadLabels($plp)) {
             $result = $this->runLabelDownload($plp);
             if (!$result['success']) {
                 return false;
             }
-            
-            // Reload PPN to get updated status
+
             $plp = $this->plpRepository->getById($plpId);
         }
-        
+
         // Step 5: Shipment Creation (if needed)
         if ($this->shouldCreateShipments($plp)) {
             $result = $this->runShipmentCreation($plp);
             if (!$result['success']) {
                 return false;
             }
-            
-            // Final check
+
             $plp = $this->plpRepository->getById($plpId);
             if ($plp->getStatus() === PlpStatus::STATUS_PLP_COMPLETED) {
                 $this->processStats['completed_plps']++;
             }
         }
-        
+
         return true;
     }
 
@@ -263,7 +253,7 @@ class PlpCompleteProcessCron
     protected function runDataCollection($plp)
     {
         $result = $this->plpDataCollector->execute($plp->getId());
-        
+
         if ($result['success']) {
             $this->processStats['data_collection']['success'] += $result['processed'];
         }
@@ -271,7 +261,7 @@ class PlpCompleteProcessCron
         if ($result['errors']) {
             $this->processStats['data_collection']['errors'] += $result['errors'];
         }
-        
+
         return $result;
     }
 
@@ -295,7 +285,7 @@ class PlpCompleteProcessCron
     protected function runSubmission($plp)
     {
         $result = $this->plpSingleSubmit->execute($plp->getId());
-        
+
         if ($result['success']) {
             $this->processStats['submission']['success'] += $result['processed'];
         }
@@ -303,7 +293,7 @@ class PlpCompleteProcessCron
         if ($result['errors']) {
             $this->processStats['submission']['errors'] += $result['errors'];
         }
-        
+
         return $result;
     }
 
@@ -327,7 +317,7 @@ class PlpCompleteProcessCron
     protected function runLabelRequest($plp)
     {
         $result = $this->plpLabelRequest->execute($plp->getId());
-        
+
         if ($result['success']) {
             $this->processStats['label_requests']['success'] += $result['processed'];
         }
@@ -359,7 +349,7 @@ class PlpCompleteProcessCron
     protected function runLabelDownload($plp)
     {
         $result = $this->plpLabelDownload->execute($plp->getId());
-        
+
         if ($result['success']) {
             $this->processStats['label_downloads']['success'] += $result['processed'];
         }
@@ -367,7 +357,7 @@ class PlpCompleteProcessCron
         if ($result['errors']) {
             $this->processStats['label_downloads']['errors'] += $result['errors'];
         }
-        
+
         return $result;
     }
 
@@ -390,9 +380,8 @@ class PlpCompleteProcessCron
      */
     protected function runShipmentCreation($plp)
     {
-        $this->logger->info(__('Running shipment creation for PPN %1', $plp->getId()));
         $result = $this->plpOrdShipCreator->execute($plp->getId());
-        
+
         if ($result['success']) {
             $this->processStats['shipment_creation']['success'] += $result['processed'];
         }
@@ -400,59 +389,7 @@ class PlpCompleteProcessCron
         if ($result['errors']) {
             $this->processStats['shipment_creation']['errors'] += $result['errors'];
         }
-        
-        $this->logger->info(__(
-            'Shipment creation for PPN %1: %2 (Processed: %3, Errors: %4)',
-            $plp->getId(),
-            $result['message'],
-            $result['processed'],
-            $result['errors']
-        ));
-        
-        return $result;
-    }
 
-    /**
-     * Log completion summary
-     */
-    protected function logCompletionSummary()
-    {
-        $this->logger->info(__('Complete PPN Process cron job Summary:'));
-        $this->logger->info(__(
-            'Total PLPs: %1, Completed: %2, Failed: %3',
-            $this->processStats['total_plps'],
-            $this->processStats['completed_plps'],
-            $this->processStats['failed_plps']
-        ));
-        
-        $this->logger->info(__(
-            'Data Collection: Success: %1, Errors: %2',
-            $this->processStats['data_collection']['success'],
-            $this->processStats['data_collection']['errors']
-        ));
-        
-        $this->logger->info(__(
-            'Submission: Success: %1, Errors: %2',
-            $this->processStats['submission']['success'],
-            $this->processStats['submission']['errors']
-        ));
-        
-        $this->logger->info(__(
-            'Label Requests: Success: %1, Errors: %2',
-            $this->processStats['label_requests']['success'],
-            $this->processStats['label_requests']['errors']
-        ));
-        
-        $this->logger->info(__(
-            'Label Downloads: Success: %1, Errors: %2',
-            $this->processStats['label_downloads']['success'],
-            $this->processStats['label_downloads']['errors']
-        ));
-        
-        $this->logger->info(__(
-            'Shipment Creation: Success: %1, Errors: %2',
-            $this->processStats['shipment_creation']['success'],
-            $this->processStats['shipment_creation']['errors']
-        ));
+        return $result;
     }
 }

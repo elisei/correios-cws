@@ -121,8 +121,14 @@ class PlpSingleSubmit extends AbstractPlpOperation
             
             $serviceResult = $this->plpSingleService->execute($request);
 
-            if (!$serviceResult['success'] || !$serviceResult['data']) {
-                throw new LocalizedException(__('Service error: %1', $serviceResult['message']));
+            iif (!$serviceResult['success'] || empty($serviceResult['data'])) {
+                throw new LocalizedException(__('Service error: %1', $serviceResult['message'] ?? 'Unknown error'));
+            }
+
+            if (!isset($serviceResult['data']['id'], $serviceResult['data']['codigoObjeto'])) {
+                throw new LocalizedException(
+                    __('Service response missing required fields: %1', $this->json->serialize($serviceResult['data']))
+                );
             }
 
             $processingData = [

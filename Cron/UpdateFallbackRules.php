@@ -65,16 +65,12 @@ class UpdateFallbackRules
     public function execute()
     {
         try {
-            $this->logger->info('Starting monthly fallback rules update cron');
-            
             $updatedRules = $this->fallbackUpdater->updateServiceRules();
-            
+
             $this->configWriter->save(
                 'carriers/sigep_web_carrier/fallback_service_rules',
                 $this->json->serialize($updatedRules)
             );
-            
-            $this->logger->info('Monthly fallback rules update completed successfully');
         } catch (\Exception $e) {
             $this->logger->error('Error in fallback rules update cron: ' . $e->getMessage());
         }
