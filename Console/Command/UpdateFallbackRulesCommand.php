@@ -47,7 +47,7 @@ class UpdateFallbackRulesCommand extends Command
         FallbackServiceUpdater $fallbackUpdater,
         WriterInterface $configWriter,
         Json $json,
-        string $name = null
+        ?string $name = null
     ) {
         parent::__construct($name);
         $this->fallbackUpdater = $fallbackUpdater;
