@@ -33,8 +33,8 @@ class Plp extends AbstractModel implements PlpInterface
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
         Status $statusModel,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        ?\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->statusModel = $statusModel;
@@ -130,7 +130,7 @@ class Plp extends AbstractModel implements PlpInterface
     {
         $permissions = $this->statusModel->getActionPermissions($status);
         $this->setCanAddOrders($permissions['can_add_orders']);
-        
+
         return $this->setData(self::STATUS, $status);
     }
 }
