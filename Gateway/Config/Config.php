@@ -198,7 +198,29 @@ class Config
     }
 
     /**
-     * Get Base URL
+     * Check if DC-e emission by Correios is enabled
+     *
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function isEmiteDceEnabled(?int $storeId = null): bool
+    {
+        return (bool)$this->getConfigValue('emite_dce', $storeId);
+    }
+
+    /**
+     * Get DACE type (T=Térmica, R=Resumida, C=Completa)
+     *
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getDaceType(?int $storeId = null): string
+    {
+        return (string)($this->getConfigValue('dace_type', $storeId) ?: 'R');
+    }
+
+    /**
+     * Get Allowed Status
      *
      * @param int|null $storeId
      * @return array

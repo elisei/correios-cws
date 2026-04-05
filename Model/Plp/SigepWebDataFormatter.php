@@ -102,7 +102,11 @@ class SigepWebDataFormatter
         
         $declaredValue = $collectedData['order_info']['subtotal'];
         $formattedData = $this->processAdditionalServices($formattedData, $serviceCode, $declaredValue);
-        
+
+        if ($this->config->isEmiteDceEnabled()) {
+            $formattedData['emiteDCe'] = 'S';
+        }
+
         return $formattedData;
     }
     

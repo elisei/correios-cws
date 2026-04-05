@@ -35,6 +35,21 @@
             <source_model>O2TI\SigepWebCarrier\Model\Config\Source\FilterStatus</source_model>
             <config_path>carriers/sigep_web_carrier/allowed_status</config_path>
         </field>
+        <field id="emite_dce" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Emitir DC-e pelos Correios</label>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/sigep_web_carrier/emite_dce</config_path>
+            <comment><![CDATA[Quando habilitado, os Correios emitirão automaticamente a Declaração de Conteúdo Eletrônica (DC-e) para pré-postagens sem NF-e. A DACE (documento impresso da DC-e) deverá ser impressa e fixada no objeto.]]></comment>
+        </field>
+        <field id="dace_type" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Formato da DACE</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\DaceType</source_model>
+            <config_path>carriers/sigep_web_carrier/dace_type</config_path>
+            <comment><![CDATA[T = Térmica (texto plano), R = Resumida (PDF compacto), C = Completa (PDF completo). A DACE deve ser impressa e fixada no objeto.]]></comment>
+            <depends>
+                <field id="emite_dce">1</field>
+            </depends>
+        </field>
         <group id="plp_sender" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Sender Data</label>
             <field id="name" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">

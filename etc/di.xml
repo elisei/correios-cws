@@ -20,6 +20,7 @@
                 <item name="sigepweb_plp_single_submit" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpSingleSubmitCommand</item>
                 <item name="sigepweb_plp_label" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpLabelRequestCommand</item>
                 <item name="sigepweb_plp_label_download" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpLabelDownloadCommand</item>
+                <item name="sigepweb_plp_dace_download" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpDaceDownloadCommand</item>
                 <item name="sigepweb_plp_create_shipments" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpShipmentCreateCommand</item>
             </argument>
         </arguments>
@@ -146,6 +147,14 @@
     </type>
 
     <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpLabelDownloadService">
+        <arguments>
+            <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
+    <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpDaceDownloadService">
         <arguments>
             <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
             <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>

@@ -45,6 +45,8 @@
                 <label_format>ET</label_format>
                 <print_layout>LINEAR_100_150</print_layout>
                 <allowed_status>processing</allowed_status>
+                <emite_dce>1</emite_dce>
+                <dace_type>R</dace_type>
                 <show_home_delivery_info>1</show_home_delivery_info>
             </sigep_web_carrier>
         </carriers>

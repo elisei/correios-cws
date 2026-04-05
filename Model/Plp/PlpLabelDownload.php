@@ -19,6 +19,8 @@ use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Url\DecoderInterface;
 use Magento\Framework\Exception\LocalizedException;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
+use O2TI\SigepWebCarrier\Gateway\Config\Config;
+use O2TI\SigepWebCarrier\Gateway\Service\PlpAsyncLabelService;
 use O2TI\SigepWebCarrier\Gateway\Service\PlpLabelDownloadService;
 use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
 use O2TI\SigepWebCarrier\Model\Plp\Source\StatusItem as PlpStatusItem;
@@ -57,7 +59,17 @@ class PlpLabelDownload extends AbstractPlpOperation
      * @var DecoderInterface
      */
     protected $urlDecoder;
-    
+
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
+     * @var PlpAsyncLabelService
+     */
+    protected $plpAsyncLabelService;
+
     /**
      * @var array
      */
@@ -76,6 +88,8 @@ class PlpLabelDownload extends AbstractPlpOperation
      * @param DriverFile $driver
      * @param File $fileIo
      * @param DecoderInterface $urlDecoder
+     * @param Config $config
+     * @param PlpAsyncLabelService $plpAsyncLabelService
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
@@ -89,14 +103,18 @@ class PlpLabelDownload extends AbstractPlpOperation
         Filesystem $filesystem,
         DriverFile $driver,
         File $fileIo,
-        DecoderInterface $urlDecoder
+        DecoderInterface $urlDecoder,
+        Config $config,
+        PlpAsyncLabelService $plpAsyncLabelService
     ) {
         $this->plpLabelDownService = $plpLabelDownService;
         $this->filesystem = $filesystem;
         $this->driver = $driver;
         $this->fileIo = $fileIo;
         $this->urlDecoder = $urlDecoder;
-        
+        $this->config = $config;
+        $this->plpAsyncLabelService = $plpAsyncLabelService;
+
         parent::__construct(
             $logger,
             $plpRepository,
@@ -112,22 +130,35 @@ class PlpLabelDownload extends AbstractPlpOperation
     protected function initialize()
     {
         $this->operationName = 'label download';
-        
+
         // Define PPN statuses
-        $this->expectedPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
-        $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_FILE_CREATION;
+        if ($this->config->isEmiteDceEnabled()) {
+            // When DC-e is enabled, label download runs AFTER DACE download
+            $this->expectedPlpStatus = PlpStatus::STATUS_PLP_AWAITING_DACE;
+            $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_AWAITING_DACE;
+            $this->failurePlpStatus = PlpStatus::STATUS_PLP_AWAITING_DACE;
+            $this->expectedOrderStatus = [
+                PlpStatusItem::STATUS_ITEM_DACE_COMPLETED,
+                PlpStatusItem::STATUS_ITEM_PENDING_DOWNLOAD
+            ];
+            $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_DACE_COMPLETED;
+        } else {
+            $this->expectedPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
+            $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_FILE_CREATION;
+            $this->failurePlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
+            $this->expectedOrderStatus = [
+                PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED,
+                PlpStatusItem::STATUS_ITEM_PENDING_DOWNLOAD
+            ];
+            $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED;
+        }
+
         $this->successPlpStatus = PlpStatus::STATUS_PLP_AWAITING_SHIPMENT;
-        $this->failurePlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
-        
+
         // Define order statuses
         $this->expectedTypeFilter = 'status';
-        $this->expectedOrderStatus = [
-            PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED,
-            PlpStatusItem::STATUS_ITEM_PENDING_DOWNLOAD
-        ];
         $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_DOWNLOAD;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_DOWNLOAD_COMPLETED;
-        $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED;
     }
     
     /**
@@ -196,9 +227,21 @@ class PlpLabelDownload extends AbstractPlpOperation
             }
 
             $receiptId = $processingData['labelReceiptId'];
-            
+
             $serviceResult = $this->plpLabelDownService->execute($receiptId);
-            
+
+            // PPN-288: old receiptId is invalid after DC-e changes status.
+            // When DC-e is enabled, request a new receiptId and retry download.
+            if ($this->isLabelSynchronizing($serviceResult) && $this->config->isEmiteDceEnabled()) {
+                $serviceResult = $this->renewReceiptAndDownload($plpOrder, $processingData, $result);
+                if ($serviceResult === null) {
+                    return true; // handled as sync
+                }
+            } elseif ($this->isLabelSynchronizing($serviceResult)) {
+                $this->handleSynchronizingLabel($plpOrder, $processingData, $receiptId, $result);
+                return true;
+            }
+
             if (!$serviceResult['success']) {
                 // phpcs:ignore Magento2.Exceptions.DirectThrow
                 throw new LocalizedException(__(
@@ -206,11 +249,6 @@ class PlpLabelDownload extends AbstractPlpOperation
                     $receiptId,
                     $serviceResult['message']
                 ));
-            }
-            
-            if ($this->isLabelSynchronizing($serviceResult)) {
-                $this->handleSynchronizingLabel($plpOrder, $processingData, $receiptId, $result);
-                return true; // This is a successful sync request, not an error
             }
             
             $fileName = $this->saveShippingLabelFile($serviceResult['data'], $plpOrder, $plpOrder->getPlpId());
@@ -566,6 +604,61 @@ class PlpLabelDownload extends AbstractPlpOperation
             );
             return false;
         }
+    }
+
+    /**
+     * Request a new receipt ID and attempt download.
+     * Old receiptIds generated while pre-postagem was "Pendente" become invalid
+     * after DC-e changes status to "Pré-postado".
+     *
+     * @param object $plpOrder
+     * @param array $processingData
+     * @param array $result
+     * @return array|null Service result if download succeeded, null if handled as sync
+     */
+    private function renewReceiptAndDownload($plpOrder, array &$processingData, array &$result)
+    {
+        $trackingCode = $processingData['tracking'] ?? null;
+        if (!$trackingCode) {
+            $this->handleSynchronizingLabel(
+                $plpOrder,
+                $processingData,
+                $processingData['labelReceiptId'],
+                $result
+            );
+            return null;
+        }
+
+        $labelResult = $this->plpAsyncLabelService->execute($trackingCode);
+
+        if (!$labelResult['success'] || !isset($labelResult['data']['idRecibo'])) {
+            $this->handleSynchronizingLabel(
+                $plpOrder,
+                $processingData,
+                $processingData['labelReceiptId'],
+                $result
+            );
+            return null;
+        }
+
+        $newReceiptId = $labelResult['data']['idRecibo'];
+        $processingData['labelReceiptId'] = $newReceiptId;
+
+        $this->logger->info(__(
+            'Renewed label receipt ID for tracking %1: %2',
+            $trackingCode,
+            $newReceiptId
+        ));
+
+        $serviceResult = $this->plpLabelDownService->execute($newReceiptId);
+
+        // Still synchronizing with new receipt — wait for next cycle
+        if ($this->isLabelSynchronizing($serviceResult)) {
+            $this->handleSynchronizingLabel($plpOrder, $processingData, $newReceiptId, $result);
+            return null;
+        }
+
+        return $serviceResult;
     }
 
     /**

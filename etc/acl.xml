@@ -19,6 +19,7 @@
                     <resource id="O2TI_SigepWebCarrier::services_write" title="Modify Services" sortOrder="20" />
                     <resource id="O2TI_SigepWebCarrier::plp_view" title="Plp View" sortOrder="30" />
                     <resource id="O2TI_SigepWebCarrier::plp_management" title="Plp Manage" sortOrder="40" />
+                    <resource id="O2TI_SigepWebCarrier::download_receipt" title="Download DACE Receipt" sortOrder="50" />
                 </resource>
                 <resource id="Magento_Backend::stores">
                     <resource id="Magento_Backend::stores_settings">

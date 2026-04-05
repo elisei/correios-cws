@@ -23,6 +23,7 @@ class Status implements OptionSourceInterface
     public const STATUS_PLP_REQUESTING_RECEIPT = 'requesting_receipt';
     public const STATUS_PLP_REQUESTING_FILE_CREATION = 'requesting_file_creation';
     public const STATUS_PLP_REQUESTING_SHIPMENT_CREATION = 'requesting_shipment_creation';
+    public const STATUS_PLP_AWAITING_DACE = 'awaiting_dace';
     public const STATUS_PLP_AWAITING_SHIPMENT = 'awaiting_shipment';
     public const STATUS_PLP_COMPLETED = 'completed';
 
@@ -40,6 +41,7 @@ class Status implements OptionSourceInterface
             ['value' => self::STATUS_PLP_REQUESTING_RECEIPT, 'label' => __('Requesting Receipt')],
             ['value' => self::STATUS_PLP_REQUESTING_FILE_CREATION, 'label' => __('Requesting File Creation')],
             ['value' => self::STATUS_PLP_REQUESTING_SHIPMENT_CREATION, 'label' => __('Requesting Shipment Creation')],
+            ['value' => self::STATUS_PLP_AWAITING_DACE, 'label' => __('DACE Downloaded - Awaiting Label')],
             ['value' => self::STATUS_PLP_AWAITING_SHIPMENT, 'label' => __('Awaiting Shipment Creation')],
             ['value' => self::STATUS_PLP_COMPLETED, 'label' => __('Completed')]
         ];

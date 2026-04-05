@@ -11,6 +11,7 @@
 namespace O2TI\SigepWebCarrier\Cron;
 
 use Psr\Log\LoggerInterface;
+use O2TI\SigepWebCarrier\Model\Plp\PlpDaceDownload;
 use O2TI\SigepWebCarrier\Model\Plp\PlpLabelDownload;
 use O2TI\SigepWebCarrier\Model\Plp\PlpOrderShipmentCreator;
 use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
@@ -28,6 +29,11 @@ class PlpFinalizationCron
      * @var PlpLabelDownload
      */
     protected $plpLabelDownload;
+
+    /**
+     * @var PlpDaceDownload
+     */
+    protected $plpDaceDownload;
 
     /**
      * @var PlpOrderShipmentCreator
@@ -52,6 +58,7 @@ class PlpFinalizationCron
         'completed_plps' => 0,
         'failed_plps' => 0,
         'label_downloads' => ['success' => 0, 'errors' => 0],
+        'dace_downloads' => ['success' => 0, 'errors' => 0],
         'shipment_creation' => ['success' => 0, 'errors' => 0]
     ];
 
@@ -60,6 +67,7 @@ class PlpFinalizationCron
      *
      * @param LoggerInterface $logger
      * @param PlpLabelDownload $plpLabelDownload
+     * @param PlpDaceDownload $plpDaceDownload
      * @param PlpOrderShipmentCreator $plpOrdShipCreator
      * @param PlpRepositoryInterface $plpRepository
      * @param PlpCollectionFactory $plpCollectionFactory
@@ -67,12 +75,14 @@ class PlpFinalizationCron
     public function __construct(
         LoggerInterface $logger,
         PlpLabelDownload $plpLabelDownload,
+        PlpDaceDownload $plpDaceDownload,
         PlpOrderShipmentCreator $plpOrdShipCreator,
         PlpRepositoryInterface $plpRepository,
         PlpCollectionFactory $plpCollectionFactory
     ) {
         $this->logger = $logger;
         $this->plpLabelDownload = $plpLabelDownload;
+        $this->plpDaceDownload = $plpDaceDownload;
         $this->plpOrdShipCreator = $plpOrdShipCreator;
         $this->plpRepository = $plpRepository;
         $this->plpCollectionFactory = $plpCollectionFactory;
@@ -124,6 +134,7 @@ class PlpFinalizationCron
         $collection->addFieldToFilter('status', [
             'in' => [
                 PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION,
+                PlpStatus::STATUS_PLP_AWAITING_DACE,
                 PlpStatus::STATUS_PLP_AWAITING_SHIPMENT
             ]
         ]);
@@ -141,7 +152,17 @@ class PlpFinalizationCron
     {
         $plpId = $plp->getId();
 
-        // Step 1: Label Download (if needed)
+        // Step 1: DACE Download (if DC-e enabled, runs before label)
+        if ($this->shouldDownloadDace($plp)) {
+            $result = $this->runDaceDownload($plp);
+            if (!$result['success']) {
+                return false;
+            }
+
+            $plp = $this->plpRepository->getById($plpId);
+        }
+
+        // Step 2: Label Download (if needed)
         if ($this->shouldDownloadLabels($plp)) {
             $result = $this->runLabelDownload($plp);
             if (!$result['success']) {
@@ -151,7 +172,7 @@ class PlpFinalizationCron
             $plp = $this->plpRepository->getById($plpId);
         }
 
-        // Step 2: Shipment Creation (if needed)
+        // Step 3: Shipment Creation (if needed)
         if ($this->shouldCreateShipments($plp)) {
             $result = $this->runShipmentCreation($plp);
             if (!$result['success']) {
@@ -175,7 +196,10 @@ class PlpFinalizationCron
      */
     protected function shouldDownloadLabels($plp)
     {
-        return $plp->getStatus() === PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
+        return in_array($plp->getStatus(), [
+            PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION,
+            PlpStatus::STATUS_PLP_AWAITING_DACE
+        ]);
     }
 
     /**
@@ -194,6 +218,38 @@ class PlpFinalizationCron
 
         if ($result['errors']) {
             $this->processStats['label_downloads']['errors'] += $result['errors'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check if PPN needs DACE downloads
+     *
+     * @param \O2TI\SigepWebCarrier\Model\Plp $plp
+     * @return bool
+     */
+    protected function shouldDownloadDace($plp)
+    {
+        return $plp->getStatus() === PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
+    }
+
+    /**
+     * Run DACE downloads for a PPN
+     *
+     * @param \O2TI\SigepWebCarrier\Model\Plp $plp
+     * @return array
+     */
+    protected function runDaceDownload($plp)
+    {
+        $result = $this->plpDaceDownload->execute($plp->getId());
+
+        if ($result['success']) {
+            $this->processStats['dace_downloads']['success'] += $result['processed'];
+        }
+
+        if ($result['errors']) {
+            $this->processStats['dace_downloads']['errors'] += $result['errors'];
         }
 
         return $result;

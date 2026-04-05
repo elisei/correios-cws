@@ -145,7 +145,10 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         
         // Define order statuses
         $this->expectedTypeFilter = 'status';
-        $this->expectedOrderStatus = [PlpStatusItem::STATUS_ITEM_DOWNLOAD_COMPLETED];
+        $this->expectedOrderStatus = [
+            PlpStatusItem::STATUS_ITEM_DOWNLOAD_COMPLETED,
+            PlpStatusItem::STATUS_ITEM_DACE_COMPLETED
+        ];
         $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_SHIP_CREATE;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_SHIP_CREATED;
         $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_SHIP_CREATE_ERROR;

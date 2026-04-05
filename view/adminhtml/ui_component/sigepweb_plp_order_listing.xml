@@ -90,6 +90,16 @@
                 <label translate="true">Username</label>
             </settings>
         </column>
+        <actionsColumn name="receipt_download"
+                       class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\ReceiptDownload"
+                       component="Magento_Ui/js/grid/columns/actions">
+            <settings>
+                <label translate="true">DACE</label>
+                <sortable>false</sortable>
+                <filter>false</filter>
+                <indexField>entity_id</indexField>
+            </settings>
+        </actionsColumn>
         <actionsColumn name="actions" class="O2TI\SigepWebCarrier\Ui\Component\Listing\Column\PlpOrderActions">
             <settings>
                 <indexField>entity_id</indexField>
