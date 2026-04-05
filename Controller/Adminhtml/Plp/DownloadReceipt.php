@@ -35,23 +35,23 @@ class DownloadReceipt extends Action
     /**
      * @var PlpOrderCollectionFactory
      */
-    private $plpOrderCollectionFactory;
+    private $plpOrderCollFactory;
 
     /**
      * @param Context $context
      * @param FileFactory $fileFactory
      * @param Json $json
-     * @param PlpOrderCollectionFactory $plpOrderCollectionFactory
+     * @param PlpOrderCollectionFactory $plpOrderCollFactory
      */
     public function __construct(
         Context $context,
         FileFactory $fileFactory,
         Json $json,
-        PlpOrderCollectionFactory $plpOrderCollectionFactory
+        PlpOrderCollectionFactory $plpOrderCollFactory
     ) {
         $this->fileFactory = $fileFactory;
         $this->json = $json;
-        $this->plpOrderCollectionFactory = $plpOrderCollectionFactory;
+        $this->plpOrderCollFactory = $plpOrderCollFactory;
         parent::__construct($context);
     }
 
@@ -65,7 +65,7 @@ class DownloadReceipt extends Action
         $plpOrderId = (int) $this->getRequest()->getParam('plp_order_id');
 
         try {
-            $collection = $this->plpOrderCollectionFactory->create();
+            $collection = $this->plpOrderCollFactory->create();
             $plpOrder = $collection
                 ->addFieldToFilter('entity_id', $plpOrderId)
                 ->getFirstItem();

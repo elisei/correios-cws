@@ -131,9 +131,16 @@ class PlpLabelDownload extends AbstractPlpOperation
     {
         $this->operationName = 'label download';
 
-        // Define PPN statuses
+        $this->expectedPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
+        $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_FILE_CREATION;
+        $this->failurePlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
+        $this->expectedOrderStatus = [
+            PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED,
+            PlpStatusItem::STATUS_ITEM_PENDING_DOWNLOAD
+        ];
+        $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED;
+
         if ($this->config->isEmiteDceEnabled()) {
-            // When DC-e is enabled, label download runs AFTER DACE download
             $this->expectedPlpStatus = PlpStatus::STATUS_PLP_AWAITING_DACE;
             $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_AWAITING_DACE;
             $this->failurePlpStatus = PlpStatus::STATUS_PLP_AWAITING_DACE;
@@ -142,20 +149,9 @@ class PlpLabelDownload extends AbstractPlpOperation
                 PlpStatusItem::STATUS_ITEM_PENDING_DOWNLOAD
             ];
             $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_DACE_COMPLETED;
-        } else {
-            $this->expectedPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
-            $this->inProgressPlpStatus = PlpStatus::STATUS_PLP_REQUESTING_FILE_CREATION;
-            $this->failurePlpStatus = PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION;
-            $this->expectedOrderStatus = [
-                PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED,
-                PlpStatusItem::STATUS_ITEM_PENDING_DOWNLOAD
-            ];
-            $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED;
         }
 
         $this->successPlpStatus = PlpStatus::STATUS_PLP_AWAITING_SHIPMENT;
-
-        // Define order statuses
         $this->expectedTypeFilter = 'status';
         $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_DOWNLOAD;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_DOWNLOAD_COMPLETED;

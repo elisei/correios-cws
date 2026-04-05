@@ -17,6 +17,7 @@ use Magento\Framework\Exception\RuntimeException;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Driver\File as DriverFile;
+use ZipArchive;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
 use O2TI\SigepWebCarrier\Gateway\Config\Config;
 use O2TI\SigepWebCarrier\Gateway\Service\PlpDeclarationContent;
@@ -192,8 +193,8 @@ class DeclarationProcessor
         $zipFileName = 'sigepweb_dace_plp_' . $plpId . '_' . date('YmdHis') . '.zip';
         $zipPath = $mediaWrite->getAbsolutePath('sigepweb/labels/' . $zipFileName);
 
-        $zip = new \ZipArchive();
-        if ($zip->open($zipPath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) !== true) {
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
             throw new LocalizedException(__('Could not create ZIP file for DACE'));
         }
 

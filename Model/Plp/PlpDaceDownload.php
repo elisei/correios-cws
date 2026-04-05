@@ -180,85 +180,22 @@ class PlpDaceDownload extends AbstractPlpOperation
         try {
             $this->result = &$result;
 
-            $processingData = $plpOrder->getProcessingData();
-
-            if (empty($processingData)) {
-                // phpcs:ignore Magento2.Exceptions.DirectThrow
-                throw new LocalizedException(__(
-                    'PPN Order %1 has no processing data',
-                    $plpOrder->getId()
-                ));
-            }
-
-            $processingData = $this->json->unserialize($processingData);
-
+            $processingData = $this->getValidatedProcessingData($plpOrder);
             $trackingCode = $processingData['tracking'] ?? null;
+
             if (!$trackingCode) {
                 // phpcs:ignore Magento2.Exceptions.DirectThrow
-                throw new LocalizedException(__(
-                    'PPN Order %1 has no tracking code',
-                    $plpOrder->getId()
-                ));
+                throw new LocalizedException(__('PPN Order %1 has no tracking code', $plpOrder->getId()));
             }
 
-            $daceType = $this->config->getDaceType();
-            $daceResult = $this->plpDaceDownService->execute([$trackingCode], $daceType);
+            $daceResult = $this->plpDaceDownService->execute([$trackingCode], $this->config->getDaceType());
 
-            // DC-e still being processed by Correios — retry later
-            if (!$daceResult['success']) {
+            if (!$daceResult['success'] || empty($daceResult['data'])) {
                 $this->handleDaceSynchronizing($plpOrder, $processingData, $trackingCode, $result);
                 return true;
             }
 
-            if (empty($daceResult['data'])) {
-                $this->handleDaceSynchronizing($plpOrder, $processingData, $trackingCode, $result);
-                return true;
-            }
-
-            $daceData = $daceResult['data'];
-            $daceContent = $this->extractDaceContent($daceData);
-
-            if (!$daceContent) {
-                // phpcs:ignore Magento2.Exceptions.DirectThrow
-                throw new LocalizedException(__(
-                    'DACE response has no content for tracking %1',
-                    $trackingCode
-                ));
-            }
-
-            $fileName = $this->saveDaceFile(
-                $daceContent,
-                $plpOrder,
-                $plpOrder->getPlpId(),
-                $trackingCode
-            );
-
-            if (!$fileName) {
-                // phpcs:ignore Magento2.Exceptions.DirectThrow
-                throw new LocalizedException(__(
-                    'Failed to save DACE file for tracking %1',
-                    $trackingCode
-                ));
-            }
-
-            $processingData['receiptFileName'] = $fileName;
-
-            $daceInfo = $this->extractDaceInfo($plpOrder, $trackingCode);
-            if ($daceInfo) {
-                $processingData['daceData'] = $daceInfo;
-            }
-
-            $this->updatePlpOrderStatus(
-                $plpOrder,
-                $this->successOrderStatus,
-                $processingData
-            );
-
-            $result['files'][] = [
-                'plp_order_id' => $plpOrder->getId(),
-                'tracking_code' => $trackingCode,
-                'file_name' => $fileName
-            ];
+            $this->saveDaceAndUpdateOrder($plpOrder, $processingData, $daceResult['data'], $trackingCode, $result);
 
             $result['success_count']++;
             return true;
@@ -280,6 +217,64 @@ class PlpDaceDownload extends AbstractPlpOperation
             $result['error_count']++;
             return false;
         }
+    }
+
+    /**
+     * Get and validate processing data from PLP order
+     *
+     * @param object $plpOrder
+     * @return array
+     * @throws LocalizedException
+     */
+    private function getValidatedProcessingData($plpOrder)
+    {
+        $raw = $plpOrder->getProcessingData();
+        if (empty($raw)) {
+            // phpcs:ignore Magento2.Exceptions.DirectThrow
+            throw new LocalizedException(__('PPN Order %1 has no processing data', $plpOrder->getId()));
+        }
+
+        return $this->json->unserialize($raw);
+    }
+
+    /**
+     * Save DACE file and update order processing data
+     *
+     * @param object $plpOrder
+     * @param array $processingData
+     * @param array $daceData
+     * @param string $trackingCode
+     * @param array $result
+     * @throws LocalizedException
+     */
+    private function saveDaceAndUpdateOrder($plpOrder, $processingData, $daceData, $trackingCode, &$result)
+    {
+        $daceContent = $this->extractDaceContent($daceData);
+        if (!$daceContent) {
+            // phpcs:ignore Magento2.Exceptions.DirectThrow
+            throw new LocalizedException(__('DACE response has no content for tracking %1', $trackingCode));
+        }
+
+        $fileName = $this->saveDaceFile($daceContent, $plpOrder, $plpOrder->getPlpId(), $trackingCode);
+        if (!$fileName) {
+            // phpcs:ignore Magento2.Exceptions.DirectThrow
+            throw new LocalizedException(__('Failed to save DACE file for tracking %1', $trackingCode));
+        }
+
+        $processingData['receiptFileName'] = $fileName;
+
+        $daceInfo = $this->extractDaceInfo($trackingCode);
+        if ($daceInfo) {
+            $processingData['daceData'] = $daceInfo;
+        }
+
+        $this->updatePlpOrderStatus($plpOrder, $this->successOrderStatus, $processingData);
+
+        $result['files'][] = [
+            'plp_order_id' => $plpOrder->getId(),
+            'tracking_code' => $trackingCode,
+            'file_name' => $fileName
+        ];
     }
 
     /**
@@ -333,61 +328,79 @@ class PlpDaceDownload extends AbstractPlpOperation
     /**
      * Extract DACE metadata from Térmica format
      *
-     * @param object $plpOrder
      * @param string $trackingCode
      * @return array|null
      */
-    private function extractDaceInfo($plpOrder, $trackingCode)
+    private function extractDaceInfo($trackingCode)
     {
         try {
-            $termResult = $this->plpDaceDownService->execute([$trackingCode], 'T');
-
-            if (!$termResult['success'] || empty($termResult['data'])) {
+            $text = $this->fetchDaceText($trackingCode);
+            if (!$text) {
                 return null;
             }
 
-            $termData = $termResult['data'];
-            $text = '';
-            if (is_array($termData) && isset($termData[0]['dados'])) {
-                $text = $termData[0]['dados'];
-            } elseif (isset($termData['dados'])) {
-                $text = $termData['dados'];
-            }
-
-            if (empty($text)) {
-                return null;
-            }
-
-            $info = [];
-
-            if (preg_match('/Chave de Acesso DC-e:\s*\r?\n?(\d{40,44})/', $text, $m)) {
-                $info['chaveDCe'] = $m[1];
-            }
-
-            if (preg_match('/Protocolo de Autorização:\s*(.+?)[\r\n]/', $text, $m)) {
-                $info['protocolo'] = trim($m[1]);
-            }
-
-            if (preg_match('/Num:\s*(\d+)\s+Série:\s*(\d+)\s+(.+?)[\r\n]/', $text, $m)) {
-                $info['numero'] = $m[1];
-                $info['serie'] = $m[2];
-                $info['dataEmissao'] = trim($m[3]);
-            }
-
-            if (preg_match('/qrcode\?chDCe=([^&]+)/', $text, $m)) {
-                $info['qrCodeUrl'] = 'https://www.fazenda.pr.gov.br/dce/qrcode?chDCe=' . $m[1];
-            }
-
+            $info = $this->parseDaceText($text);
             return !empty($info) ? $info : null;
-
-        } catch (\Exception $e) {
+        } catch (\Exception $exc) {
             $this->logger->error(__(
                 'Error extracting DACE info for tracking %1: %2',
                 $trackingCode,
-                $e->getMessage()
+                $exc->getMessage()
             ));
             return null;
         }
+    }
+
+    /**
+     * Fetch DACE text content from API
+     *
+     * @param string $trackingCode
+     * @return string|null
+     */
+    private function fetchDaceText($trackingCode)
+    {
+        $termResult = $this->plpDaceDownService->execute([$trackingCode], 'T');
+
+        if (!$termResult['success'] || empty($termResult['data'])) {
+            return null;
+        }
+
+        return $this->extractDaceContent($termResult['data']);
+    }
+
+    /**
+     * Parse DACE text to extract structured data
+     *
+     * @param string $text
+     * @return array
+     */
+    private function parseDaceText($text)
+    {
+        $info = [];
+        $patterns = [
+            'chaveDCe' => '/Chave de Acesso DC-e:\s*\r?\n?(\d{40,44})/',
+            'protocolo' => '/Protocolo de Autorização:\s*(.+?)[\r\n]/',
+            'qrCodeChave' => '/qrcode\?chDCe=([^&]+)/',
+        ];
+
+        foreach ($patterns as $key => $pattern) {
+            if (preg_match($pattern, $text, $match)) {
+                $info[$key] = trim($match[1]);
+            }
+        }
+
+        if (preg_match('/Num:\s*(\d+)\s+Série:\s*(\d+)\s+(.+?)[\r\n]/', $text, $match)) {
+            $info['numero'] = $match[1];
+            $info['serie'] = $match[2];
+            $info['dataEmissao'] = trim($match[3]);
+        }
+
+        if (isset($info['qrCodeChave'])) {
+            $info['qrCodeUrl'] = 'https://www.fazenda.pr.gov.br/dce/qrcode?chDCe=' . $info['qrCodeChave'];
+            unset($info['qrCodeChave']);
+        }
+
+        return $info;
     }
 
     /**
@@ -425,16 +438,17 @@ class PlpDaceDownload extends AbstractPlpOperation
             $daceType = $this->config->getDaceType();
 
             // T = Térmica (plain text), R = Resumida (base64 PDF), C = Completa (base64 PDF)
+            $extension = 'pdf';
+            $fileContent = base64_decode($content);
+
             if ($daceType === 'T') {
                 $extension = 'txt';
                 $fileContent = $content;
-            } else {
-                $extension = 'pdf';
-                $fileContent = base64_decode($content);
-                if ($fileContent === false) {
-                    $this->logger->error(__('Failed to decode base64 DACE content for tracking %1', $trackingCode));
-                    return false;
-                }
+            }
+
+            if ($fileContent === false) {
+                $this->logger->error(__('Failed to decode base64 DACE content for tracking %1', $trackingCode));
+                return false;
             }
 
             $fileName = $this->generateDaceFileName($plpId, $plpOrder->getId(), $trackingCode, $extension);

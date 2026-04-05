@@ -72,6 +72,8 @@ class ReceiptDownload extends Column
                 }
             }
 
+            $item[$this->getData('name')] = [];
+
             if (!empty($processingData['receiptFileName'])) {
                 $item[$this->getData('name')] = [
                     'download' => [
@@ -83,8 +85,6 @@ class ReceiptDownload extends Column
                         'target' => '_blank'
                     ]
                 ];
-            } else {
-                $item[$this->getData('name')] = [];
             }
         }
 
