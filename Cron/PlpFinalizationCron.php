@@ -199,7 +199,7 @@ class PlpFinalizationCron
         return in_array($plp->getStatus(), [
             PlpStatus::STATUS_PLP_REQUESTING_SHIPMENT_CREATION,
             PlpStatus::STATUS_PLP_AWAITING_DACE
-        ]);
+        ], true);
     }
 
     /**

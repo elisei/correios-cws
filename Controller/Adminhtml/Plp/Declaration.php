@@ -86,6 +86,8 @@ class Declaration extends Action implements HttpGetActionInterface
      * Execute action
      *
      * @return \Magento\Framework\Controller\ResultInterface|mixed
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute()
     {

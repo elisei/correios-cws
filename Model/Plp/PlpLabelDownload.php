@@ -196,6 +196,8 @@ class PlpLabelDownload extends AbstractPlpOperation
      * @param object $plpOrder
      * @param array $result
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function processPlpOrder($plpOrder, &$result)
     {

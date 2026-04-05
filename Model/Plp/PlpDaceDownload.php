@@ -439,7 +439,7 @@ class PlpDaceDownload extends AbstractPlpOperation
 
             // T = Térmica (plain text), R = Resumida (base64 PDF), C = Completa (base64 PDF)
             $extension = 'pdf';
-            $fileContent = base64_decode($content);
+            $fileContent = base64_decode($content, true);
 
             if ($daceType === 'T') {
                 $extension = 'txt';
