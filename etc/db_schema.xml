@@ -82,4 +82,13 @@
             <column name="order_id"/>
         </index>
     </table>
+    <table name="sales_shipment" resource="sales" comment="Sales Flat Shipment">
+        <column xsi:type="varchar" name="sigepweb_dace_path" length="255" nullable="true"
+                comment="SigepWeb DACE File Path"/>
+    </table>
+
+    <table name="sales_shipment_grid" resource="sales" comment="Sales Flat Shipment Grid">
+        <column xsi:type="varchar" name="sigepweb_dace_path" length="255" nullable="true"
+                comment="SigepWeb DACE File Path"/>
+    </table>
 </schema>

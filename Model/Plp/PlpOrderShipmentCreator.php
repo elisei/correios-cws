@@ -375,10 +375,14 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         
         $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
         $relativeFilePath = 'sigepweb/labels/' . $processingData['labelFileName'];
-        
+
         if ($mediaDirectory->isExist($relativeFilePath)) {
             $labelContent = $mediaDirectory->readFile($relativeFilePath);
             $shipment->setShippingLabel($labelContent);
+        }
+
+        if (!empty($processingData['receiptFileName'])) {
+            $shipment->setData('sigepweb_dace_path', $processingData['receiptFileName']);
         }
         
         $shipment->register();

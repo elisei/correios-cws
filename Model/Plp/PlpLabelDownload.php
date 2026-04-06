@@ -341,19 +341,23 @@ class PlpLabelDownload extends AbstractPlpOperation
     protected function resetFailedPlpOrdersToInitialState($plpId)
     {
         $failedOrders = $this->getPlpOrdersByStatus($plpId, $this->failureOrderStatus);
-        
+
+        $resetStatus = $this->config->isEmiteDceEnabled()
+            ? PlpStatusItem::STATUS_ITEM_DACE_COMPLETED
+            : PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED;
+
         foreach ($failedOrders as $failedOrder) {
             $processingData = $failedOrder->getProcessingData();
             $processingData = $processingData ? $this->json->unserialize($processingData) : [];
-            
+
             // Remover apenas flags de controle, não informações de erro
             unset($processingData['labelSynchronizing']);
-            
+
             $failedOrder->setErrorMessage(null);
-            
+
             $this->updatePlpOrderStatus(
                 $failedOrder,
-                PlpStatusItem::STATUS_ITEM_RECEIPT_CREATED,
+                $resetStatus,
                 $processingData
             );
         }

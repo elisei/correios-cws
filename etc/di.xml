@@ -228,6 +228,15 @@
         </arguments>
     </type>
 
+    <!-- Shipment Grid: sync sigepweb_dace_path column -->
+    <virtualType name="ShipmentGridAggregator" type="Magento\Sales\Model\ResourceModel\Grid">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="sigepweb_dace_path" xsi:type="string">sales_shipment.sigepweb_dace_path</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <!-- Carrier Configuration -->
     <type name="O2TI\SigepWebCarrier\Model\Carrier">
         <arguments>
