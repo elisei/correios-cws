@@ -34,10 +34,10 @@ O módulo Correios CWS para Magento 2 oferece uma solução completa para integr
 
 Visite nossa [Wiki](../../wiki) para documentação detalhada sobre:
 
-- [Guia de Instalação Completo](../../wiki/Instalação)
-- [Guia de Configuração Detalhado](../../wiki/Configuração)
-- [Gerenciamento de Etiquetas e PLPs](../../wiki/Gerenciamento-de-Etiquetas)
-- [FAQ Completa](../../wiki/FAQ)
+- [Guia de Instalação Completo](../../wiki/01-Instalação)
+- [Guia de Configuração Detalhado](../../wiki/02---Configuração)
+- [Gerenciamento de Etiquetas e PLPs](../../wiki/03-‐-Gerenciamento-de-Etiquetas)
+- [FAQ Completa](../../wiki/05-‐-Dúvidas-Comuns)
 
 ## Principais Benefícios
 
