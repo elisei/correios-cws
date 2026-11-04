@@ -102,8 +102,8 @@ class SigepWebDataFormatter
         
         $declaredValue = $collectedData['order_info']['subtotal'];
         $formattedData = $this->processAdditionalServices($formattedData, $serviceCode, $declaredValue);
-        
-        return $formattedData;
+
+        return $this->applyFiscalDocument($formattedData, $collectedData);
     }
     
     /**
@@ -117,8 +117,45 @@ class SigepWebDataFormatter
         if (isset($collectedData['order_info']['invoice_increment_id'])) {
             return $collectedData['order_info']['invoice_increment_id'];
         }
-        
+
         return $collectedData['order_info']['increment_id'] ?? '';
+    }
+
+    /**
+     * Set the fiscal document fields of the pre-posting
+     *
+     * DC-e enabled: Correios issue the DC-e (emiteDCe = S).
+     * DC-e disabled: the NF-e from the invoice comment goes as chaveNFe (44 digits)
+     * plus numeroNotaFiscal (up to 12 digits), with emiteDCe = N. Without an NF-e
+     * the object travels with the content declaration only (itensDeclaracaoConteudo).
+     *
+     * @param array $formattedData
+     * @param array $collectedData
+     * @return array
+     */
+    protected function applyFiscalDocument(array $formattedData, array $collectedData): array
+    {
+        if ($this->config->isEmiteDceEnabled()) {
+            $formattedData['emiteDCe'] = 'S';
+            return $formattedData;
+        }
+
+        unset($formattedData['numeroNotaFiscal']);
+        $formattedData['emiteDCe'] = 'N';
+
+        $nfe = $collectedData['order_info']['nfe'] ?? null;
+        if (empty($nfe['access_key'])) {
+            $this->logger->warning(__(
+                'Order %1 has no NF-e in invoice comments; pre-posting sent with content declaration only',
+                $collectedData['order_info']['increment_id'] ?? ''
+            ));
+            return $formattedData;
+        }
+
+        $formattedData['chaveNFe'] = $nfe['access_key'];
+        $formattedData['numeroNotaFiscal'] = $nfe['number'];
+
+        return $formattedData;
     }
 
     /**
@@ -138,12 +175,17 @@ class SigepWebDataFormatter
     ): array {
         $avisoRecebimento = $this->config->getAvisoDeRecebimento() === '1';
         $maoPropria = $this->config->getMaoPropria() === '1';
+        $autoDeclared = $this->shouldDeclareValue($declaredValue);
         $services = [];
-        
+
+        if (!$autoDeclared) {
+            unset($formattedData['valorDeclarado']);
+        }
+
         try {
             $additionalServices = $this->servicesRepository->getByCode($serviceCode);
-            
-            if ($declaredValue && $additionalServices->getHasVd()) {
+
+            if ($autoDeclared && $declaredValue && $additionalServices->getHasVd()) {
                 $declaredValueFloat = (float)$declaredValue;
                 $minValue = $additionalServices->getDeclaredMinValue();
                 $maxValue = $additionalServices->getDeclaredMaxValue();
@@ -182,6 +224,30 @@ class SigepWebDataFormatter
         }
 
         return $formattedData;
+    }
+
+    /**
+     * Check if the declared value must be sent for the given order value
+     *
+     * The "declare above amount" setting overrides the Declared Price setting,
+     * so high value orders are always posted with declared value.
+     *
+     * @param float|null $declaredValue
+     * @return bool
+     */
+    protected function shouldDeclareValue(?float $declaredValue): bool
+    {
+        if ($this->config->isAutoDeclaredEnabled()) {
+            return true;
+        }
+
+        if (!$this->config->isAutoDeclaredAboveEnabled()) {
+            return false;
+        }
+
+        $minimumValue = $this->config->getAutoDeclaredAboveValue();
+
+        return $minimumValue > 0 && (float)$declaredValue > $minimumValue;
     }
 
     /**
@@ -243,7 +309,7 @@ class SigepWebDataFormatter
         }
 
         $largestPackage = end($rules);
-        $this->logger->warning(__(
+        $this->logger->debug(__(
             'Weight %1 grams exceeds all package rules, using largest package: %2',
             $weightInGrams,
             $largestPackage['description']

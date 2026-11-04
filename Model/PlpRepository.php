@@ -317,6 +317,32 @@ class PlpRepository implements PlpRepositoryInterface
     /**
      * @inheritDoc
      */
+    public function removeOrderFromPlp($plpId, $orderId)
+    {
+        $this->getById($plpId);
+
+        $plpOrder = $this->plpOrderFactory->create();
+        $this->plpOrderResource->loadByPlpAndOrder($plpOrder, $plpId, $orderId);
+
+        if (!$plpOrder->getId()) {
+            throw new NoSuchEntityException(
+                __('Order with id "%1" does not exist in PPN "%2".', $orderId, $plpId)
+            );
+        }
+
+        try {
+            $this->plpOrderResource->delete($plpOrder);
+            return true;
+        } catch (\Exception $exception) {
+            throw new CouldNotDeleteException(
+                __('Could not remove order from PPN: %1', $exception->getMessage())
+            );
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function updateOrderProcessingData($plpId, $orderId, $processingData)
     {
         try {

@@ -88,4 +88,15 @@ interface PlpRepositoryInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function updateOrderProcessingData($plpId, $orderId, $processingData);
+
+    /**
+     * Remove order from PPN
+     *
+     * @param int $plpId
+     * @param string $orderId
+     * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function removeOrderFromPlp($plpId, $orderId);
 }

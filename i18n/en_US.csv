@@ -280,9 +280,9 @@ Error,Error
 "Sigep Web Service with id ""%1"" does not exist.","Sigep Web Service with id ""%1"" does not exist."
 "Sigep Web Service with code ""%1"" does not exist.","Sigep Web Service with code ""%1"" does not exist."
 "Could not delete the service: %1","Could not delete the service: %1"
-"Seu pedido foi encaminhado para coleta dos Correios, seu código de postagem é %1. Aguarde até 24 horas para acompanhar a entrega.","Seu pedido foi encaminhado para coleta dos Correios, seu código de postagem é %1. Aguarde até 24 horas para acompanhar a entrega."
-"Seu pedido %1 foi entregue em %2 às %3 em %4.","Seu pedido %1 foi entregue em %2 às %3 em %4."
-"Atualização sobre sua entrega %1: %2. Localização: %3 em %4 %5","Atualização sobre sua entrega %1: %2. Localização: %3 em %4 %5"
+"Seu pedido foi encaminhado para coleta dos Correios. Código de rastreio: %1. Aguarde até 24 horas para acompanhar a entrega.","Seu pedido foi encaminhado para coleta dos Correios. Código de rastreio: %1. Aguarde até 24 horas para acompanhar a entrega."
+"Seu pedido foi entregue em %1 às %2. Local: %3.","Seu pedido foi entregue em %1 às %2. Local: %3."
+"Atualização da entrega: %1. Local: %2. Atualizado em %3 às %4.","Atualização da entrega: %1. Local: %2. Atualizado em %3 às %4."
 View,View
 Edit,Edit
 Delete,Delete
@@ -335,6 +335,10 @@ CNPJ,CNPJ
 "Service Settings","Service Settings"
 "Declared Price","Declared Price"
 "When active and if available for the delivery method, the insurance value will be added.","When active and if available for the delivery method, the insurance value will be added."
+"Declare Value Above Amount","Declare Value Above Amount"
+"Overrides Declared Price: when active, orders with subtotal above the amount below are always posted with declared value.","Overrides Declared Price: when active, orders with subtotal above the amount below are always posted with declared value."
+"Minimum Order Value to Declare","Minimum Order Value to Declare"
+"Order subtotal must be greater than this amount for the declared value to be applied.","Order subtotal must be greater than this amount for the declared value to be applied."
 "Own Hand","Own Hand"
 "Receipt Notice","Receipt Notice"
 "Maximum Package Weight (please check with your carrier for maximum supported shipping weight)","Maximum Package Weight (please check with your carrier for maximum supported shipping weight)"

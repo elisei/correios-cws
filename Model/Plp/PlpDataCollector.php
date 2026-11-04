@@ -11,10 +11,12 @@
 namespace O2TI\SigepWebCarrier\Model\Plp;
 
 use Psr\Log\LoggerInterface;
+use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
+use O2TI\SigepWebCarrier\Gateway\Config\Config;
 use O2TI\SigepWebCarrier\Model\Plp\Source\Status as PlpStatus;
 use O2TI\SigepWebCarrier\Model\Plp\Source\StatusItem as PlpStatusItem;
 use O2TI\SigepWebCarrier\Model\Plp\SigepWebDataFormatter;
@@ -43,6 +45,16 @@ class PlpDataCollector extends AbstractPlpOperation
     protected $storeInformation;
 
     /**
+     * @var EventManagerInterface
+     */
+    protected $eventManager;
+
+    /**
+     * @var Config
+     */
+    protected $config;
+
+    /**
      * Constructor
      *
      * @param LoggerInterface $logger
@@ -53,6 +65,8 @@ class PlpDataCollector extends AbstractPlpOperation
      * @param PlpCollectionFactory $plpCollectionFactory
      * @param SigepWebDataFormatter $sigepDataFormatter
      * @param StoreInformation $storeInformation
+     * @param EventManagerInterface $eventManager
+     * @param Config $config
      */
     public function __construct(
         LoggerInterface $logger,
@@ -62,11 +76,15 @@ class PlpDataCollector extends AbstractPlpOperation
         PlpOrderCollectionFactory $plpOrdCollection,
         PlpCollectionFactory $plpCollectionFactory,
         SigepWebDataFormatter $sigepDataFormatter,
-        StoreInformation $storeInformation
+        StoreInformation $storeInformation,
+        EventManagerInterface $eventManager,
+        Config $config
     ) {
         $this->orderRepository = $orderRepository;
         $this->sigepDataFormatter = $sigepDataFormatter;
         $this->storeInformation = $storeInformation;
+        $this->eventManager = $eventManager;
+        $this->config = $config;
 
         parent::__construct(
             $logger,
@@ -142,7 +160,33 @@ class PlpDataCollector extends AbstractPlpOperation
                 $this->failureOrderStatus
             );
 
+            $this->dispatchOrderErrorEvent($plpOrder, $exc->getMessage());
+
             return false;
+        }
+    }
+
+    /**
+     * Dispatch event when an order fails during data collection.
+     *
+     * @param object $plpOrder
+     * @param string $errorMessage
+     * @return void
+     */
+    private function dispatchOrderErrorEvent($plpOrder, $errorMessage)
+    {
+        try {
+            $this->eventManager->dispatch('sigepweb_plp_order_process_error', [
+                'plp_id'        => (int) $plpOrder->getPlpId(),
+                'order_id'      => $plpOrder->getOrderId(),
+                'error_message' => $errorMessage,
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error(__(
+                'Error dispatching sigepweb_plp_order_process_error event for order %1: %2',
+                $plpOrder->getOrderId(),
+                $e->getMessage()
+            ));
         }
     }
 
@@ -189,6 +233,7 @@ class PlpDataCollector extends AbstractPlpOperation
                 'subtotal'             => $order->getBaseSubTotal(),
                 'increment_id'         => $order->getIncrementId(),
                 'invoice_increment_id' => $this->getInvoiceIncrementId($order),
+                'nfe'                  => $this->getNfeData($order),
                 'created_at'           => $order->getCreatedAt(),
                 'customer_email'       => $order->getCustomerEmail(),
                 'customer_firstname'   => $order->getCustomerFirstname(),
@@ -255,6 +300,144 @@ class PlpDataCollector extends AbstractPlpOperation
         }
 
         return '';
+    }
+
+    /**
+     * Get NF-e data from the most recent comment that carries a valid access key
+     *
+     * Reads the invoice comments, or the order comments (status history) when the
+     * declaration type is "NF-e (order comment)".
+     *
+     * Expected comment lines:
+     *     NF-e: 33
+     *     Chave: 35261160963974000100550020000000331178139575
+     *
+     * The number comes from the "NF-e:" line; when it is missing or does not match
+     * the number embedded in the key (nNF, positions 26-34), the key wins.
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @return array{number: string, access_key: string}|null
+     */
+    protected function getNfeData($order)
+    {
+        $found = null;
+        $foundSortKey = null;
+
+        foreach ($this->getNfeComments($order) as $comment) {
+            $text = (string)$comment->getComment();
+            if (!preg_match(
+                '/^\s*chave(?:\s+de\s+acesso)?\s*[:=]\s*([\d\s.]{44,60})\s*$/imu',
+                $text,
+                $matches
+            )) {
+                continue;
+            }
+
+            $key = preg_replace('/\D/', '', $matches[1]);
+            if (!$this->isValidNfeAccessKey($key)) {
+                $this->logger->warning(__(
+                    'Invalid NF-e access key in comment %1 of order %2',
+                    $comment->getId(),
+                    $order->getIncrementId()
+                ));
+                continue;
+            }
+
+            $sortKey = [(string)$comment->getCreatedAt(), (int)$comment->getId()];
+            if ($foundSortKey === null || $sortKey > $foundSortKey) {
+                $found = [
+                    'number' => $this->resolveNfeNumber($text, $key, (string)$order->getIncrementId()),
+                    'access_key' => $key,
+                ];
+                $foundSortKey = $sortKey;
+            }
+        }
+
+        return $found;
+    }
+
+    /**
+     * Comments that may carry the NF-e, according to the declaration type
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     * @return iterable
+     */
+    protected function getNfeComments($order)
+    {
+        if ($this->config->isEmiteDceEnabled()) {
+            return [];
+        }
+
+        if ($this->config->isNfeFromOrderComment()) {
+            return $order->getStatusHistoryCollection();
+        }
+
+        $comments = [];
+        foreach ($order->getInvoiceCollection() as $invoice) {
+            foreach ($invoice->getCommentsCollection() as $comment) {
+                $comments[] = $comment;
+            }
+        }
+
+        return $comments;
+    }
+
+    /**
+     * NF-e number from the "NF-e:" comment line, checked against the key
+     *
+     * @param string $text
+     * @param string $key
+     * @param string $orderIncrementId
+     * @return string
+     */
+    protected function resolveNfeNumber(string $text, string $key, string $orderIncrementId): string
+    {
+        $keyNumber = ltrim(substr($key, 25, 9), '0');
+
+        if (!preg_match(
+            '/^\s*(?:nf-?e|nota(?:\s+fiscal)?|n[uú]mero)\s*[:=]\s*(\d{1,12})\s*$/imu',
+            $text,
+            $matches
+        )) {
+            return $keyNumber;
+        }
+
+        $number = ltrim($matches[1], '0');
+        if ($number !== $keyNumber) {
+            $this->logger->warning(__(
+                'NF-e number %1 does not match access key number %2 for order %3; using the key',
+                $number,
+                $keyNumber,
+                $orderIncrementId
+            ));
+            return $keyNumber;
+        }
+
+        return $number;
+    }
+
+    /**
+     * Check NF-e access key: 44 digits and modulo 11 check digit
+     *
+     * @param string $key
+     * @return bool
+     */
+    protected function isValidNfeAccessKey(string $key): bool
+    {
+        if (!preg_match('/^\d{44}$/', $key)) {
+            return false;
+        }
+
+        $sum = 0;
+        $weight = 2;
+        for ($i = 42; $i >= 0; $i--) {
+            $sum += (int)$key[$i] * $weight;
+            $weight = $weight === 9 ? 2 : $weight + 1;
+        }
+        $rest = $sum % 11;
+        $digit = $rest < 2 ? 0 : 11 - $rest;
+
+        return $digit === (int)$key[43];
     }
 
     /**

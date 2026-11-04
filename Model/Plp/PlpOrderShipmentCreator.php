@@ -13,6 +13,7 @@ namespace O2TI\SigepWebCarrier\Model\Plp;
 use Psr\Log\LoggerInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipmentRepositoryInterface;
 use Magento\Sales\Model\Convert\Order as ConvertOrder;
@@ -71,7 +72,12 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
      * @var DriverFile
      */
     protected $driver;
-    
+
+    /**
+     * @var EventManagerInterface
+     */
+    protected $eventManager;
+
     /**
      * @var array
      */
@@ -92,6 +98,7 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
      * @param Filesystem $filesystem
      * @param TrackFactory $trackFactory
      * @param DriverFile $driver
+     * @param EventManagerInterface $eventManager
      * @param bool $sendEmail
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -110,6 +117,7 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         Filesystem $filesystem,
         TrackFactory $trackFactory,
         DriverFile $driver,
+        EventManagerInterface $eventManager,
         $sendEmail = false
     ) {
         $this->orderRepository = $orderRepository;
@@ -119,8 +127,9 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         $this->filesystem = $filesystem;
         $this->trackFactory = $trackFactory;
         $this->driver = $driver;
+        $this->eventManager = $eventManager;
         $this->sendEmail = $sendEmail;
-        
+
         parent::__construct(
             $logger,
             $plpRepository,
@@ -145,7 +154,10 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         
         // Define order statuses
         $this->expectedTypeFilter = 'status';
-        $this->expectedOrderStatus = [PlpStatusItem::STATUS_ITEM_DOWNLOAD_COMPLETED];
+        $this->expectedOrderStatus = [
+            PlpStatusItem::STATUS_ITEM_DOWNLOAD_COMPLETED,
+            PlpStatusItem::STATUS_ITEM_DACE_COMPLETED
+        ];
         $this->inProgressOrdStatus = PlpStatusItem::STATUS_ITEM_PROCESSING_SHIP_CREATE;
         $this->successOrderStatus = PlpStatusItem::STATUS_ITEM_SHIP_CREATED;
         $this->failureOrderStatus = PlpStatusItem::STATUS_ITEM_SHIP_CREATE_ERROR;
@@ -272,13 +284,15 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
                 $plpOrder->getOrderId(),
                 $errorMessage
             ));
-            
+
             $plpOrder->setErrorMessage($errorMessage);
             $this->updatePlpOrderStatus(
                 $plpOrder,
                 $this->failureOrderStatus
             );
-            
+
+            $this->dispatchOrderErrorEvent($plpOrder, $errorMessage);
+
             $result['data']['error_count']++;
             return false;
         }
@@ -293,14 +307,20 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
      */
     protected function updateFinalPlpStatus($plp, $successCount, $errorCount)
     {
-        if ($successCount > 0 && $errorCount === 0) {
+        if ($successCount > 0) {
+            // At least one shipment created — PPN is done; per-order errors remain visible at item level
             $plp->setStatus($this->successPlpStatus);
-        } elseif ($errorCount) {
+        } elseif ($errorCount > 0) {
+            // No shipments created — keep at AWAITING_SHIPMENT for manual intervention
             $plp->setStatus($this->failurePlpStatus);
         }
-        
+
         $this->plpRepository->save($plp);
         $this->generateShipmentResultMessage($plp->getId());
+
+        if ($plp->getStatus() === PlpStatus::STATUS_PLP_COMPLETED) {
+            $this->dispatchCompletedEvent($plp);
+        }
     }
 
     /**
@@ -372,10 +392,14 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
         
         $mediaDirectory = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
         $relativeFilePath = 'sigepweb/labels/' . $processingData['labelFileName'];
-        
+
         if ($mediaDirectory->isExist($relativeFilePath)) {
             $labelContent = $mediaDirectory->readFile($relativeFilePath);
             $shipment->setShippingLabel($labelContent);
+        }
+
+        if (!empty($processingData['receiptFileName'])) {
+            $shipment->setData('sigepweb_dace_path', $processingData['receiptFileName']);
         }
         
         $shipment->register();
@@ -412,5 +436,100 @@ class PlpOrderShipmentCreator extends AbstractPlpOperation
     public function getPlpsWithLabels()
     {
         return $this->getPlpsByStatus(PlpStatus::STATUS_PLP_AWAITING_SHIPMENT);
+    }
+
+    /**
+     * Dispatch event when PLP is completed — all orders succeeded.
+     *
+     * Each order carries label and DACE file blobs with their MD5 hashes.
+     *
+     * @param object $plp
+     * @return void
+     */
+    private function dispatchCompletedEvent($plp)
+    {
+        try {
+            $plpId = (int) $plp->getId();
+            $mediaDir = $this->filesystem->getDirectoryRead(DirectoryList::MEDIA);
+            $ordersData = [];
+
+            $allOrders = $this->plpOrdCollection->create();
+            $allOrders->addFieldToFilter('plp_id', $plpId);
+            $allOrders->addFieldToFilter('status', PlpStatusItem::STATUS_ITEM_SHIP_CREATED);
+
+            foreach ($allOrders as $plpOrder) {
+                $processingData = $this->json->unserialize($plpOrder->getProcessingData() ?: '{}');
+
+                $labelBlob = null;
+                $labelMd5 = null;
+                $labelType = null;
+                if (!empty($processingData['labelFileName'])) {
+                    $labelPath = 'sigepweb/labels/' . $processingData['labelFileName'];
+                    if ($mediaDir->isExist($labelPath)) {
+                        $labelBlob = $mediaDir->readFile($labelPath);
+                        $labelMd5 = md5($labelBlob);
+                        $labelType = pathinfo($processingData['labelFileName'], PATHINFO_EXTENSION) ?: 'pdf';
+                    }
+                }
+
+                $daceBlob = null;
+                $daceMd5 = null;
+                $daceType = null;
+                if (!empty($processingData['receiptFileName'])) {
+                    $dacePath = 'sigepweb/labels/' . $processingData['receiptFileName'];
+                    if ($mediaDir->isExist($dacePath)) {
+                        $daceBlob = $mediaDir->readFile($dacePath);
+                        $daceMd5 = md5($daceBlob);
+                        $daceType = pathinfo($processingData['receiptFileName'], PATHINFO_EXTENSION) ?: 'pdf';
+                    }
+                }
+
+                $ordersData[] = [
+                    'order_id'   => $plpOrder->getOrderId(),
+                    'tracking'   => $processingData['tracking'] ?? null,
+                    'label_blob' => $labelBlob,
+                    'label_md5'  => $labelMd5,
+                    'label_type' => $labelType,
+                    'dace_blob'  => $daceBlob,
+                    'dace_md5'   => $daceMd5,
+                    'dace_type'  => $daceType,
+                ];
+            }
+
+            $this->eventManager->dispatch('sigepweb_plp_completed', [
+                'plp'    => $plp,
+                'orders' => $ordersData,
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error(__(
+                'Error dispatching sigepweb_plp_completed event for PPN %1: %2',
+                $plp->getId(),
+                $e->getMessage()
+            ));
+        }
+    }
+
+    /**
+     * Dispatch event immediately when an order fails during processing.
+     *
+     * @param object $plpOrder
+     * @param string $errorMessage
+     * @return void
+     */
+    private function dispatchOrderErrorEvent($plpOrder, $errorMessage)
+    {
+        try {
+            $this->eventManager->dispatch('sigepweb_plp_order_process_error', [
+                'plp_id'        => (int) $plpOrder->getPlpId(),
+                'order_id'      => $plpOrder->getOrderId(),
+                'error_message' => $errorMessage,
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error(__(
+                'Error dispatching sigepweb_plp_order_process_error event for order %1: %2',
+                $plpOrder->getOrderId(),
+                $e->getMessage()
+            ));
+        }
     }
 }

@@ -11,6 +11,7 @@
 namespace O2TI\SigepWebCarrier\Model\Plp;
 
 use Psr\Log\LoggerInterface;
+use Magento\Framework\Event\ManagerInterface as EventManagerInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Exception\LocalizedException;
 use O2TI\SigepWebCarrier\Api\PlpRepositoryInterface;
@@ -28,6 +29,11 @@ class PlpLabelRequest extends AbstractPlpOperation
     protected $plpAsyncLabelService;
 
     /**
+     * @var EventManagerInterface
+     */
+    protected $eventManager;
+
+    /**
      * Constructor
      *
      * @param Json $json
@@ -36,6 +42,7 @@ class PlpLabelRequest extends AbstractPlpOperation
      * @param PlpAsyncLabelService $plpAsyncLabelService
      * @param PlpOrderCollectionFactory $plpOrdCollection
      * @param PlpCollectionFactory $plpCollectionFactory
+     * @param EventManagerInterface $eventManager
      */
     public function __construct(
         Json $json,
@@ -43,10 +50,12 @@ class PlpLabelRequest extends AbstractPlpOperation
         PlpRepositoryInterface $plpRepository,
         PlpAsyncLabelService $plpAsyncLabelService,
         PlpOrderCollectionFactory $plpOrdCollection,
-        PlpCollectionFactory $plpCollectionFactory
+        PlpCollectionFactory $plpCollectionFactory,
+        EventManagerInterface $eventManager
     ) {
         $this->plpAsyncLabelService = $plpAsyncLabelService;
-        
+        $this->eventManager = $eventManager;
+
         parent::__construct(
             $logger,
             $plpRepository,
@@ -197,12 +206,38 @@ class PlpLabelRequest extends AbstractPlpOperation
                 $plpOrder,
                 $this->failureOrderStatus
             );
-            
+
+            $this->dispatchOrderErrorEvent($plpOrder, $errorMessage);
+
             $result['error_count']++;
             return false;
         }
     }
-    
+
+    /**
+     * Dispatch event when an order fails during label request.
+     *
+     * @param object $plpOrder
+     * @param string $errorMessage
+     * @return void
+     */
+    private function dispatchOrderErrorEvent($plpOrder, $errorMessage)
+    {
+        try {
+            $this->eventManager->dispatch('sigepweb_plp_order_process_error', [
+                'plp_id'        => (int) $plpOrder->getPlpId(),
+                'order_id'      => $plpOrder->getOrderId(),
+                'error_message' => $errorMessage,
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error(__(
+                'Error dispatching sigepweb_plp_order_process_error event for order %1: %2',
+                $plpOrder->getOrderId(),
+                $e->getMessage()
+            ));
+        }
+    }
+
     /**
      * Update final PPN status based on processing results
      *

@@ -21,6 +21,21 @@
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
             <config_path>carriers/sigep_web_carrier/auto_declared</config_path>
         </field>
+        <field id="auto_declared_above" translate="label,comment" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Declare Value Above Amount</label>
+            <comment>Overrides Declared Price: when active, orders with subtotal above the amount below are always posted with declared value.</comment>
+            <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+            <config_path>carriers/sigep_web_carrier/auto_declared_above</config_path>
+        </field>
+        <field id="auto_declared_above_value" translate="label,comment" type="text" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Minimum Order Value to Declare</label>
+            <comment>Order subtotal must be greater than this amount for the declared value to be applied.</comment>
+            <validate>validate-number validate-zero-or-greater</validate>
+            <config_path>carriers/sigep_web_carrier/auto_declared_above_value</config_path>
+            <depends>
+                <field id="auto_declared_above">1</field>
+            </depends>
+        </field>
         <field id="mao_propria" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
             <label>Own Hand</label>
             <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

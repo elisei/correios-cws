@@ -27,6 +27,21 @@ use Psr\Log\LoggerInterface;
 class TrackingProcessor
 {
     /**
+     * Human readable label for each internal tracking status.
+     *
+     * The status codes double as order status codes, so they cannot be
+     * translated in place — the tracking popup renders them through
+     * getStatusLabel() instead.
+     */
+    private const STATUS_LABELS = [
+        'sigewep_created' => 'Aguardando coleta da transportadora',
+        'sigewep_in_transit' => 'Em trânsito',
+        'sigewep_on_delivery_route' => 'Em rota de entrega',
+        'sigewep_delivered' => 'Entregue',
+        'sigewep_delivery_failed' => 'Entrega falhou',
+    ];
+
+    /**
      * @var Config
      */
     protected $config;
@@ -64,6 +79,22 @@ class TrackingProcessor
         $this->quoteService = $quoteService;
         $this->storeManager = $storeManager;
         $this->logger = $logger;
+    }
+
+    /**
+     * Get the customer facing label for an internal tracking status
+     *
+     * @param string $status Internal status code, e.g. "sigewep_delivered"
+     *
+     * @return string Translated label, or the code itself when unmapped
+     */
+    public function getStatusLabel(string $status): string
+    {
+        if (!isset(self::STATUS_LABELS[$status])) {
+            return $status;
+        }
+
+        return (string) __(self::STATUS_LABELS[$status]);
     }
 
     /**

@@ -210,6 +210,10 @@ abstract class AbstractPlpOperation
             $response[$key] = $value;
         }
 
+        // Ensure error state is preserved even if $data contained success/message
+        $response['success'] = false;
+        $response['message'] = $message;
+
         if ($exception !== null) {
             $this->logger->critical($exception);
             if (!isset($response['exception'])) {
@@ -462,14 +466,13 @@ abstract class AbstractPlpOperation
             $this->plpRepository->save($plp);
 
             $plpOrders = $this->getEligibleOrders($plpId);
-            
+
             if ($plpOrders->getSize() === 0) {
                 $plp->setStatus($this->failurePlpStatus);
                 $this->plpRepository->save($plp);
-                
+
                 return $this->createErrorResponse(
-                    $this->getNoOrdersMessage($plpId),
-                    $result
+                    $this->getNoOrdersMessage($plpId)
                 );
             }
 

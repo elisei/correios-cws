@@ -189,11 +189,11 @@ class TrackingStatus
         $lastComment = $comments->getLastItem();
         $lastCommentText = $lastComment->getComment();
 
-        if (preg_match('/Localização:\s*([^\.]+)/', $lastCommentText, $matches)) {
+        if (preg_match('/(?:Localização|Local):\s*([^\.]+)/', $lastCommentText, $matches)) {
             $lastLocation = trim($matches[1]);
             $lastLocation = preg_replace('/\s+em\s+\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}/', '', $lastLocation);
-            $normalLastLocation = preg_replace('/\s+/', ' ', strtolower($lastLocation));
-            $normalCurrentLocal = preg_replace('/\s+/', ' ', strtolower($currentLocation));
+            $normalLastLocation = $this->normalizeTrackingLocation($lastLocation);
+            $normalCurrentLocal = $this->normalizeTrackingLocation($currentLocation);
             
             return $normalLastLocation !== $normalCurrentLocal;
         }
@@ -212,31 +212,90 @@ class TrackingStatus
     {
         if (empty($trackingInfo['progressdetail'])) {
             // phpcs:ignore
-            return __('Seu pedido foi encaminhado para coleta dos Correios, seu código de postagem é %1. Aguarde até 24 horas para acompanhar a entrega.', $trackNumber);
+            return __(
+                'Seu pedido foi encaminhado para coleta dos Correios. Código de rastreio: %1. Aguarde até 24 horas para acompanhar a entrega.',
+                $trackNumber
+            );
         }
 
         $latestEvent = $trackingInfo['progressdetail'][0];
+        $deliveryDate = $this->formatTrackingDate($latestEvent['deliverydate'] ?? '');
+        $deliveryTime = $this->formatTrackingTime($latestEvent['deliverytime'] ?? '');
+        $deliveryLocation = $this->formatTrackingLocation($latestEvent['deliverylocation'] ?? '');
 
         switch ($trackingInfo['status']) {
+            case 'sigewep_delivered':
             case 'Delivered':
                 return __(
-                    'Seu pedido %1 foi entregue em %2 às %3 em %4.',
-                    $trackNumber,
-                    $latestEvent['deliverydate'],
-                    $latestEvent['deliverytime'],
-                    $latestEvent['deliverylocation']
+                    'Seu pedido foi entregue em %1 às %2. Local: %3.',
+                    $deliveryDate,
+                    $deliveryTime,
+                    $deliveryLocation
                 );
                 
             default:
                 return __(
-                    'Atualização sobre sua entrega %1: %2. Localização: %3 em %4 %5',
-                    $trackNumber,
+                    'Atualização da entrega: %1. Local: %2. Atualizado em %3 às %4.',
                     $latestEvent['activity'],
-                    $latestEvent['deliverylocation'],
-                    $latestEvent['deliverydate'],
-                    $latestEvent['deliverytime']
+                    $deliveryLocation,
+                    $deliveryDate,
+                    $deliveryTime
                 );
         }
+    }
+
+    /**
+     * Format tracking date for customer-facing comments.
+     *
+     * @param string $date
+     * @return string
+     */
+    private function formatTrackingDate(string $date): string
+    {
+        if ($date === '') {
+            return '';
+        }
+
+        try {
+            return (new DateTime($date))->format('d/m/Y');
+        } catch (\Exception $exc) {
+            return $date;
+        }
+    }
+
+    /**
+     * Format tracking time for customer-facing comments.
+     *
+     * @param string $time
+     * @return string
+     */
+    private function formatTrackingTime(string $time): string
+    {
+        return preg_replace('/:\d{2}$/', '', $time) ?: $time;
+    }
+
+    /**
+     * Format tracking location for customer-facing comments.
+     *
+     * @param string $location
+     * @return string
+     */
+    private function formatTrackingLocation(string $location): string
+    {
+        return str_replace(' - ', '/', $location);
+    }
+
+    /**
+     * Normalize tracking location for duplicate comment checks.
+     *
+     * @param string $location
+     * @return string
+     */
+    private function normalizeTrackingLocation(string $location): string
+    {
+        $location = str_replace(' - ', '/', $location);
+
+        return preg_replace('/\s+/', ' ', strtolower(trim($location)));
     }
 
     /**

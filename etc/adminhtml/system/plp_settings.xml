@@ -35,6 +35,21 @@
             <source_model>O2TI\SigepWebCarrier\Model\Config\Source\FilterStatus</source_model>
             <config_path>carriers/sigep_web_carrier/allowed_status</config_path>
         </field>
+        <field id="declaration_type" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Tipo de declaração</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\DeclarationType</source_model>
+            <config_path>carriers/sigep_web_carrier/declaration_type</config_path>
+            <comment><![CDATA[DC-e: os Correios emitem a Declaração de Conteúdo Eletrônica; a DACE (documento impresso da DC-e) deve ser impressa e fixada no objeto.<br/>NF-e: envia a chave de acesso e o número da nota (sem DC-e e sem DACE), lidos do comentário do invoice ou do pedido, no formato abaixo. Sem a nota no comentário, a pré-postagem segue só com a declaração de conteúdo.<br/><code>NF-e: 123456<br/>Série: 1<br/>Chave: (44 dígitos)<br/>CFOP: 5102</code>]]></comment>
+        </field>
+        <field id="dace_type" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+            <label>Formato da DACE</label>
+            <source_model>O2TI\SigepWebCarrier\Model\Config\Source\DaceType</source_model>
+            <config_path>carriers/sigep_web_carrier/dace_type</config_path>
+            <comment><![CDATA[T = Térmica (texto plano), R = Resumida (PDF compacto), C = Completa (PDF completo). A DACE deve ser impressa e fixada no objeto.]]></comment>
+            <depends>
+                <field id="declaration_type">dce</field>
+            </depends>
+        </field>
         <group id="plp_sender" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Sender Data</label>
             <field id="name" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="0">

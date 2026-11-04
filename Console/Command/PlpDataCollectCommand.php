@@ -89,7 +89,7 @@ class PlpDataCollectCommand extends Command
      * @param OutputInterface $output
      * @return int
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $plpId = $input->getArgument(self::PLP_ID_ARGUMENT);

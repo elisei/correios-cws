@@ -30,6 +30,8 @@
                 <specificcountry>BR</specificcountry>
                 <correios_id></correios_id>
                 <auto_declared>0</auto_declared>
+                <auto_declared_above>0</auto_declared_above>
+                <auto_declared_above_value>0</auto_declared_above_value>
                 <mao_propria>0</mao_propria>
                 <aviso_de_recebimento>0</aviso_de_recebimento>
                 <add_deadline>0</add_deadline>
@@ -45,6 +47,8 @@
                 <label_format>ET</label_format>
                 <print_layout>LINEAR_100_150</print_layout>
                 <allowed_status>processing</allowed_status>
+                <declaration_type>nfe_invoice</declaration_type>
+                <dace_type>T</dace_type>
                 <show_home_delivery_info>1</show_home_delivery_info>
             </sigep_web_carrier>
         </carriers>

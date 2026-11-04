@@ -14,6 +14,8 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Store\Model\ScopeInterface;
+use O2TI\SigepWebCarrier\Model\Config\Source\DeclarationType;
+
 
 class Config
 {
@@ -121,6 +123,39 @@ class Config
     }
 
     /**
+     * Check if Declared Value (Valor Declarado) is enabled
+     *
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function isAutoDeclaredEnabled(?int $storeId = null): bool
+    {
+        return (bool)$this->getConfigValue('auto_declared', $storeId);
+    }
+
+    /**
+     * Check if Declared Value above a given order amount is enabled
+     *
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function isAutoDeclaredAboveEnabled(?int $storeId = null): bool
+    {
+        return (bool)$this->getConfigValue('auto_declared_above', $storeId);
+    }
+
+    /**
+     * Get the order amount above which the Declared Value is applied
+     *
+     * @param int|null $storeId
+     * @return float
+     */
+    public function getAutoDeclaredAboveValue(?int $storeId = null): float
+    {
+        return (float)$this->getConfigValue('auto_declared_above_value', $storeId);
+    }
+
+    /**
      * Get Mão Própria
      *
      * @param int|null $storeId
@@ -198,7 +233,51 @@ class Config
     }
 
     /**
-     * Get Base URL
+     * Get declaration type (dce, nfe_invoice or nfe_order)
+     *
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getDeclarationType(?int $storeId = null): string
+    {
+        return (string)($this->getConfigValue('declaration_type', $storeId) ?: DeclarationType::NFE_INVOICE);
+    }
+
+    /**
+     * Check if DC-e emission by Correios is enabled
+     *
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function isEmiteDceEnabled(?int $storeId = null): bool
+    {
+        return $this->getDeclarationType($storeId) === DeclarationType::DCE;
+    }
+
+    /**
+     * Check if the NF-e is read from the order comments instead of the invoice comments
+     *
+     * @param int|null $storeId
+     * @return bool
+     */
+    public function isNfeFromOrderComment(?int $storeId = null): bool
+    {
+        return $this->getDeclarationType($storeId) === DeclarationType::NFE_ORDER;
+    }
+
+    /**
+     * Get DACE type (T=Térmica, R=Resumida, C=Completa)
+     *
+     * @param int|null $storeId
+     * @return string
+     */
+    public function getDaceType(?int $storeId = null): string
+    {
+        return (string)($this->getConfigValue('dace_type', $storeId) ?: 'R');
+    }
+
+    /**
+     * Get Allowed Status
      *
      * @param int|null $storeId
      * @return array

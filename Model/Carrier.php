@@ -286,12 +286,12 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
 
         $cacheKey = $this->encryptor->hash($this->json->serialize($requestParams));
     
-        $this->_logger->info($this->json->serialize(['request_params' => $requestParams]));
+        $this->_logger->debug($this->json->serialize(['request_params' => $requestParams]));
 
         $cachedData = $this->responseCache->get($cacheKey);
         if ($cachedData && !($cachedData['is_fallback'] ?? false)) {
             $this->_logger->debug('Using cached shipping rates', ['cache_key' => $cacheKey]);
-            $this->_logger->info($this->json->serialize(['cache_hit' => $cachedData]));
+            $this->_logger->debug($this->json->serialize(['cache_hit' => $cachedData]));
             return $cachedData;
         }
 
@@ -570,6 +570,11 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
                     ->setCarrierTitle($this->getConfigData('title'))
                     ->setTracking($tracking)
                     ->addData($trackingInfo);
+                // The tracking popup prints this value as is, so show the label
+                // instead of the internal status code the order logic relies on.
+                $track->setStatus(
+                    $this->trackingProcessor->getStatusLabel((string) ($trackingInfo['status'] ?? ''))
+                );
                 $result->append($track);
             }
 
@@ -747,7 +752,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
         ];
 
         if (empty($rules)) {
-            $this->_logger->info('No package rules found, using default package');
+            $this->_logger->debug('No package rules found, using default package');
             return $defaultPackage;
         }
 
@@ -777,7 +782,7 @@ class Carrier extends AbstractCarrierOnline implements CarrierInterface
 
         // If weight exceeds all rules, use the largest package
         $largestPackage = end($rules);
-        $this->_logger->warning(sprintf(
+        $this->_logger->debug(sprintf(
             'Weight %d grams exceeds all package rules, using largest package: %s',
             $weightInGrams,
             $largestPackage['description']

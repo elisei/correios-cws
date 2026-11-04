@@ -86,6 +86,8 @@ class Declaration extends Action implements HttpGetActionInterface
      * Execute action
      *
      * @return \Magento\Framework\Controller\ResultInterface|mixed
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute()
     {
@@ -119,12 +121,21 @@ class Declaration extends Action implements HttpGetActionInterface
                 $filePath = $declarationResult['filepath'];
                 $content = $this->driverFile->fileGetContents($filePath);
                 $filename = $declarationResult['filename'];
-                
+
+                $contentType = 'application/pdf';
+                if (str_ends_with($filename, '.txt')) {
+                    $contentType = 'text/plain; charset=utf-8';
+                } elseif (str_ends_with($filename, '.html')) {
+                    $contentType = 'text/html; charset=utf-8';
+                } elseif (str_ends_with($filename, '.zip')) {
+                    $contentType = 'application/zip';
+                }
+
                 $response = $this->getResponse();
-                $response->setHeader('Content-Type', 'application/pdf');
+                $response->setHeader('Content-Type', $contentType);
                 $response->setHeader('Content-Disposition', 'attachment; filename="' . $filename . '"');
                 $response->setBody($content);
-                
+
                 return $response;
             }
             

@@ -33,6 +33,10 @@ class StatusItem implements OptionSourceInterface
     public const STATUS_ITEM_PROCESSING_DOWNLOAD = 'processing_download';
     public const STATUS_ITEM_DOWNLOAD_COMPLETED = 'download_completed';
     public const STATUS_ITEM_DOWNLOAD_ERROR = 'download_error';
+    public const STATUS_ITEM_PENDING_DACE = 'pending_dace';
+    public const STATUS_ITEM_PROCESSING_DACE = 'processing_dace';
+    public const STATUS_ITEM_DACE_COMPLETED = 'dace_completed';
+    public const STATUS_ITEM_DACE_ERROR = 'dace_error';
     public const STATUS_ITEM_PENDING_SHIP_CREATE = 'pending_ship_create';
     public const STATUS_ITEM_PROCESSING_SHIP_CREATE = 'processing_ship_create';
     public const STATUS_ITEM_SHIP_CREATED = 'ship_created';
@@ -62,6 +66,10 @@ class StatusItem implements OptionSourceInterface
             ['value' => self::STATUS_ITEM_PROCESSING_DOWNLOAD, 'label' => __('Processing Download')],
             ['value' => self::STATUS_ITEM_DOWNLOAD_COMPLETED, 'label' => __('Download Completed')],
             ['value' => self::STATUS_ITEM_DOWNLOAD_ERROR, 'label' => __('Download Error')],
+            ['value' => self::STATUS_ITEM_PENDING_DACE, 'label' => __('Pending DACE Download')],
+            ['value' => self::STATUS_ITEM_PROCESSING_DACE, 'label' => __('Processing DACE Download')],
+            ['value' => self::STATUS_ITEM_DACE_COMPLETED, 'label' => __('DACE Completed')],
+            ['value' => self::STATUS_ITEM_DACE_ERROR, 'label' => __('DACE Error')],
             ['value' => self::STATUS_ITEM_PENDING_SHIP_CREATE, 'label' => __('Pending Ship Create')],
             ['value' => self::STATUS_ITEM_PROCESSING_SHIP_CREATE, 'label' => __('Processing Ship Create')],
             ['value' => self::STATUS_ITEM_SHIP_CREATED, 'label' => __('Ship Created')],

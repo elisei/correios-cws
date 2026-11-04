@@ -80,6 +80,12 @@
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>
     </route>
+    <route url="/V1/sigepweb/plp/:plpId/order/:orderId" method="DELETE">
+        <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="removeOrderFromPlp"/>
+        <resources>
+            <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
+        </resources>
+    </route>
     <!-- Novos endpoints para gestão de dados de coleta e processamento -->
     <route url="/V1/sigepweb/plp/:plpId/order/:orderId/collected-data" method="POST">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderCollectedData"/>
@@ -89,6 +95,14 @@
     </route>
     <route url="/V1/sigepweb/plp/:plpId/order/:orderId/processing-data" method="POST">
         <service class="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface" method="updateOrderProcessingData"/>
+        <resources>
+            <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
+        </resources>
+    </route>
+
+    <!-- PLP Creation with order validation -->
+    <route url="/V1/sigepweb/plp/create" method="POST">
+        <service class="O2TI\SigepWebCarrier\Api\PlpManagementInterface" method="create"/>
         <resources>
             <resource ref="O2TI_SigepWebCarrier::plp_manage"/>
         </resources>

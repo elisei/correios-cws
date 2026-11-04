@@ -20,6 +20,7 @@
                 <item name="sigepweb_plp_single_submit" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpSingleSubmitCommand</item>
                 <item name="sigepweb_plp_label" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpLabelRequestCommand</item>
                 <item name="sigepweb_plp_label_download" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpLabelDownloadCommand</item>
+                <item name="sigepweb_plp_dace_download" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpDaceDownloadCommand</item>
                 <item name="sigepweb_plp_create_shipments" xsi:type="object">O2TI\SigepWebCarrier\Console\Command\PlpShipmentCreateCommand</item>
             </argument>
         </arguments>
@@ -153,6 +154,14 @@
         </arguments>
     </type>
 
+    <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpDaceDownloadService">
+        <arguments>
+            <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
+            <argument name="logger" xsi:type="object">Magento\Shipping\Model\Method\VirtualLogger</argument>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+
     <type name="O2TI\SigepWebCarrier\Gateway\Service\PlpDeclarationContent">
         <arguments>
             <argument name="apiClient" xsi:type="object">O2TI\SigepWebCarrier\Gateway\Http\Client\ApiClient</argument>
@@ -219,6 +228,15 @@
         </arguments>
     </type>
 
+    <!-- Shipment Grid: sync sigepweb_dace_path column -->
+    <virtualType name="ShipmentGridAggregator" type="Magento\Sales\Model\ResourceModel\Grid">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="sigepweb_dace_path" xsi:type="string">sales_shipment.sigepweb_dace_path</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
     <!-- Carrier Configuration -->
     <type name="O2TI\SigepWebCarrier\Model\Carrier">
         <arguments>
@@ -227,6 +245,10 @@
     </type>
 
     <!-- Interface Preferences -->
+    <preference for="O2TI\SigepWebCarrier\Api\PlpManagementInterface"
+                type="O2TI\SigepWebCarrier\Model\PlpManagement"/>
+    <preference for="O2TI\SigepWebCarrier\Api\Data\PlpCreateResultInterface"
+                type="O2TI\SigepWebCarrier\Model\Data\PlpCreateResult"/>
     <preference for="O2TI\SigepWebCarrier\Api\PlpRepositoryInterface"
                 type="O2TI\SigepWebCarrier\Model\PlpRepository"/>
     <preference for="O2TI\SigepWebCarrier\Api\Data\PlpInterface"
@@ -277,9 +299,9 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="O2TI\SigepWebCarrier\Model\Session\PlpSession" type="Magento\Framework\Session\Generic">
+    <type name="O2TI\SigepWebCarrier\Model\Session\PlpSession">
         <arguments>
             <argument name="name" xsi:type="string">plp_session</argument>
         </arguments>
-    </virtualType>
+    </type>
 </config>
